@@ -7,8 +7,8 @@ public class Rook extends Piece {
 
     public Rook (Position2D new_position, Side new_side) {
         this.current_position = new Position2D(new_position);
-        this.side = new_side; // vamos ter problemas com referencia aqui?
-        this.value = 5;
+        this.side             = new_side; // vamos ter problemas com referencia aqui?
+        this.value            = 5;
 
     }
 

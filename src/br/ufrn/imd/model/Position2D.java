@@ -1,5 +1,7 @@
 package br.ufrn.imd.model;
 
+//TODO: Lidar com valores nulos nessa clase:
+
 public class Position2D {
     private int x = 0;
     private int y = 0;
@@ -45,6 +47,20 @@ public class Position2D {
                this.isInTheSameLeftDiagonalOf  (another_position);
     }
 
+    public boolean isInAKnightsAwayOf (Position2D another_position) {
+        return Math.abs(this.x - another_position.getX()) * Math.abs(this.y - another_position.getY()) == 2;
+    }
+
+    // Inclui a propria posicao
+    public boolean isSurroundedBy (Position2D another_position) {
+        return Math.abs(this.x - another_position.getX()) <= 1
+            && Math.abs(this.y - another_position.getY()) <= 1;
+    }
+
+    public boolean isOneYBehind (Position2D another_position) {
+        return this.y + 1 == another_position.getY();
+    }
+
 
     public int getX () { return x; }
 
@@ -53,6 +69,5 @@ public class Position2D {
     public void setY (int y) { this.y = y; }
 
     public void setX (int x) { this.x = x; }
-
 
 }

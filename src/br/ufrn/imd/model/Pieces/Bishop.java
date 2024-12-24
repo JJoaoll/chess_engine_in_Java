@@ -14,6 +14,6 @@ public class Bishop extends Piece {
 
     @Override
     public boolean movable(Position2D candidate_position) {
-        return false;
+        return current_position.isInTheSameDiagonalOf(candidate_position);
     }
 }

@@ -24,6 +24,28 @@ public class Position2D {
         return this.y == another_position.getY();
     }
 
+    public boolean isAlignedWith (Position2D another_position) {
+        return this.isInTheSameColumnOf(another_position) ||
+               this.isInTheSameRowOf(another_position);
+    }
+
+    public boolean isInTheSameRightDiagonalOf (Position2D another_position) {
+        return (this.x - this.y) == (another_position.getX() - another_position.getY());
+    }
+
+
+
+    public boolean isInTheSameLeftDiagonalOf (Position2D another_position) {
+        return (this.x + this.y) == (another_position.getX() + another_position.getY());
+    }
+
+
+    public boolean isInTheSameDiagonalOf (Position2D another_position) {
+        return this.isInTheSameRightDiagonalOf (another_position) ||
+               this.isInTheSameLeftDiagonalOf  (another_position);
+    }
+
+
     public int getX () { return x; }
 
     public int getY () { return y; }

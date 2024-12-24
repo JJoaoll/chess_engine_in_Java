@@ -1,11 +1,17 @@
 package br.ufrn.imd.model;
 
 public class Position2D {
-    int x = 0;
-    int y = 0;
+    private int x = 0;
+    private int y = 0;
 
-    public Position2D(int x, int y) {
-        this.x = x; this.y = y;
+    public Position2D(int new_x, int new_y) {
+        this.x = new_x;
+        this.y = new_y;
+    }
+
+    public Position2D(Position2D pos) {
+        this.x = pos.getX();
+        this.y = pos.getY();
     }
 
     public Position2D() {}

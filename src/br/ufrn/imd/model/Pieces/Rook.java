@@ -16,8 +16,8 @@ public class Rook extends Piece {
 
     @Override
     public boolean movable(Position2D candidate_position) {
-        return current_position.getX() == candidate_position.getX() ||
-               current_position.getY() == candidate_position.getY();
+        return current_position.isInTheSameColumnOf(candidate_position) ||
+               current_position.isInTheSameRowOf(candidate_position);
     }
 
 

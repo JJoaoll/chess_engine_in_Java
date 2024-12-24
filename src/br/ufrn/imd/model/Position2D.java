@@ -14,15 +14,23 @@ public class Position2D {
         this.y = pos.getY();
     }
 
-    public Position2D() {}
+    public Position2D () {}
 
-    public int getX() { return x; }
+    public boolean isInTheSameColumnOf (Position2D another_position) {
+        return this.x == another_position.getX();
+    }
 
-    public int getY() { return y; }
+    public boolean isInTheSameRowOf (Position2D another_position) {
+        return this.y == another_position.getY();
+    }
 
-    public void setY(int y) { this.y = y; }
+    public int getX () { return x; }
 
-    public void setX(int x) { this.x = x; }
+    public int getY () { return y; }
+
+    public void setY (int y) { this.y = y; }
+
+    public void setX (int x) { this.x = x; }
 
 
 }

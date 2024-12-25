@@ -7,7 +7,7 @@ public class Board {
     private int width = 8, height = 8;
     private Grid<Tile> tiles;
     // TODO: It's ok with that beeing public and final?
-    private final int tileSize = 85;
+    public final int tileSize = 85;
 
     public Board () {
         Grid<Tile> grid = new Grid<>(width, height);

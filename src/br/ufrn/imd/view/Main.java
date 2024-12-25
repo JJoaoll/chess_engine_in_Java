@@ -11,7 +11,6 @@ import java.awt.*;
 public class Main {
     public static void main(String[] args) {
 
-
         /*Grid<Double> grid = new Grid<>(8, 8);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -24,7 +23,7 @@ public class Main {
         Double d3 = grid.getValue(7, 7);
         System.out.printf(d1 + "," + d2 + "," + d3 + "\n");*/
 
-        Game game = Game.getInstance();
+        /*GameManager game = new GameManager();
 
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.BLACK);
@@ -33,9 +32,23 @@ public class Main {
         frame.setMinimumSize(new Dimension(1000, 1000));
         frame.setLocationRelativeTo(null);
 
-        Board board = new Board();
-        BoardView board_view = new BoardView(board);
-        frame.add(board_view);
+        frame.add(game);
+
+        frame.setVisible(true);*/
+
+        Game.getInstance();
+
+        JFrame frame = new JFrame("Chess Board");
+        frame.getContentPane().setBackground(Color.BLACK);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GameManager gameManager = new GameManager();
+        frame.add(gameManager);
+
+        //frame.setLayout(new GridBagLayout());
+        frame.setMinimumSize(new Dimension(1000, 1000));
+        frame.setLocationRelativeTo(null);
+        frame.pack();
 
         frame.setVisible(true);
     }

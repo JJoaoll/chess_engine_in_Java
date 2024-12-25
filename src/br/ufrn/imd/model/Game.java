@@ -47,6 +47,12 @@ public class Game {
     }
 
     // GETTER's
+    // TODO: Discover about possible side effects here!!
+    public static Board getBoard() {
+        // redundante?
+        Game game = Game.getInstance();
+        return game.board;
+    }
 
     // TODO: custom Getter's
 

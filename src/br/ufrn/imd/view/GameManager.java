@@ -1,28 +1,65 @@
 package br.ufrn.imd.view;
 
+import br.ufrn.imd.control.Input;
+import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Objects;
 
-public class GameManager {
+public class GameManager extends JPanel {
 
-    private Game            game;
-    private BoardView board_view;
+    public GameManager() {
+        Input input = Input.getInstance();
+        Board board = Game.getBoard();
+        this.setPreferredSize(new Dimension(board.getWidth() * board.tileSize, board.getHeight() * board.tileSize));
 
-    private static GameManager instance;
+        this.addMouseListener       (input);
+        this.addMouseMotionListener (input);
+        //this.setBackground(Color.GREEN);
+    }
 
-    private GameManager() {}
 
-    // Fiz um double lock ;)
-    public static GameManager getInstance() {
-        if (Objects.isNull(instance)) {
-            synchronized (GameManager.class) {
-                if (Objects.isNull(instance)) {
-                    instance = new GameManager();
-                }
+    public void paintComponent (Graphics g) {
+        super.paintComponent(g);
+        Game.getInstance();
+        Board board = Game.getBoard();
+        Graphics2D g2d = (Graphics2D) g;
+
+        // PAINT BOARD
+        // SetCBoard Colors
+        // TODO: Modularize
+        for (int r = 0; r < board.getTiles().getCols(); r++) {
+            for (int c = 0; c < board.getTiles().getRows(); c++) {
+                // Inline if else (haskell's better)
+                g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
+                g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);
             }
         }
-        return instance;
+
+        /*// PAINT HIGHLIGHTS
+        // TODO: fix this DRY ('U CAN MOVE HERE')
+        // TODO: The current position should be less neutral!
+        // TODO: Remove TRY CATCHS
+        if (selectedPiece != null)
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++) {
+
+                    try {
+                        if(isValidMove(new Move(this, selectedPiece, c, r))) {
+                            g2d.setColor(new Color(68, 180, 57, 190));
+                            g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+        // PAINT PIECES
+        for (Piece piece : pieceList) {
+            piece.paint(g2d);
+        }*/
     }
 
 

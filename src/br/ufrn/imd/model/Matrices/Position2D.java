@@ -1,4 +1,4 @@
-package br.ufrn.imd.model;
+package br.ufrn.imd.model.Matrices;
 
 //TODO: Lidar com valores nulos nessa clase:
 

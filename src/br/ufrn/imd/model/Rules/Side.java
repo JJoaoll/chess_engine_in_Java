@@ -1,4 +1,4 @@
-package br.ufrn.imd.model;
+package br.ufrn.imd.model.Rules;
 
 // Another name could be "team"
 public enum Side {

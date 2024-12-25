@@ -1,26 +1,25 @@
-package br.ufrn.imd.view;
+package br.ufrn.imd.model.Board;
 
 import br.ufrn.imd.model.Pieces.Piece;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class Tile {
     // Optional pode ser uma opcao valida?
     private Optional<Piece> piece       = Optional.empty();
     private String coordinate           = ""  ;
-    private Color color                 = null;
+    //private Color color                 = null;
     //  g2d.setColor((c+r) % 2 == 0 ?
     //  new Color(227, 198, 181) : new Color(157, 105, 53));
 
-    public Tile(String coordinate, Color color) {
+
+
+    public Tile(String coordinate) {
         this.coordinate = coordinate;
-        this.color      = color;
     }
 
-    public Tile(String coordinate, Color color, Piece piece) {
+    public Tile(String coordinate,Piece piece) {
         this.coordinate = coordinate;
-        this.color      = color;
         this.piece      = Optional.of(piece);
     }
 
@@ -34,9 +33,9 @@ public class Tile {
         return coordinate;
     }
 
-    public Color getColor() {
+   /* public Color getColor() {
         return color;
-    }
+    }*/
 
     // SETTER's
 
@@ -48,7 +47,8 @@ public class Tile {
         this.coordinate = coordinate;
     }
 
-    public void setColor(Color color) {
+   /* public void setColor(Color color) {
         this.color = color;
-    }
+    }*/
+
 }

@@ -1,7 +1,7 @@
 package br.ufrn.imd.model.Pieces;
 
-import br.ufrn.imd.model.Position2D;
-import br.ufrn.imd.model.Side;
+import br.ufrn.imd.model.Matrices.Position2D;
+import br.ufrn.imd.model.Rules.Side;
 
 public class King extends Piece {
 

@@ -1,4 +1,4 @@
-package br.ufrn.imd.model;
+package br.ufrn.imd.model.Matrices;
 
 import java.util.ArrayList;
 import java.util.Collections;

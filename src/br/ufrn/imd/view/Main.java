@@ -45,7 +45,7 @@ public class Main {
         GameManager gameManager = new GameManager();
         frame.add(gameManager);
 
-        //frame.setLayout(new GridBagLayout());
+        frame.setLayout(new GridBagLayout());
         frame.setMinimumSize(new Dimension(1000, 1000));
         frame.setLocationRelativeTo(null);
         frame.pack();

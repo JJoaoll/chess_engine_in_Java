@@ -22,22 +22,12 @@ public class GameManager extends JPanel {
 
 
     public void paintComponent (Graphics g) {
-        super.paintComponent(g);
-        Game.getInstance();
+        super.paintComponent (g); // apaga as coisas
+        Game.getInstance ();
         Board board = Game.getBoard();
         Graphics2D g2d = (Graphics2D) g;
 
-        // PAINT BOARD
-        // SetCBoard Colors
-        // TODO: Modularize
-        for (int r = 0; r < board.getTiles().getCols(); r++) {
-            for (int c = 0; c < board.getTiles().getRows(); c++) {
-                // Inline if else (haskell's better)
-                g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
-                g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);
-            }
-        }
-
+        paintBoard (g);
         /*// PAINT HIGHLIGHTS
         // TODO: fix this DRY ('U CAN MOVE HERE')
         // TODO: The current position should be less neutral!
@@ -60,6 +50,19 @@ public class GameManager extends JPanel {
         for (Piece piece : pieceList) {
             piece.paint(g2d);
         }*/
+    }
+
+    private void paintBoard (Graphics g) {
+        Board board = Game.getBoard();
+        Graphics2D g2d = (Graphics2D) g;
+        // TODO: Modularize
+        for (int r = 0; r < board.getTiles().getCols(); r++) {
+            for (int c = 0; c < board.getTiles().getRows(); c++) {
+                // Inline if else (haskell's better)
+                g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
+                g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);
+            }
+        }
     }
 
 

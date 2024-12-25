@@ -16,7 +16,7 @@ public class Rook extends Piece {
 
     @Override
     public boolean movable(Position2D candidate_position) {
-        return current_position.isAlignedWith(candidate_position );
+        return current_position.isAlignedWith(candidate_position);
     }
 
 }

@@ -59,7 +59,7 @@ public class GameManager extends JPanel {
     private void paintBoard (Graphics g) {
         Board board = Game.getBoard();
         Graphics2D g2d = (Graphics2D) g;
-        // TODO: Modularize
+        // TODO: Modularize e confira os c's e os r's
         for (int r = 0; r < board.getTiles().getCols(); r++) {
             for (int c = 0; c < board.getTiles().getRows(); c++) {
                 // TODO: Generalize colors by using the settings checkup!!
@@ -69,6 +69,7 @@ public class GameManager extends JPanel {
             }
         }
     }
+
 
     private void paintPieces (Graphics g) {
         Board board = Game.getBoard();

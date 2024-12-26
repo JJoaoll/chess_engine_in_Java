@@ -3,10 +3,13 @@ package br.ufrn.imd.view;
 import br.ufrn.imd.control.Input;
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
+import br.ufrn.imd.model.Pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class GameManager extends JPanel {
 
@@ -28,6 +31,7 @@ public class GameManager extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         paintBoard (g);
+        paintPieces (g);
         /*// PAINT HIGHLIGHTS
         // TODO: fix this DRY ('U CAN MOVE HERE')
         // TODO: The current position should be less neutral!
@@ -58,10 +62,23 @@ public class GameManager extends JPanel {
         // TODO: Modularize
         for (int r = 0; r < board.getTiles().getCols(); r++) {
             for (int c = 0; c < board.getTiles().getRows(); c++) {
-                // Inline if else (haskell's better)
+                // TODO: Generalize colors by using the settings checkup!!
                 g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
                 g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);
+
             }
+        }
+    }
+
+    private void paintPieces (Graphics g) {
+        Board board = Game.getBoard();
+        Graphics2D g2d = (Graphics2D) g;
+
+        // TODO: resolver chamada de metodos aninhadas
+        // Salvando possiveis erros remanescentes
+        LinkedList<Piece> pieces = board.getPieces();
+        for (Piece piece : pieces) {
+            PieceView.paintPiece(g2d, piece);
         }
     }
 

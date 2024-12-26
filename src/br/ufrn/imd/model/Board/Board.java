@@ -1,6 +1,10 @@
 package br.ufrn.imd.model.Board;
 
 import br.ufrn.imd.model.Matrices.Grid;
+import br.ufrn.imd.model.Pieces.Piece;
+
+import java.util.LinkedList;
+import java.util.List;
 
 //TODO: tratamento de erros
 public class Board {
@@ -20,6 +24,23 @@ public class Board {
                 this.tiles.setValue(i, j, grid.getValue(i, j));
             }
     }
+
+    public LinkedList<Piece> getPieces() {
+        LinkedList<Piece> pieces = new LinkedList<Piece>();
+
+        for (int c = 0; c < width; c++)
+            for (int r = 0; r < height; r++) {
+                Tile tile = tiles.getValue(c, r);
+                if (tile != null) {
+                    tile.getPiece().ifPresent(p -> pieces.add(p));
+                    // versao com lambda:
+                    // tile.getPiece().ifPresent(pieces::add);
+                }
+            }
+
+        return pieces;
+    }
+
 
     // GETTER's
 

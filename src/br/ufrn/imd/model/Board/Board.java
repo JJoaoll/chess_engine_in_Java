@@ -5,6 +5,7 @@ import br.ufrn.imd.model.Pieces.Piece;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 //TODO: tratamento de erros
 public class Board {
@@ -41,6 +42,10 @@ public class Board {
         return pieces;
     }
 
+    public Optional<Piece> getPiece (int col, int row) {
+        Tile t = tiles.getValue(col, row);
+        return t.getPiece();
+    }
 
     // GETTER's
 

@@ -1,6 +1,7 @@
 package br.ufrn.imd.model;
 
 import br.ufrn.imd.model.Board.Board;
+import br.ufrn.imd.model.Pieces.Piece;
 import br.ufrn.imd.model.Rules.ClassicalRules;
 import br.ufrn.imd.model.Rules.GameState;
 import br.ufrn.imd.model.Rules.Move;
@@ -10,12 +11,15 @@ import br.ufrn.imd.view.GameManager;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Game {
     private Board            board;
     private RuleSet          rules;
     private List<Move>   move_list = new LinkedList<>();
     private GameState   game_state = GameState.Playing;
+
+    private Optional<Piece> selected_piece = Optional.empty();
 
     private static Game instance;
 
@@ -41,9 +45,17 @@ public class Game {
         return instance;
     }
 
-
+    // TODO: DO
     public void makeMove (Move move) {
 
+    }
+
+    public Optional<Piece> getPiece(int col, int row) {
+        return board.getPiece(col, row);
+    }
+
+    public void selectPiece (Optional<Piece> piece) {
+        selected_piece = piece;
     }
 
     // GETTER's

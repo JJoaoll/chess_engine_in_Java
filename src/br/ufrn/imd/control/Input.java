@@ -6,6 +6,7 @@ import br.ufrn.imd.model.Pieces.Piece;
 
 import java.awt.event.*;
 import java.util.Objects;
+import java.util.Optional;
 
 
 // TODO: Fix DRY!
@@ -29,17 +30,15 @@ public class Input extends MouseAdapter{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Board board = Game.getBoard();
+        Game game    = Game.getInstance();
+        Board board  = Game.getBoard();
 
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
 
-        // TODO: DO!
-       /* // inline declaration oncoming
-        Piece pieceXY = board.getPiece(col, row);
-        if (pieceXY != null) {
-            board.selectedPiece = pieceXY;
-        }*/
+
+        Optional<Piece> opt_piece = board.getPiece(col, row);
+        game.selectPiece(opt_piece);
     }
 
     @Override

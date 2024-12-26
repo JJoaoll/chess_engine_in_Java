@@ -35,8 +35,6 @@ public class Position2D {
         return (this.x - this.y) == (another_position.getX() - another_position.getY());
     }
 
-
-
     public boolean isInTheSameLeftDiagonalOf (Position2D another_position) {
         return (this.x + this.y) == (another_position.getX() + another_position.getY());
     }

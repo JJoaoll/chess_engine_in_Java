@@ -19,8 +19,6 @@ public class Game {
     private List<Move>   move_list = new LinkedList<>();
     private GameState   game_state = GameState.Playing;
 
-    private Optional<Piece> selected_piece = Optional.empty();
-
     private static Game instance;
 
     private Game(RuleSet new_rules) {
@@ -45,8 +43,23 @@ public class Game {
         return instance;
     }
 
-    // TODO: DO
-    public void makeMove (Move move) {
+    // TODO: Devo continuar statizando as coisas?
+    public static void makeMove (Move move) {
+        Game game = Game.getInstance();
+        int col1 = move.getInitialPosition().getX();
+        int row1 = move.getInitialPosition().getY();
+
+        // TODO: um overload cairia bem
+        Optional<Piece> opt_piece = game.board.getPiece(col1, row1);
+        //System.out.println(opt_piece.isPresent());
+
+        int col2 = move.getFinalPosition().getX();
+        int row2 = move.getFinalPosition().getY();
+
+        // TODO: um overload cairia bem aqui tbm
+        game.board.replacePiece(col1, row1, Optional.empty());
+        game.board.replacePiece(col2, row2, opt_piece);
+
 
     }
 
@@ -54,9 +67,6 @@ public class Game {
         return board.getPiece(col, row);
     }
 
-    public void selectPiece (Optional<Piece> piece) {
-        selected_piece = piece;
-    }
 
     // GETTER's
     // TODO: Discover about possible side effects here!!

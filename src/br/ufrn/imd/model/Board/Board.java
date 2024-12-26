@@ -1,6 +1,7 @@
 package br.ufrn.imd.model.Board;
 
 import br.ufrn.imd.model.Matrices.Grid;
+import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.Piece;
 
 import java.util.LinkedList;
@@ -45,6 +46,14 @@ public class Board {
     public Optional<Piece> getPiece (int col, int row) {
         Tile t = tiles.getValue(col, row);
         return t.getPiece();
+    }
+
+    // TODO: TRATAMENTO DE ERROS!!!
+    public void replacePiece (int col, int row, Optional<Piece> opt_piece) {
+        opt_piece.ifPresent(p -> {p.setCurrent_position(new Position2D(col, row));});
+        System.out.println("Antes: " + tiles.getValue(col, row).getPiece());
+        tiles.getValue(col, row).setPiece(opt_piece);
+        System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
     }
 
     // GETTER's

@@ -2,7 +2,10 @@ package br.ufrn.imd.control;
 
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
+import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.Piece;
+import br.ufrn.imd.model.Rules.Move;
+import br.ufrn.imd.view.GameManager;
 
 import java.awt.event.*;
 import java.util.Objects;
@@ -30,19 +33,18 @@ public class Input extends MouseAdapter{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Game game    = Game.getInstance();
         Board board  = Game.getBoard();
 
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
 
-
-        Optional<Piece> opt_piece = board.getPiece(col, row);
-        game.selectPiece(opt_piece);
+        Optional<Piece> opt_piece = GameManager.getPiece(col, row);
+        GameManager.selectPiece(opt_piece);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        GameManager referee = GameManager.getInstance();
         Board board = Game.getBoard();
 
         int col = e.getX() / board.tileSize;
@@ -50,6 +52,17 @@ public class Input extends MouseAdapter{
 
         // TODO: REMOVE THESE SHITTY TRY CATCHS!!!!
         // TODO: DO!
+        Optional<Piece> opt_piece = referee.getSelectedPiece();
+        opt_piece.ifPresent(piece -> {
+            Move move = new Move(board, piece.getCurrent_position(), new Position2D(col, row));
+            // isValidMove
+            referee.makeMove(move);
+        });
+
+        // TODO: IT SHOULD BE STATIC?
+        GameManager.selectPiece(Optional.empty());
+        referee.repaint();
+
         /*if(board.selectedPiece != null) {
             Move move = new Move(board, board.selectedPiece, col, row);
 
@@ -77,17 +90,25 @@ public class Input extends MouseAdapter{
         }*/
     }
 
-    @Override
+
+/*@Override
     public void mouseDragged(MouseEvent e) {
-        // TODO: DO!
-       /* if(board.selectedPiece != null) {
-            board.selectedPiece.setxPos(
-                    e.getX() - (board.tileSize / 2));
-            board.selectedPiece.setyPos(
-                    e.getY() - (board.tileSize / 2));
+        GameManager referee = GameManager.getInstance();
+        Board board = Game.getBoard();
+        Optional<Piece> opt_piece = referee.getSelectedPiece();
 
-            board.repaint();
-        }*/
-    }
+        opt_piece.ifPresent(piece -> {
+            // Atualize as coordenadas da peça com base no movimento do mouse
+            int newX = e.getX() - (board.tileSize / 2);
+            int newY = e.getY() - (board.tileSize / 2);
 
+            Position2D position = new Position2D(newX, newY);
+
+            if (true) {
+                piece.setCurrent_position(position);
+            }
+
+            referee.repaint();
+        });
+    }*/
 }

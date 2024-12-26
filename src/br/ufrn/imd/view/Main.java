@@ -42,7 +42,7 @@ public class Main {
         frame.getContentPane().setBackground(Color.BLACK);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GameManager gameManager = new GameManager();
+        GameManager gameManager = GameManager.getInstance();
         frame.add(gameManager);
 
         frame.setLayout(new GridBagLayout());

@@ -4,6 +4,8 @@ import br.ufrn.imd.control.Input;
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Pieces.Piece;
+import br.ufrn.imd.model.Rules.ClassicalRules;
+import br.ufrn.imd.model.Rules.Move;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +13,14 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 
+// TODO: Consertar a parte singleton
 public class GameManager extends JPanel {
 
-    public GameManager() {
+    private Optional<Piece> selected_piece = Optional.empty();
+
+    private static GameManager instance;
+
+    private GameManager() {
         Input input = Input.getInstance();
         Board board = Game.getBoard();
         this.setPreferredSize(new Dimension(board.getWidth() * board.tileSize, board.getHeight() * board.tileSize));
@@ -21,6 +28,52 @@ public class GameManager extends JPanel {
         this.addMouseListener       (input);
         this.addMouseMotionListener (input);
         //this.setBackground(Color.GREEN);
+    }
+
+    public static GameManager getInstance() {
+        if (Objects.isNull(instance)) {
+            synchronized (GameManager.class) {
+                if (Objects.isNull(instance)) {
+                    instance = new GameManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+
+    /// ///////////////////////////////////////////////////////////
+    // TODO: Simplificar a logica
+    public void makeMove (Move move) {
+        if (move.getBoardBeforeMove().equals(Game.getBoard())) {
+            if (true) {
+                Game.makeMove (move);
+                // TODO: DA OVERLEAD LOGO, POR FAVOR!!
+                System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
+            }
+        }
+    }
+
+
+    public static Optional<Piece> getPiece (int col, int row) {
+        Game game = Game.getInstance();
+        return game.getPiece(col, row);
+    }
+
+
+    public static void selectPiece (Optional<Piece> opt_piece) {
+        GameManager referee = GameManager.getInstance();
+        referee.setSelectedPiece(opt_piece);
+
+    }
+
+    private void setSelectedPiece(Optional<Piece> opt_piece) {
+        selected_piece = opt_piece;
+    }
+
+
+    public Optional<Piece> getSelectedPiece () {
+        return selected_piece;
     }
 
 
@@ -79,6 +132,7 @@ public class GameManager extends JPanel {
         // Salvando possiveis erros remanescentes
         LinkedList<Piece> pieces = board.getPieces();
         for (Piece piece : pieces) {
+            //System.out.println(piece.getCurrent_position().getX() + "|" + piece.getCurrent_position().getY() + " : " + piece.getClass());
             PieceView.paintPiece(g2d, piece);
         }
     }

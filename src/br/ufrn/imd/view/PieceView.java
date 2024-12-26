@@ -35,43 +35,44 @@ public class PieceView {
     // FICOU FEIO PORQUE O JAVA 17 NAO SUPORTA O BASICO DE PATTERN MATCHING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO: Lidar com IOException
+    // TODO: ENTENDER PQ TROCAR O p.isWhite por p.isBlack deu certo!!!!
     private Image getSprite (Piece p) throws PieceNotFound, IOException, Exception {
         // TODO: Modularize isso (talvez global!??)
         int tileSize = Game.getBoard().getTileSize();
         try {
             if (p instanceof Pawn) {
                 return sheet.getSubimage(5 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
             else if (p instanceof Rook) {
                 return sheet.getSubimage(4 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
             else if (p instanceof Knight) {
                 return sheet.getSubimage(3 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
             else if (p instanceof Bishop) {
                 return sheet.getSubimage(2 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
             else if (p instanceof Queen) {
                 return sheet.getSubimage(1 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
             else if (p instanceof King) {
                 return sheet.getSubimage(0 * this.sheetScale,
-                       p.isWhite() ? 0 : sheetScale, sheetScale, sheetScale)
+                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
                        .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
             }
 
@@ -94,7 +95,7 @@ public class PieceView {
         PieceView pv = new PieceView();
         int tileSize = Game.getBoard().getTileSize();
         int xPos     = piece.getCurrent_position().getX() * tileSize;
-        int yPos     = piece.getCurrent_position().getX() * tileSize;
+        int yPos     = piece.getCurrent_position().getY() * tileSize;
 
         try {
             g2d.drawImage(pv.getSprite(piece), xPos, yPos, null);

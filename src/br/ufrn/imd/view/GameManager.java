@@ -3,9 +3,11 @@ package br.ufrn.imd.view;
 import br.ufrn.imd.control.Input;
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
+import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.Piece;
 import br.ufrn.imd.model.Rules.ClassicalRules;
 import br.ufrn.imd.model.Rules.Move;
+import br.ufrn.imd.model.Rules.RuleSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,12 +80,15 @@ public class GameManager extends JPanel {
 
     public void paintComponent (Graphics g) {
         super.paintComponent (g); // apaga as coisas
-        Game.getInstance ();
-        Board board = Game.getBoard();
+        Game.getInstance     ( );
+        Board board    = Game.getBoard();
         Graphics2D g2d = (Graphics2D) g;
 
-        paintBoard (g);
-        paintPieces (g);
+
+        // Evitando multiplas instancias p/ performance
+        paintBoard      (g2d, board);
+        paintPieces     (g2d, board);
+        paintHighlights (g2d, board);
         /*// PAINT HIGHLIGHTS
         // TODO: fix this DRY ('U CAN MOVE HERE')
         // TODO: The current position should be less neutral!
@@ -108,9 +113,8 @@ public class GameManager extends JPanel {
         }*/
     }
 
-    private void paintBoard (Graphics g) {
-        Board board = Game.getBoard();
-        Graphics2D g2d = (Graphics2D) g;
+    private void paintBoard (Graphics2D g2d, Board board) {
+
         // TODO: Modularize e confira os c's e os r's
         for (int r = 0; r < board.getTiles().getCols(); r++) {
             for (int c = 0; c < board.getTiles().getRows(); c++) {
@@ -123,9 +127,7 @@ public class GameManager extends JPanel {
     }
 
 
-    private void paintPieces (Graphics g) {
-        Board board = Game.getBoard();
-        Graphics2D g2d = (Graphics2D) g;
+    private void paintPieces (Graphics2D g2d, Board board) {
 
         // TODO: resolver chamada de metodos aninhadas
         // Salvando possiveis erros remanescentes
@@ -145,8 +147,60 @@ public class GameManager extends JPanel {
             //System.out.println(piece.getCurrent_position().getX() + "|" + piece.getCurrent_position().getY() + " : " + piece.getClass());
             PieceView.paintPiece(g2d, piece);
         }
+    }
+
+    private void paintHighlights (Graphics2D g2d, Board board) {
+
+        selected_piece.ifPresent(piece -> {
+
+            int tileSize    = board.tileSize;
+
+            g2d.setColor(new Color(68, 180, 57, 190));
+            Move move;
+
+            // Possible Moves Highlights
+            for (int c = 0; c < board.getWidth(); c++)
+                for (int r = 0; r < board.getHeight(); r++) {
+
+                    RuleSet referee = Game.getRules();
+                    move            = new Move(board, piece.
+                            getCurrent_position(), new Position2D(c, r));
+
+                    if(referee.isValidMove(move)) {
+                        int ovalSize = tileSize / 2;
+
+                        int x = c * board.tileSize + (tileSize - ovalSize) / 2;
+                        int y = r * board.tileSize + (tileSize - ovalSize) / 2;
+
+                        g2d.fillOval(x, y, ovalSize, ovalSize);
+                    }
+                }
+
+            // selected piece highlight:
+
+            // Chamada de metodos aninhados!
+            int x = piece.getCurrent_position().getX();
+            int y = piece.getCurrent_position().getY();
+
+            g2d.fillRect(x * board.tileSize, y * tileSize, tileSize, tileSize);
 
 
+
+        });
+
+        // SelectedPiece Highlight
+            /*for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++) {
+
+                    try {
+                        if(isValidMove(new Move(this, selectedPiece, c, r))) {
+                            g2d.setColor(new Color(68, 180, 57, 190));
+                            g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }*/
     }
 
 

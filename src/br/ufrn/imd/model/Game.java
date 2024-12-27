@@ -68,7 +68,7 @@ public class Game {
     }
 
 
-    // GETTER's
+    // GETTER's   // TODO: custom Getter's
     // TODO: Discover about possible side effects here!!
     public static Board getBoard() {
         // redundante?
@@ -76,7 +76,12 @@ public class Game {
         return game.board;
     }
 
-    // TODO: custom Getter's
+    public static RuleSet getRules() {
+        Game game = Game.getInstance();
+        return game.rules;
+    }
+
+
 
 
     // SETTER's

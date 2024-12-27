@@ -6,12 +6,26 @@ import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
 
+import java.util.LinkedList;
+import java.util.Optional;
+
 // TODO: DO!
 public class ClassicalRules implements RuleSet {
 
     @Override
     public boolean isValidMove(Move move) {
+        int x = move.getInitialPosition().getX();
+        int y = move.getInitialPosition().getY();
+
+        Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
+
+
         return false;
+    }
+
+    // TODO: Deleat it
+    public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {
+        return null;
     }
 
     @Override

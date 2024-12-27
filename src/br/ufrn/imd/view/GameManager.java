@@ -41,7 +41,6 @@ public class GameManager extends JPanel {
         return instance;
     }
 
-
     /// ///////////////////////////////////////////////////////////
     // TODO: Simplificar a logica
     public void makeMove (Move move) {

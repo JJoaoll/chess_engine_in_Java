@@ -59,6 +59,50 @@ public class Position2D {
         return this.y + 1 == another_position.getY();
     }
 
+    //TODO: Melhorar as exceptions
+    public static Position2D fromChessNotation(String coordinate) throws IllegalArgumentException {
+        if (coordinate == null || coordinate.length() != 2) {
+            throw new IllegalArgumentException("Coordenada inválida: " + coordinate);
+        }
+
+        // nomes sugeridos
+        char file = coordinate.charAt(0);
+        char rank = coordinate.charAt(1);
+
+        if (file < 'a' || file > 'h' || rank < '1' || rank > '8') {
+            throw new IllegalArgumentException("Coordenada fora do tabuleiro: " + coordinate);
+        }
+
+        // assim fica mais legivel:
+        int x = file - 'a';
+        int y = rank - '1';
+
+        return new Position2D(x, y);
+    }
+
+    //TODO: criar um throw unico, novo e adequado que herde deste
+    // O nome "chessNotation ficou bem melhor"
+    public String toChessNotation() throws IllegalArgumentException {
+
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            throw new IllegalArgumentException("Posição fora do tabuleiro: (" + x + ", " + y + ")");
+        }
+
+        char file = (char) ('a' + x);
+        char rank = (char) ('1' + y);
+
+        return String.valueOf(file) + rank;
+    }
+
+    // !!!!!!!!!1
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position2D another_position) {
+            return this.x == another_position.getX()
+                && this.y == another_position.getY();
+        }
+        return false;
+    }
 
     public int getX () { return x; }
 

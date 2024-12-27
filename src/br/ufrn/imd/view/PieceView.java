@@ -111,7 +111,7 @@ public class PieceView {
 
     // metodo gerado de uma simplificacao por eficiencia.
     private Image getSprite(Piece p) throws PieceNotFound {
-        String key = p.getClass().getSimpleName() + (p.isBlack() ? "_black" : "_white");
+        String key = p.getClass().getSimpleName() + (p.isWhite() ? "_white" : "_black");
         return spriteCache.computeIfAbsent(key, k -> {
             int tileSize = Game.getBoard().getTileSize();
             int spriteX = switch (p.getClass().getSimpleName()) {
@@ -123,7 +123,7 @@ public class PieceView {
                 case "King"   -> 0;
                 default -> throw new IllegalStateException("Unexpected value: " + p.getClass().getSimpleName());
             };
-            int spriteY = p.isBlack() ? 0 : sheetScale;
+            int spriteY = p.isWhite() ? 0 : sheetScale;
             return sheet.getSubimage(spriteX * sheetScale, spriteY, sheetScale, sheetScale)
                     .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
         });
@@ -135,7 +135,9 @@ public class PieceView {
         PieceView pv = PieceView.getInstance();
         int tileSize = Game.getBoard().getTileSize();
         int xPos     = piece.getCurrent_position().getX() * tileSize;
-        int yPos     = piece.getCurrent_position().getY() * tileSize;
+        // correcao!!!
+        int yPos = (Game.getBoard().getHeight() - 1 - piece.getCurrent_position().getY()) * tileSize;
+
 
         try {
             g2d.drawImage(pv.getSprite(piece), xPos, yPos, null);

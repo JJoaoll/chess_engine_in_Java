@@ -45,9 +45,11 @@ public class GameManager extends JPanel {
 
     /// ///////////////////////////////////////////////////////////
     // TODO: Simplificar a logica
+    // TODO: Mais um acoplamento desnecessario do singleton GAME instance
     public void makeMove (Move move) {
         if (move.getBoardBeforeMove().equals(Game.getBoard())) {
-            if (true) {
+            RuleSet referee = Game.getRules();
+            if (referee.isValidMove(move)) {
                 Game.makeMove (move);
                 // TODO: DA OVERLEAD LOGO, POR FAVOR!!
                 System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
@@ -116,8 +118,8 @@ public class GameManager extends JPanel {
     private void paintBoard (Graphics2D g2d, Board board) {
 
         // TODO: Modularize e confira os c's e os r's
-        for (int r = 0; r < board.getTiles().getCols(); r++) {
-            for (int c = 0; c < board.getTiles().getRows(); c++) {
+        for (int c = 0; c < board.getTiles().getCols(); c++) {
+            for (int r = 0; r < board.getTiles().getRows(); r++) {
                 // TODO: Generalize colors by using the settings checkup!!
                 g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
                 g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);

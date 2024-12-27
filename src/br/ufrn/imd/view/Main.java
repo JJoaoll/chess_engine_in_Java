@@ -2,6 +2,7 @@ package br.ufrn.imd.view;
 
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
+import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.ClassicalRules;
 import br.ufrn.imd.model.Rules.RuleSet;
 
@@ -35,6 +36,31 @@ public class Main {
         frame.add(game);
 
         frame.setVisible(true);*/
+        Position2D position7 = new Position2D(4, 3);
+        Position2D position6 = new Position2D(7, 5);
+        Position2D position5 = new Position2D(2, 4);
+        Position2D position4 = new Position2D(3, 3);
+        Position2D position3 = new Position2D(5, 5);
+        Position2D position2 = new Position2D(0, 7);
+        Position2D position1 = new Position2D(1, 0);
+
+        System.out.println(position1.toChessNotation());
+        System.out.println(position2.toChessNotation());
+        System.out.println(position3.toChessNotation());
+        System.out.println(position4.toChessNotation());
+        System.out.println(position5.toChessNotation());
+        System.out.println(position5.toChessNotation());
+        System.out.println(position7.toChessNotation());
+
+
+        System.out.println(Position2D.fromChessNotation(position1.toChessNotation()).toChessNotation());
+        System.out.println(Position2D.fromChessNotation(position2.toChessNotation()).toChessNotation());
+        System.out.println(Position2D.fromChessNotation(position3.toChessNotation()).toChessNotation());
+        System.out.println(Position2D.fromChessNotation(position4.toChessNotation()).toChessNotation());
+        System.out.println(position5.toChessNotation());
+        System.out.println(position5.toChessNotation());
+        System.out.println(position7.toChessNotation());
+
 
         Game.getInstance();
 

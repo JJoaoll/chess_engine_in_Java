@@ -1,5 +1,6 @@
 package br.ufrn.imd.model.Rules;
 
+import br.ufrn.imd.control.PieceNotFound;
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Board.Tile;
 import br.ufrn.imd.model.Matrices.Grid;
@@ -7,21 +8,154 @@ import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // TODO: DO!
 public class ClassicalRules implements RuleSet {
 
+    LinkedList<Position2D> board_positions = new LinkedList<>();
+
+    //SMART WAY WHEN??
+    {
+        board_positions.add(Position2D.fromChessNotation("a1"));
+        board_positions.add(Position2D.fromChessNotation("a2"));
+        board_positions.add(Position2D.fromChessNotation("a3"));
+        board_positions.add(Position2D.fromChessNotation("a4"));
+        board_positions.add(Position2D.fromChessNotation("a5"));
+        board_positions.add(Position2D.fromChessNotation("a6"));
+        board_positions.add(Position2D.fromChessNotation("a7"));
+        board_positions.add(Position2D.fromChessNotation("a8"));
+
+        board_positions.add(Position2D.fromChessNotation("b1"));
+        board_positions.add(Position2D.fromChessNotation("b2"));
+        board_positions.add(Position2D.fromChessNotation("b3"));
+        board_positions.add(Position2D.fromChessNotation("b4"));
+        board_positions.add(Position2D.fromChessNotation("b5"));
+        board_positions.add(Position2D.fromChessNotation("b6"));
+        board_positions.add(Position2D.fromChessNotation("b7"));
+        board_positions.add(Position2D.fromChessNotation("b8"));
+
+        board_positions.add(Position2D.fromChessNotation("c1"));
+        board_positions.add(Position2D.fromChessNotation("c2"));
+        board_positions.add(Position2D.fromChessNotation("c3"));
+        board_positions.add(Position2D.fromChessNotation("c4"));
+        board_positions.add(Position2D.fromChessNotation("c5"));
+        board_positions.add(Position2D.fromChessNotation("c6"));
+        board_positions.add(Position2D.fromChessNotation("c7"));
+        board_positions.add(Position2D.fromChessNotation("c8"));
+
+        board_positions.add(Position2D.fromChessNotation("d1"));
+        board_positions.add(Position2D.fromChessNotation("d2"));
+        board_positions.add(Position2D.fromChessNotation("d3"));
+        board_positions.add(Position2D.fromChessNotation("d4"));
+        board_positions.add(Position2D.fromChessNotation("d5"));
+        board_positions.add(Position2D.fromChessNotation("d6"));
+        board_positions.add(Position2D.fromChessNotation("d7"));
+        board_positions.add(Position2D.fromChessNotation("d8"));
+
+        board_positions.add(Position2D.fromChessNotation("e1"));
+        board_positions.add(Position2D.fromChessNotation("e2"));
+        board_positions.add(Position2D.fromChessNotation("e3"));
+        board_positions.add(Position2D.fromChessNotation("e4"));
+        board_positions.add(Position2D.fromChessNotation("e5"));
+        board_positions.add(Position2D.fromChessNotation("e6"));
+        board_positions.add(Position2D.fromChessNotation("e7"));
+        board_positions.add(Position2D.fromChessNotation("e8"));
+
+        board_positions.add(Position2D.fromChessNotation("f1"));
+        board_positions.add(Position2D.fromChessNotation("f2"));
+        board_positions.add(Position2D.fromChessNotation("f3"));
+        board_positions.add(Position2D.fromChessNotation("f4"));
+        board_positions.add(Position2D.fromChessNotation("f5"));
+        board_positions.add(Position2D.fromChessNotation("f6"));
+        board_positions.add(Position2D.fromChessNotation("f7"));
+        board_positions.add(Position2D.fromChessNotation("f8"));
+
+        board_positions.add(Position2D.fromChessNotation("g1"));
+        board_positions.add(Position2D.fromChessNotation("g2"));
+        board_positions.add(Position2D.fromChessNotation("g3"));
+        board_positions.add(Position2D.fromChessNotation("g4"));
+        board_positions.add(Position2D.fromChessNotation("g5"));
+        board_positions.add(Position2D.fromChessNotation("g6"));
+        board_positions.add(Position2D.fromChessNotation("g7"));
+        board_positions.add(Position2D.fromChessNotation("g8"));
+
+        board_positions.add(Position2D.fromChessNotation("h1"));
+        board_positions.add(Position2D.fromChessNotation("h2"));
+        board_positions.add(Position2D.fromChessNotation("h3"));
+        board_positions.add(Position2D.fromChessNotation("h4"));
+        board_positions.add(Position2D.fromChessNotation("h5"));
+        board_positions.add(Position2D.fromChessNotation("h6"));
+        board_positions.add(Position2D.fromChessNotation("h7"));
+        board_positions.add(Position2D.fromChessNotation("h8"));
+    }
+
     @Override
     public boolean isValidMove(Move move) {
+
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
 
         Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
 
+        // EXPRESSAO HORRIVEL DE FEIA PQ O JAVA NAO TEM O BASICO!!!
+        return opt_piece.map(piece -> {
 
-        return false;
+            if (piece instanceof Pawn p)        {
+                return false;
+            }
+
+            else if (piece instanceof Rook r)   {
+                return validRookMoves (r, move.getBoardBeforeMove())
+                            .contains      (move.getFinalPosition());
+            }
+
+            else if (piece instanceof Knight k) {
+                return false;
+            }
+
+            else if (piece instanceof Bishop b) {
+                return true;
+            }
+
+            else if (piece instanceof Queen q)  {
+                return true;
+            }
+
+            else if (piece instanceof King k)   {
+                return false;
+            }
+
+            else {
+                throw new PieceNotFound("Unexpected piece: " + piece.getClass().getSimpleName());
+            }
+        }).orElse(false);
+
     }
+
+    private LinkedList<Position2D> validRookMoves (Rook rook, Board board) {
+        // Correcao automatica
+        LinkedList<Position2D> valid_positions = new LinkedList<>(List.copyOf(board_positions));
+
+        System.out.println("Initial valid_positions: " + valid_positions.stream()
+                .map(Position2D::toChessNotation).collect(Collectors.joining(",")));
+
+        LinkedList<Position2D> one_step_after_valid_positions = valid_positions.stream()
+                .filter(rook::movable)
+                .collect(Collectors
+                .toCollection(LinkedList::new));
+
+        System.out.println("AFTER ONE STEP valid_positions: " + one_step_after_valid_positions.stream()
+                .map(Position2D::toChessNotation).collect(Collectors.joining(",")));
+
+
+        return one_step_after_valid_positions;
+
+    }
+
 
     // TODO: Deleat it
     public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {

@@ -91,7 +91,7 @@ public class PieceView {
     }
 
     // TODO: resolver a chamada de metodos aninhados!
-    public static void paintPiece(Graphics2D g2d, Piece piece) {
+    public static void paintPiece (Graphics2D g2d, Piece piece) {
         PieceView pv = new PieceView();
         int tileSize = Game.getBoard().getTileSize();
         int xPos     = piece.getCurrent_position().getX() * tileSize;
@@ -108,4 +108,22 @@ public class PieceView {
             return;
         }
     }
+
+    public static void paintPieceAt (Graphics2D g2d, Piece piece, int PosX, int PosY) {
+        PieceView pv = new PieceView();
+
+        try {
+            Image sprite = pv.getSprite(piece);
+            g2d.drawImage(sprite, PosX, PosY, null);
+        }
+
+        catch (Exception e) {
+            // Sugestao de texto gerada pelo meu editor lindao <3
+            System.err.printf("Erro ao desenhar peça na posição (%d, %d): %s\n", PosX, PosY, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

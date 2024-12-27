@@ -131,10 +131,23 @@ public class GameManager extends JPanel {
         // TODO: resolver chamada de metodos aninhadas
         // Salvando possiveis erros remanescentes
         LinkedList<Piece> pieces = board.getPieces();
+        selected_piece.ifPresent(piece -> {
+            pieces.remove(piece);
+
+            Input input  = Input.getInstance();
+
+            int draggedX = input.getDraggedX();
+            int draggedY = input.getDraggedY();
+
+            PieceView.paintPieceAt(g2d, piece, draggedX, draggedY);
+        });
+
         for (Piece piece : pieces) {
             //System.out.println(piece.getCurrent_position().getX() + "|" + piece.getCurrent_position().getY() + " : " + piece.getClass());
             PieceView.paintPiece(g2d, piece);
         }
+
+
     }
 
 

@@ -16,6 +16,9 @@ import java.util.Optional;
 // TODO: KeyListener next!
 public class Input extends MouseAdapter{
 
+    private int draggedX = -1;
+    private int draggedY = -1;
+
     private static Input instance;
 
     private Input () {}
@@ -88,8 +91,25 @@ public class Input extends MouseAdapter{
             board.selectedPiece = null;
             board.repaint();
         }*/
+
+        draggedX = -1;
+        draggedY = -1;
     }
 
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        GameManager referee       = GameManager.getInstance();
+        Optional<Piece> opt_piece = referee.getSelectedPiece();
+
+        opt_piece.ifPresent(piece -> {
+            draggedX = e.getX() - (Game.getBoard().getTileSize() / 2);
+            draggedY = e.getY() - (Game.getBoard().getTileSize() / 2);
+
+            // Solicitar redesenho do tabuleiro
+            referee.repaint();
+        });
+    }
 
 /*@Override
     public void mouseDragged(MouseEvent e) {
@@ -111,4 +131,12 @@ public class Input extends MouseAdapter{
             referee.repaint();
         });
     }*/
+
+    public int getDraggedX() {
+        return draggedX;
+    }
+
+    public int getDraggedY() {
+        return draggedY;
+    }
 }

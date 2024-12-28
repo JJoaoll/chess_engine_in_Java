@@ -135,9 +135,7 @@ public class PieceView {
         PieceView pv = PieceView.getInstance();
         int tileSize = Game.getBoard().getTileSize();
         int xPos     = piece.getCurrent_position().getX() * tileSize;
-        // correcao!!!
-        int yPos = (Game.getBoard().getHeight() - 1 - piece.getCurrent_position().getY()) * tileSize;
-
+        int yPos     = piece.getCurrent_position().getY() * tileSize;
 
         try {
             g2d.drawImage(pv.getSprite(piece), xPos, yPos, null);

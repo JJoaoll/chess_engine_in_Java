@@ -89,7 +89,7 @@ public class Position2D {
         }
 
         char file = (char) ('a' + x);
-        char rank = (char) ('1' + y);
+        char rank = (char) Math.abs('8' - y);
 
         return String.valueOf(file) + rank;
     }

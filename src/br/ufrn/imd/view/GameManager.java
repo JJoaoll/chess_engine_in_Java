@@ -58,10 +58,13 @@ public class GameManager extends JPanel {
     }
 
 
-    public static Optional<Piece> getPiece (int col, int row) {
+    public static Optional<Piece> getPiece(int col, int row) {
         Game game = Game.getInstance();
+        Board board = Game.getBoard();
+
         return game.getPiece(col, row);
     }
+
 
 
     public static void selectPiece (Optional<Piece> opt_piece) {

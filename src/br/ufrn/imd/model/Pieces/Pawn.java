@@ -13,6 +13,12 @@ public class Pawn extends Piece {
 
     @Override
     public boolean movable(Position2D candidate_position) {
-        return this.current_position.isOneYBehind(candidate_position);
+        // tabuleiro flipado pra ficar mais bonito
+        if (isWhite())
+            return candidate_position.isOneYBehind(this.current_position)
+                && candidate_position.getX() == this.current_position.getX();
+
+        return this.current_position.isOneYBehind(candidate_position)
+                && candidate_position.getX() == this.current_position.getX();
     }
 }

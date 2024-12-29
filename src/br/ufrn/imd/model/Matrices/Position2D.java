@@ -2,6 +2,10 @@ package br.ufrn.imd.model.Matrices;
 
 //TODO: Lidar com valores nulos nessa clase:
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
 public class Position2D {
     private int x = 0;
     private int y = 0;
@@ -55,6 +59,43 @@ public class Position2D {
             && Math.abs(this.y - another_position.getY()) <= 1;
     }
 
+    public boolean isXAboveOf (Position2D another_position) {
+        return this.x > another_position.getX();
+    }
+
+    public boolean isXBehindOf (Position2D another_position) {
+        return this.x < another_position.getX();
+    }
+
+    public boolean isYAboveOf (Position2D another_position) {
+        return this.y > another_position.getY();
+    }
+
+    public boolean isYBehindOf (Position2D another_position) {
+        return this.y < another_position.getY();
+    }
+
+    // Aqui nao precisa usar getters e nem setters
+
+    // Reducao sugerida:
+
+    // TODO: Tratar do throws illegalArguments!!?
+    public static Position2D highestXPosition(LinkedList<Position2D> positions) {
+        return positions.stream().max(Comparator.comparingInt(Position2D::getX)).orElse(null);
+    }
+
+    public static Position2D lowestXPosition(LinkedList<Position2D> positions) {
+        return positions.stream().min(Comparator.comparingInt(Position2D::getX)).orElse(null);
+    }
+
+    public static Position2D highestYPosition(LinkedList<Position2D> positions) {
+        return positions.stream().max(Comparator.comparingInt(Position2D::getY)).orElse(null);
+    }
+
+    public static Position2D lowestYPosition(LinkedList<Position2D> positions) {
+        return positions.stream().min(Comparator.comparingInt(Position2D::getY)).orElse(null);
+    }
+
     public boolean isOneYBehind (Position2D another_position) {
         return this.y + 1 == another_position.getY();
     }
@@ -75,7 +116,7 @@ public class Position2D {
 
         // assim fica mais legivel:
         int x = file - 'a';
-        int y = rank - '1';
+        int y = '8' - rank;
 
         return new Position2D(x, y);
     }
@@ -103,6 +144,8 @@ public class Position2D {
         }
         return false;
     }
+
+
 
     public int getX () { return x; }
 

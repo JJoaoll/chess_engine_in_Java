@@ -7,12 +7,15 @@ import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
+import br.ufrn.imd.view.GameManager;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static br.ufrn.imd.model.Matrices.Position2D.lowestXPosition;
 
 // TODO: DO!
 public class ClassicalRules implements RuleSet {
@@ -31,6 +34,9 @@ public class ClassicalRules implements RuleSet {
     @Override
     public boolean isValidMove(Move move) {
 
+        //System.out.println("initial Position: " + move.getInitialPosition().getX() + " " + move.getInitialPosition().getY());
+        //System.out.println("Final Position: "   + move.getFinalPosition().getX() + " " + move.getFinalPosition().getY());
+
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
 
@@ -40,28 +46,28 @@ public class ClassicalRules implements RuleSet {
         return opt_piece.map(piece -> {
 
             if (piece instanceof Pawn p)        {
-                return false;
+                return isAValidPawnMove (p, move);
             }
 
             else if (piece instanceof Rook r)   {
-                return validRookMoves (r, move.getBoardBeforeMove())
-                            .contains      (move.getFinalPosition());
+                return isAValidRookMove (r, move);
+
             }
 
-            else if (piece instanceof Knight k) {
-                return false;
+            else if (piece instanceof Knight n) {
+                return isAValidKnightMove (n, move);
             }
 
             else if (piece instanceof Bishop b) {
-                return true;
+                return isAValidBishopMove (b, move);
             }
 
             else if (piece instanceof Queen q)  {
-                return true;
+                return isAValidQueenMove (q, move);
             }
 
             else if (piece instanceof King k)   {
-                return false;
+                return isAValidKingMove (k, move);
             }
 
             else {
@@ -71,22 +77,203 @@ public class ClassicalRules implements RuleSet {
 
     }
 
-    private LinkedList<Position2D> validRookMoves (Rook rook, Board board) {
-        // Correcao automatica
-        LinkedList<Position2D> valid_positions = new LinkedList<>(List.copyOf(board_positions))
+    private boolean isAValidKingMove(King king, Move move) {
+        if (king.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(king::movable)
+                .collect(Collectors
+                        .toCollection(LinkedList::new));
+
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
+
+        return true;
+    }
+
+    private boolean isAValidQueenMove(Queen queen, Move move) {
+        if (queen.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(queen::movable)
+                .collect(Collectors
+                        .toCollection(LinkedList::new));
+
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
+
+        return true;
+    }
+
+    private boolean isAValidBishopMove(Bishop bishop, Move move) {
+        if (bishop.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(bishop::movable)
+                .collect(Collectors
+                        .toCollection(LinkedList::new));
+
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
+
+        return true;
+    }
+
+    private boolean isAValidKnightMove(Knight knight, Move move) {
+        if (knight.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(knight::movable)
+                .collect(Collectors
+                        .toCollection(LinkedList::new));
+
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
+
+        return true;
+    }
+
+    private boolean isAValidPawnMove(Pawn pawn, Move move) {
+
+        if (pawn.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(pawn::movable)
+                .collect(Collectors
+                        .toCollection(LinkedList::new));
+
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
+
+        return true;
+    }
+
+
+    private boolean isAValidRookMove (Rook rook, Move move) {
+
+        if (rook.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(rook::movable)
                 .collect(Collectors
                 .toCollection(LinkedList::new));
 
+        if (!valid_positions.contains(move.getFinalPosition()))
+            return false;
 
-        System.out.println("valide positions: " + valid_positions.stream()
-                .map(Position2D::toChessNotation).collect(Collectors.joining(",")));
-
-
-        return valid_positions;
-
+        return true;
     }
 
+   /* private boolean isAValidRookMove (Rook rook, Move move) {
+
+        if (rook.getCurrent_position() != move.getInitialPosition())
+            throw new IllegalArgumentException("Bogou");
+
+        // Correcao automatica
+        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+                .stream().filter(rook::movable)
+                .collect(Collectors
+                .toCollection(LinkedList::new));
+
+        Position2D initial_position = rook.getCurrent_position();
+        Position2D final_position   = move.getFinalPosition();
+
+        BiPredicate<Position2D, Position2D> predicate;
+        Function<LinkedList<Position2D>, Position2D> extremeFunction = null;
+
+        //System.out.println(final_position == initial_position);
+
+        // RIGHT
+        if (final_position.isXAboveOf(move.getInitialPosition())) {
+            predicate      = Position2D::isXAboveOf;
+
+            extremeFunction = Position2D::highestXPosition;
+        }
+
+        // LEFT
+        else if (final_position.isXBehindOf(move.getInitialPosition())) {
+            predicate = Position2D::isXBehindOf;
+
+            extremeFunction = Position2D::lowestXPosition;
+        }
+
+        // UP
+        else if (final_position.isYAboveOf(move.getInitialPosition())) {
+            predicate = Position2D::isYAboveOf;
+
+            extremeFunction = Position2D::highestYPosition;
+        }
+
+        // DOWN
+        else if (final_position.isYBehindOf(move.getInitialPosition())) {
+            predicate = Position2D::isYBehindOf;
+
+            extremeFunction = Position2D::lowestYPosition;
+        }
+
+        else {
+            predicate = null;
+            //System.out.println(String.valueOf(final_position == initial_position));
+            // Nao deve dar throw aqui!
+            //throw new IllegalArgumentException("Posicao invalida");
+        }
+
+        if (predicate == null)
+            return false;
+
+        // TODO: um nome melhor seria "directioned positions"
+        LinkedList<Position2D> directioned_moves
+                = new LinkedList<>(valid_positions.stream()
+                .filter(position -> predicate.test(initial_position, position))
+                .toList());
+
+        // umas versoes iterativas de codigo
+        LinkedList<Piece> blocking_pieces = new LinkedList<>();
+        for (Position2D position : directioned_moves) {
+            GameManager.getPiece(position.getX(), position.getY())
+                       .ifPresent(blocking_pieces::add);
+        }
+
+        if (blocking_pieces.isEmpty())
+            return valid_positions.contains(final_position);
+
+        // ---- Parte final: (Hallelluia)
+
+        LinkedList<Position2D> blocking_positions = blocking_pieces.stream()
+                .map(Piece::getCurrent_position)
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        Position2D block_position = extremeFunction.apply(blocking_positions);
+        System.out.printf(block_position.getX() + " " + block_position.getY() + ", ");
+
+        // TODO: FIXE ESSE TRUST!!!!
+        Piece block_piece = Game.getBoard().getPiece(block_position.getX(), block_position.getY()).get();
+
+
+
+
+
+        // Solucao iterativa pra poupar a minha sanidade mental :P
+        for (Position2D position : directioned_moves) {
+            if (predicate.test(block_position, position)) {
+                //System.out.println(position.getX() + " " + position.getY());
+                return true;
+            }
+        }
+
+        // TODO: possiveis problemas com eficiencia
+        if (block_piece.isWhite() != rook.isWhite())
+            return final_position == block_position;
+
+        return false;
+    }
+*/
 
     // TODO: Deleat it
     public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {

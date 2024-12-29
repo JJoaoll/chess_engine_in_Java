@@ -47,7 +47,7 @@ public class Input extends MouseAdapter{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        GameManager referee = GameManager.getInstance();
+        GameManager gm = GameManager.getInstance();
         Board board = Game.getBoard();
 
         int col = e.getX() / board.tileSize;
@@ -55,16 +55,16 @@ public class Input extends MouseAdapter{
 
         // TODO: REMOVE THESE SHITTY TRY CATCHS!!!!
         // TODO: DO!
-        Optional<Piece> opt_piece = referee.getSelectedPiece();
+        Optional<Piece> opt_piece = gm.getSelectedPiece();
         opt_piece.ifPresent(piece -> {
             Move move = new Move(board, piece.getCurrent_position(), new Position2D(col, row));
             // isValidMove
-            referee.makeMove(move);
+            gm.makeMove(move);
         });
 
         // TODO: IT SHOULD BE STATIC?
         GameManager.selectPiece(Optional.empty());
-        referee.repaint();
+        gm.repaint();
 
         /*if(board.selectedPiece != null) {
             Move move = new Move(board, board.selectedPiece, col, row);

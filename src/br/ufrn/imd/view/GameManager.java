@@ -172,7 +172,7 @@ public class GameManager extends JPanel {
                             getCurrent_position(), new Position2D(c, r));
 
                     if(referee.isValidMove(move)) {
-                        int ovalSize = tileSize / 2;
+                        int ovalSize = tileSize / 3;
 
                         int x = c * board.tileSize + (tileSize - ovalSize) / 2;
                         int y = r * board.tileSize + (tileSize - ovalSize) / 2;

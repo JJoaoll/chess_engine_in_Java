@@ -8,6 +8,7 @@ import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
 import br.ufrn.imd.view.GameManager;
+import com.sun.jdi.connect.spi.TransportService;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -126,6 +127,13 @@ public class ClassicalRules implements RuleSet {
         if (knight.getCurrent_position() != move.getInitialPosition())
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
+
+        boolean same_team = Game.getBoard()
+            .getPiece(move.getFinalPosition().getX(), move.getFinalPosition().getY())
+            .map(piece -> piece.getSide().equals(knight.getSide()))
+            .orElse(false);
+
+
         LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(knight::movable)
                 .collect(Collectors
@@ -134,7 +142,7 @@ public class ClassicalRules implements RuleSet {
         if (!valid_positions.contains(move.getFinalPosition()))
             return false;
 
-        return true;
+        return !same_team;
     }
 
     private boolean isAValidPawnMove(Pawn pawn, Move move) {
@@ -153,21 +161,94 @@ public class ClassicalRules implements RuleSet {
         return true;
     }
 
-
+    // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!
     private boolean isAValidRookMove (Rook rook, Move move) {
 
         if (rook.getCurrent_position() != move.getInitialPosition())
-            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem!!");
 
-        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
-                .stream().filter(rook::movable)
+        LinkedList<Position2D> valid_positions =
+                new LinkedList<>(List.copyOf(board_positions))
+                .stream()
+                .filter(rook::movable)
                 .collect(Collectors
                 .toCollection(LinkedList::new));
 
-        if (!valid_positions.contains(move.getFinalPosition()))
-            return false;
+        LinkedList<Piece> pieces_in_the_way = new LinkedList<>();
+        for (Position2D position : valid_positions) {
+            Game.getBoard().getPiece(position.getX(), position.getY())
+                    .ifPresent(piece -> pieces_in_the_way.add(piece));
+        }
 
-        return true;
+        Piece blocker_up    = null;
+        Piece blocker_right = null;
+        Piece blocker_left  = null;
+        Piece blocker_down  = null;
+
+        Position2D rook_position = rook.getCurrent_position();
+
+        // Setta os blocker's
+        for (Piece piece : pieces_in_the_way) {
+            Position2D piece_position = piece.getCurrent_position();
+            if (piece_position.isYAboveOf(rook_position)
+                    && (blocker_up == null || blocker_up.getCurrent_position().isYAboveOf(piece_position)))
+            {
+                blocker_up = piece;
+            }
+
+            else if (piece.getCurrent_position().isXAboveOf(rook.getCurrent_position())
+                    && (blocker_right == null || blocker_right.getCurrent_position().isXAboveOf(piece_position))) {
+                blocker_right = piece;
+            }
+
+            else if (piece.getCurrent_position().isXBehindOf(rook.getCurrent_position())
+                    && (blocker_left == null || blocker_left.getCurrent_position().isXBehindOf(piece_position))) {
+                blocker_left = piece;
+            }
+
+            else if (piece.getCurrent_position().isYBehindOf(rook.getCurrent_position())
+            && (blocker_down == null || blocker_down.getCurrent_position().isYBehindOf(piece_position))) {
+                blocker_down = piece;
+            }
+        }
+
+        Position2D final_position = move.getFinalPosition();
+
+        // EFICIENCIA:
+
+        // up
+        if (final_position.isYAboveOf(rook_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                   && (blocker_up == null || blocker_up.getCurrent_position().isYAboveOf(final_position)
+                   || (!blocker_up.getSide().equals(rook.getSide())
+                    && blocker_up.getCurrent_position().equals(final_position)));
+        }
+
+        // right
+        else if (final_position.isXAboveOf(rook_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_right == null || blocker_right.getCurrent_position().isXAboveOf(final_position)
+                    || (!blocker_right.getSide().equals(rook.getSide())
+                    && blocker_right.getCurrent_position().equals(final_position)));
+        }
+
+        // left
+        else if (final_position.isXBehindOf(rook_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_left == null || blocker_left.getCurrent_position().isXBehindOf(final_position)
+                    || (!blocker_left.getSide().equals(rook.getSide())
+                    && blocker_left.getCurrent_position().equals(final_position)));
+        }
+
+        // down
+        else if (final_position.isYBehindOf(rook_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_down == null || blocker_down.getCurrent_position().isYBehindOf(final_position)
+                    || (!blocker_down.getSide().equals(rook.getSide())
+                    && blocker_down.getCurrent_position().equals(final_position)));
+        }
+
+        return false;
     }
 
    /* private boolean isAValidRookMove (Rook rook, Move move) {

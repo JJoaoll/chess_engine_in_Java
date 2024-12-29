@@ -13,12 +13,12 @@ public class Tile {
     //  new Color(227, 198, 181) : new Color(157, 105, 53));
 
 
-
+    // Dois construtores diferentes bem faceis de usar :P
     public Tile(String coordinate) {
         this.coordinate = coordinate;
     }
 
-    public Tile(String coordinate,Piece piece) {
+    public Tile(String coordinate, Piece piece) {
         this.coordinate = coordinate;
         this.piece      = Optional.of(piece);
     }

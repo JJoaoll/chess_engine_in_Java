@@ -19,6 +19,40 @@ public class Board {
         Grid<Tile> grid = new Grid<>(width, height);
     }
 
+    // TODO: o getValue pode dar nulo, faz um try catch.
+    public Board(Board board_to_copy) {
+        this.width = board_to_copy.width;
+        this.height = board_to_copy.height;
+
+        // Criação de um novo Grid para os tiles
+        Grid<Tile> new_tiles = new Grid<>(width, height);
+
+        // Iteração sobre o tabuleiro original
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // Tornando x e y efetivamente finais
+
+                Tile original_tile        = board_to_copy.tiles.getValue(x, y);
+                Optional<Piece> opt_piece = original_tile.getPiece();
+
+                Tile new_tile = opt_piece.isPresent()
+                        ? new Tile(
+                        new Position2D(x, y).toChessNotation(),
+                        opt_piece.get().clone())
+                        : new Tile(
+                        new Position2D(x, y).toChessNotation());
+
+                new_tiles.setValue(x, y, new_tile);
+            }
+
+            this.tiles = new_tiles;
+        }
+
+        // Atualiza os tiles do novo tabuleiro
+        this.tiles = new_tiles;
+    }
+
+
     // Assumindo que esta tudo bem aqui!!
     public void setBoardGrid (Grid<Tile> grid) {
         for (int i = 0; i < width; i++)

@@ -75,6 +75,48 @@ public class Position2D {
         return this.y < another_position.getY();
     }
 
+    public boolean isInRightUpDiagonalOf (Position2D another_position) {
+        return this.x > another_position.getX()
+            && this.y > another_position.getY();
+    }
+
+    public boolean isInLeftUpDiagonalOf (Position2D another_position) {
+        return this.x < another_position.getX()
+            && this.y > another_position.getY();
+    }
+
+    public boolean isInRightDownDiagonalOf (Position2D another_position) {
+        return this.x > another_position.getX()
+            && this.y < another_position.getY();
+    }
+
+    public boolean isInLeftDownDiagonalOf (Position2D another_position) {
+        return this.x < another_position.getX()
+            && this.y < another_position.getY();
+    }
+
+    // TODO: contratos!
+
+    // Assumindo que todos estao na mesma diagonal
+    public static Position2D highestInTheLeftDiagonal (LinkedList<Position2D> positions) {
+        return lowestXPosition(positions); // o mais a esquerda
+    }
+
+    // Assumindo que todos estao na mesma diagonal
+    public static Position2D lowestInTheLeftDiagonal (LinkedList<Position2D> positions) {
+        return highestXPosition(positions); // o mais a direita
+    }
+
+    // Assumindo que todos estao na mesma diagonal
+    public static Position2D highestInTheRightDiagonal (LinkedList<Position2D> positions) {
+        return highestXPosition(positions); // o mais a direita
+    }
+
+    // Assumindo que todos estao na mesma diagonal
+    public static Position2D lowestInTheRightDiagonal (LinkedList<Position2D> positions) {
+        return lowestXPosition(positions); // o mais a esquerda
+    }
+
     // Aqui nao precisa usar getters e nem setters
 
     // Reducao sugerida:

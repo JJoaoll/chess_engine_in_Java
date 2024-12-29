@@ -3,7 +3,7 @@ package br.ufrn.imd.model.Pieces;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
 
-public class Pawn extends Piece {
+public class Pawn extends Piece  implements Cloneable {
 
     public Pawn (Position2D new_position, Side new_side) {
         this.current_position = new Position2D(new_position);
@@ -20,5 +20,10 @@ public class Pawn extends Piece {
 
         return this.current_position.isOneYBehind(candidate_position)
                 && candidate_position.getX() == this.current_position.getX();
+    }
+
+    @Override
+    public Piece clone() {
+        return new Pawn (new Position2D(current_position), this.side);
     }
 }

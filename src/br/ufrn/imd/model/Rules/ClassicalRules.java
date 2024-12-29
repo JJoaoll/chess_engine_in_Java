@@ -79,52 +79,151 @@ public class ClassicalRules implements RuleSet {
     }
 
     private boolean isAValidKingMove(King king, Move move) {
-        if (king.getCurrent_position() != move.getInitialPosition())
+        if (!king.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
         LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(king::movable)
                 .collect(Collectors
-                        .toCollection(LinkedList::new));
+                .toCollection(LinkedList::new));
 
-        if (!valid_positions.contains(move.getFinalPosition()))
-            return false;
+        boolean same_team =
+                Game.getBoard()
+                .getPiece(move.getFinalPosition().getX(), move.getFinalPosition().getY())
+                .map(piece -> piece.getSide().equals(king.getSide()))
+                .orElse(false);
 
-        return true;
+        return valid_positions.contains(move.getFinalPosition())
+                && !same_team;
     }
 
     private boolean isAValidQueenMove(Queen queen, Move move) {
-        if (queen.getCurrent_position() != move.getInitialPosition())
-            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+        if (!queen.getCurrent_position().equals(move.getInitialPosition()))
+            throw new IllegalArgumentException ("As posicoes inicial do movimento e a da torre nao batem");
 
-        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
-                .stream().filter(queen::movable)
-                .collect(Collectors
-                        .toCollection(LinkedList::new));
+        Position2D initial_position = queen.getCurrent_position();
+        Position2D final_position = move.getFinalPosition();
 
-        if (!valid_positions.contains(move.getFinalPosition()))
-            return false;
+        int col = initial_position.getX();
+        int row = initial_position.getY();
 
-        return true;
+        Bishop b = new Bishop (initial_position, queen.getSide());
+        Rook   r = new Rook   (initial_position, queen.getSide());
+
+        Board b_board = new Board (move.getBoardBeforeMove());
+        Board r_board = new Board (move.getBoardBeforeMove());
+
+        Tile b_tile = new Tile (initial_position.toChessNotation(), b);
+        Tile r_tile = new Tile (initial_position.toChessNotation(), r);
+
+        b_board.getTiles().setValue(col, row, b_tile);
+        Move b_move = new Move (b_board, initial_position, final_position);
+
+        r_board.getTiles().setValue(col, row, r_tile);
+        Move r_move = new Move (r_board, initial_position, final_position);
+
+        return isAValidRookMove   (r, r_move) ||
+               isAValidBishopMove (b, b_move);
+
+
     }
 
     private boolean isAValidBishopMove(Bishop bishop, Move move) {
-        if (bishop.getCurrent_position() != move.getInitialPosition())
-            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
-        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+        if (!bishop.getCurrent_position().equals(move.getInitialPosition())) {
+            throw new IllegalArgumentException("As posicoes inicial do movimento e a do bispo nao batem");
+        }
+
+        LinkedList<Position2D> valid_positions =
+                new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(bishop::movable)
                 .collect(Collectors
-                        .toCollection(LinkedList::new));
+                .toCollection(LinkedList::new));
 
-        if (!valid_positions.contains(move.getFinalPosition()))
-            return false;
+        LinkedList<Piece> pieces_in_the_way = new LinkedList<>();
+        for (Position2D position : valid_positions) {
+            Game.getBoard().getPiece(position.getX(), position.getY())
+                    .ifPresent(piece -> pieces_in_the_way.add(piece));
+        }
 
-        return true;
+        Piece blocker_upR    = null;
+        Piece blocker_upL    = null;
+        Piece blocker_downR  = null;
+        Piece blocker_downL  = null;
+
+        Position2D bishop_position = bishop.getCurrent_position();
+
+        // Setta os blocker's
+        for (Piece piece : pieces_in_the_way) {
+            Position2D piece_position = piece.getCurrent_position();
+
+            // upR
+            if (piece_position.isInRightUpDiagonalOf(bishop_position)
+                    && (blocker_upR == null || blocker_upR.getCurrent_position().isInRightUpDiagonalOf(piece_position)))
+            {
+                blocker_upR = piece;
+            }
+
+            // upL
+            else if (piece_position.isInLeftUpDiagonalOf(bishop.getCurrent_position())
+                    && (blocker_upL == null || blocker_upL.getCurrent_position().isInLeftUpDiagonalOf(piece_position))) {
+                blocker_upL = piece;
+            }
+
+            // downR
+            else if (piece_position.isInRightDownDiagonalOf(bishop.getCurrent_position())
+                    && (blocker_downR == null || blocker_downR.getCurrent_position().isInRightDownDiagonalOf(piece_position))) {
+                blocker_downR = piece;
+            }
+
+            // downL
+            else if (piece_position.isInLeftDownDiagonalOf(bishop.getCurrent_position())
+                    && (blocker_downL == null || blocker_downL.getCurrent_position().isInLeftDownDiagonalOf(piece_position))) {
+                blocker_downL = piece;
+            }
+        }
+
+        Position2D final_position = move.getFinalPosition();
+
+        // EFICIENCIA:
+
+        // upR
+        if (final_position.isInRightUpDiagonalOf(bishop_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_upR == null || blocker_upR.getCurrent_position().isInRightUpDiagonalOf(final_position)
+                    || (!blocker_upR.getSide().equals(bishop.getSide())
+                    && blocker_upR.getCurrent_position().equals(final_position)));
+        }
+
+        // upL
+        else if (final_position.isInLeftUpDiagonalOf(bishop_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_upL == null || blocker_upL.getCurrent_position().isInLeftUpDiagonalOf(final_position)
+                    || (!blocker_upL.getSide().equals(bishop.getSide())
+                    && blocker_upL.getCurrent_position().equals(final_position)));
+        }
+
+        // downR
+        else if (final_position.isInRightDownDiagonalOf(bishop_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_downR == null || blocker_downR.getCurrent_position().isInRightDownDiagonalOf(final_position)
+                    || (!blocker_downR.getSide().equals(bishop.getSide())
+                    && blocker_downR.getCurrent_position().equals(final_position)));
+        }
+
+        // downL
+        else if (final_position.isInLeftDownDiagonalOf(bishop_position)) {
+            return valid_positions.contains(move.getFinalPosition())
+                    && (blocker_downL == null || blocker_downL.getCurrent_position().isInLeftDownDiagonalOf(final_position)
+                    || (!blocker_downL.getSide().equals(bishop.getSide())
+                    && blocker_downL.getCurrent_position().equals(final_position)));
+        }
+
+        return false;
     }
 
     private boolean isAValidKnightMove(Knight knight, Move move) {
-        if (knight.getCurrent_position() != move.getInitialPosition())
+        if (!knight.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
 
@@ -147,13 +246,13 @@ public class ClassicalRules implements RuleSet {
 
     private boolean isAValidPawnMove(Pawn pawn, Move move) {
 
-        if (pawn.getCurrent_position() != move.getInitialPosition())
+        if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
         LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(pawn::movable)
                 .collect(Collectors
-                        .toCollection(LinkedList::new));
+                .toCollection(LinkedList::new));
 
         if (!valid_positions.contains(move.getFinalPosition()))
             return false;
@@ -164,8 +263,10 @@ public class ClassicalRules implements RuleSet {
     // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!
     private boolean isAValidRookMove (Rook rook, Move move) {
 
-        if (rook.getCurrent_position() != move.getInitialPosition())
-            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem!!");
+        if (!rook.getCurrent_position().equals(move.getInitialPosition())) {
+           throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem!!");
+        }
+
 
         LinkedList<Position2D> valid_positions =
                 new LinkedList<>(List.copyOf(board_positions))
@@ -196,17 +297,17 @@ public class ClassicalRules implements RuleSet {
                 blocker_up = piece;
             }
 
-            else if (piece.getCurrent_position().isXAboveOf(rook.getCurrent_position())
+            else if (piece_position.isXAboveOf(rook.getCurrent_position())
                     && (blocker_right == null || blocker_right.getCurrent_position().isXAboveOf(piece_position))) {
                 blocker_right = piece;
             }
 
-            else if (piece.getCurrent_position().isXBehindOf(rook.getCurrent_position())
+            else if (piece_position.isXBehindOf(rook.getCurrent_position())
                     && (blocker_left == null || blocker_left.getCurrent_position().isXBehindOf(piece_position))) {
                 blocker_left = piece;
             }
 
-            else if (piece.getCurrent_position().isYBehindOf(rook.getCurrent_position())
+            else if (piece_position.isYBehindOf(rook.getCurrent_position())
             && (blocker_down == null || blocker_down.getCurrent_position().isYBehindOf(piece_position))) {
                 blocker_down = piece;
             }

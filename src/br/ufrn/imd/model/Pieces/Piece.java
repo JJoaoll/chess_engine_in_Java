@@ -3,7 +3,7 @@
     import br.ufrn.imd.model.Matrices.Position2D;
     import br.ufrn.imd.model.Rules.Side;
 
-    public abstract class Piece {
+    public abstract class Piece implements Cloneable {
 
         protected Position2D current_position = new Position2D(0,0);
 
@@ -37,5 +37,8 @@
         public void setSide(Side side) { this.side = side; }
 
         public void setValue(int value) { this.value = value; }
+
+        @Override
+        public abstract Piece clone();
 
     }

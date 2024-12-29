@@ -19,7 +19,22 @@ public class Grid<T> {
         }
     }
 
-    // col_index [0, cols-1]
+    // Copia segura!
+    public Grid(Grid<T> grid_to_copy) {
+        
+        this.cols = grid_to_copy.getCols();
+        this.rows = grid_to_copy.getRows();
+        
+        // prepara a grid de forma manual, sem aproveitar o construtor antigo p/ evitar acoplamento.
+        for (int i = 0; i < this.cols; i++) {
+            List<T> new_col = new ArrayList<>(this.rows);
+            for (int j = 0; j < this.rows; j++) {
+                new_col.add(grid_to_copy.getValue(i, j));
+            }           
+            this.grid.add(new_col);
+        }
+    }
+    
     public void setRow(int col_index, List<T> row) {
         if (col_index > 0 && col_index <= cols - 1) {
             grid.set(col_index, row);

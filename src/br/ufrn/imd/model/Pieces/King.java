@@ -3,7 +3,7 @@ package br.ufrn.imd.model.Pieces;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
 
-public class King extends Piece {
+public class King extends Piece  implements Cloneable {
 
     public King (Position2D new_position, Side new_side) {
         this.current_position = new Position2D(new_position);
@@ -15,5 +15,10 @@ public class King extends Piece {
     @Override
     public boolean movable(Position2D candidate_position) {
         return this.current_position.isSurroundedBy( candidate_position );
+    }
+
+    @Override
+    public Piece clone() {
+        return new King (new Position2D(current_position), this.side);
     }
 }

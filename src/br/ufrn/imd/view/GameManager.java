@@ -49,6 +49,7 @@ public class GameManager extends JPanel {
     public void makeMove (Move move) {
         if (move.getBoardBeforeMove().equals(Game.getBoard())) {
             RuleSet referee = Game.getRules();
+
             if (referee.isValidMove(move)) {
                 Game.makeMove (move);
                 // TODO: DA OVERLEAD LOGO, POR FAVOR!!

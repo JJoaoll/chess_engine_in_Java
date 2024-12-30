@@ -187,8 +187,6 @@ public class Position2D {
         return false;
     }
 
-
-
     public int getX () { return x; }
 
     public int getY () { return y; }

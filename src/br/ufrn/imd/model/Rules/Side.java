@@ -18,5 +18,12 @@ public enum Side {
         return this == otherSide;
     }
 
+    public Side OponentSide() {
+        if (this == WhiteSide)
+            return BlackSide;
+
+        return WhiteSide;
+    }
+
 
 }

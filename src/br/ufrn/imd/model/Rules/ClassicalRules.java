@@ -43,9 +43,11 @@ public class ClassicalRules implements RuleSet {
         int y = move.getInitialPosition().getY();
 
         Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
+        // TODO TODO TODO: ACESSOU O GAME :TODO TODO TODO
+        boolean correct_turn = opt_piece.map (piece -> {return piece.getSide() == Game.getTurn();}).orElse(false);
 
         // EXPRESSAO HORRIVEL DE FEIA PQ O JAVA NAO TEM O BASICO!!!
-        return opt_piece.map(piece -> {
+        return correct_turn && opt_piece.map(piece -> {
 
             if (piece instanceof Pawn p)        {
                 return isAValidPawnMove (p, move);
@@ -250,7 +252,7 @@ public class ClassicalRules implements RuleSet {
         if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
-        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
+        LinkedList<Position2D> valid_positions   = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(pawn::movable)
                 .collect(Collectors
                 .toCollection(LinkedList::new));
@@ -261,16 +263,16 @@ public class ClassicalRules implements RuleSet {
 
         Board board = move.getBoardBeforeMove();
 
-        boolean one_step_avaiable = board.getPiece(final_x, final_y).isEmpty();
+        boolean one_step_available = board.getPiece(final_x, final_y).isEmpty();
 
-        if (one_step_avaiable && valid_positions.contains(final_position))
+        if (one_step_available && valid_positions.contains(final_position))
             return true;
 
         int side_direction = pawn.isWhite() ? 1 : -1;
         int adjusted_y     = final_y + side_direction;
         Position2D adjusted_position = new Position2D(final_x, adjusted_y);
 
-        if (one_step_avaiable
+        if (one_step_available
             && valid_positions.contains(adjusted_position)
             && board.getPiece(final_x, adjusted_y).isEmpty()
             && pawn.isTheFirstMove()) {
@@ -278,13 +280,16 @@ public class ClassicalRules implements RuleSet {
         }
 
         // TODO: Captura
-        int initial_x = move.getInitialPosition().getX();
+        int initial_x     = move.getInitialPosition().getX();
+        adjusted_y        = pawn.getCurrent_position().getY() - side_direction;
 
-        return (board.getPiece(initial_x + 1, adjusted_y).isPresent()
-                && final_position.equals(new Position2D(initial_x + 1, adjusted_y)))
-                || (board.getPiece(initial_x - 1, adjusted_y).isPresent()
-                && final_position.equals(new Position2D(initial_x - 1, adjusted_y)));
+        boolean capture_left  = final_position.equals(new Position2D (initial_x + 1, adjusted_y))
+                && board.getPiece(initial_x + 1, adjusted_y).map(piece -> { return piece.isWhite() != pawn.isWhite();}).orElse(false);
+        boolean capture_right = final_position.equals(new Position2D (initial_x - 1, adjusted_y))
+                && board.getPiece(initial_x - 1, adjusted_y).map(piece -> { return piece.isWhite() != pawn.isWhite();}).orElse(false);
 
+        return capture_left
+            || capture_right;
     }
 
     // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!

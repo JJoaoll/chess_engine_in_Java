@@ -4,10 +4,7 @@ import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.BeginnersLucky;
 import br.ufrn.imd.model.Pieces.Piece;
-import br.ufrn.imd.model.Rules.ClassicalRules;
-import br.ufrn.imd.model.Rules.GameState;
-import br.ufrn.imd.model.Rules.Move;
-import br.ufrn.imd.model.Rules.RuleSet;
+import br.ufrn.imd.model.Rules.*;
 import br.ufrn.imd.view.GameManager;
 
 import java.util.LinkedList;
@@ -15,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+// TODO: deixar de ser estatico (vai dar trabalho)
 public class Game {
     private Board            board;
     private RuleSet          rules;
@@ -22,6 +20,19 @@ public class Game {
     private GameState   game_state = GameState.Playing;
 
     private static Game instance;
+
+    // Consideremos isso absoluto pra todos os jogos p/ simplificar.
+    private Side turn = Side.WhiteSide;
+
+    // Mais um problema com estaticidade
+    public static Side getTurn() {
+        Game game = Game.getInstance();
+        return game.turn;
+    }
+
+    private void swapTurn () {
+        this.turn = turn.OponentSide();
+    }
 
     private Game(RuleSet new_rules) {
         this.rules = new_rules;
@@ -69,6 +80,8 @@ public class Game {
                 lucky_piece.registerMoveAsMade();
             }
         }
+
+        game.swapTurn();
     }
 
     public Optional<Piece> getPiece(int col, int row) {

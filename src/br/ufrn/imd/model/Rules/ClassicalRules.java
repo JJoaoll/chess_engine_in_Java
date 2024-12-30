@@ -18,6 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static br.ufrn.imd.model.Matrices.Position2D.lowestXPosition;
+// TODO: REMOVER ACOPLAMENTO COM O GAME ao maximo!!!
+
 
 // TODO: DO!
 public class ClassicalRules implements RuleSet {
@@ -34,21 +36,27 @@ public class ClassicalRules implements RuleSet {
     }
 
     public boolean theKingIsInCheck (Board board, Side side_of_the_king) {
-        King king         = board.getKingFrom(side_of_the_king);
+        King king = board.getKingFrom (side_of_the_king);
         if (king != null) {
             Side oponent_side = side_of_the_king.OponentSide();
 
             LinkedList<Piece> pieces_on_board = board.getPieces();
-
             for (Piece piece : pieces_on_board) {
-                if (isAValidePieceMove (new Move(board, piece.getCurrent_position(), king.getCurrent_position()), oponent_side)
-                && isTheCorrectTurn(Optional.of(piece), oponent_side))
+                if (isAValidPieceMove (new Move (board, piece.getCurrent_position(), king.getCurrent_position()), oponent_side)
+                && (piece.getSide() != king.getSide()))
                     return true;
             }
         }
+        /*if (king == null)
+            System.out.println("The king was not in the board, how?!!");*/
 
-        System.out.println("The king was not in the board, how?!!");
         return false;
+    }
+
+
+    @Override
+    public Game makeItSpecial(Game game, Move move) {
+        return null;
     }
 
     @Override
@@ -56,7 +64,7 @@ public class ClassicalRules implements RuleSet {
         return false;
     }
 
-    private boolean isAValidePieceMove (Move move, Side turn) {
+    private boolean isAValidPieceMove (Move move, Side turn) {
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
 
@@ -96,7 +104,6 @@ public class ClassicalRules implements RuleSet {
     }
 
     private boolean isTheCorrectTurn (Optional<Piece> opt_piece, Side turn) {
-        // TODO TODO TODO: ACESSOU O GAME :TODO TODO TODO
         return opt_piece.map (piece -> {return piece.getSide() == turn;}).orElse(false);
     }
 
@@ -112,7 +119,7 @@ public class ClassicalRules implements RuleSet {
         Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
         boolean correct_turn = isTheCorrectTurn (opt_piece, turn);
 
-        boolean valid_piece_movement = isAValidePieceMove (move, turn);
+        boolean valid_piece_movement = isAValidPieceMove (move, turn);
 
         if (!valid_piece_movement || !correct_turn)
             return false;
@@ -127,15 +134,16 @@ public class ClassicalRules implements RuleSet {
         int final_x   = move.getFinalPosition().getX();
         int final_y   = move.getFinalPosition().getY();
 
-        piece.setCurrent_position(new Position2D(final_x, final_y));
-
         board_after_move.replacePiece (initial_x, initial_y, Optional.empty());
         board_after_move.replacePiece (  final_x,   final_y,          Optional.of(piece));
 
-        return !theKingIsInCheck(board_after_move, turn);
+        //System.out.println ("the " + turn.toString() + " king is in check: (" + theKingIsInCheck(board_after_move, turn) + ")");
+        return !theKingIsInCheck (board_after_move, turn);
     }
 
     private boolean isAValidKingMove(King king, Move move) {
+        Board board = move.getBoardBeforeMove();
+
         if (!king.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
@@ -148,7 +156,7 @@ public class ClassicalRules implements RuleSet {
                 .toCollection(LinkedList::new));
 
         boolean same_team =
-                Game.getBoard()
+                board
                 .getPiece(move.getFinalPosition().getX(), move.getFinalPosition().getY())
                 .map(piece -> piece.getSide().equals(king.getSide()))
                 .orElse(false);
@@ -189,6 +197,7 @@ public class ClassicalRules implements RuleSet {
     }
 
     private boolean isAValidBishopMove(Bishop bishop, Move move) {
+        Board board = move.getBoardBeforeMove();
 
         if (!bishop.getCurrent_position().equals(move.getInitialPosition())) {
             throw new IllegalArgumentException("As posicoes inicial do movimento e a do bispo nao batem");
@@ -202,7 +211,7 @@ public class ClassicalRules implements RuleSet {
 
         LinkedList<Piece> pieces_in_the_way = new LinkedList<>();
         for (Position2D position : valid_positions) {
-            Game.getBoard().getPiece(position.getX(), position.getY())
+            board.getPiece(position.getX(), position.getY())
                     .ifPresent(piece -> pieces_in_the_way.add(piece));
         }
 
@@ -283,11 +292,13 @@ public class ClassicalRules implements RuleSet {
     }
 
     private boolean isAValidKnightMove(Knight knight, Move move) {
+        Board board = move.getBoardBeforeMove();
+
         if (!knight.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
 
 
-        boolean same_team = Game.getBoard()
+        boolean same_team = board
             .getPiece(move.getFinalPosition().getX(), move.getFinalPosition().getY())
             .map(piece -> piece.getSide().equals(knight.getSide()))
             .orElse(false);
@@ -351,6 +362,7 @@ public class ClassicalRules implements RuleSet {
 
     // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!
     private boolean isAValidRookMove (Rook rook, Move move) {
+        Board board = move.getBoardBeforeMove();
 
         if (!rook.getCurrent_position().equals(move.getInitialPosition())) {
            throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem!!");
@@ -366,7 +378,7 @@ public class ClassicalRules implements RuleSet {
 
         LinkedList<Piece> pieces_in_the_way = new LinkedList<>();
         for (Position2D position : valid_positions) {
-            Game.getBoard().getPiece(position.getX(), position.getY())
+            board.getPiece(position.getX(), position.getY())
                     .ifPresent(piece -> pieces_in_the_way.add(piece));
         }
 

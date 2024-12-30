@@ -4,6 +4,14 @@ package br.ufrn.imd.model.Rules;
 public enum Side {
     WhiteSide, BlackSide;
 
+    @Override
+    public String toString() {
+        if (this == WhiteSide)
+            return "White";
+
+        return "Black";
+    }
+
     // Booleanismo
     public boolean isWhite() {
         return this == WhiteSide;

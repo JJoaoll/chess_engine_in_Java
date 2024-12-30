@@ -2,7 +2,9 @@ package br.ufrn.imd.model.Board;
 
 import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
+import br.ufrn.imd.model.Pieces.King;
 import br.ufrn.imd.model.Pieces.Piece;
+import br.ufrn.imd.model.Rules.Side;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -88,6 +90,22 @@ public class Board {
             // Por hora ,esta bom!
             return Optional.empty();
         }
+    }
+
+    // Pega o rei de um certo lado/time/side
+    // Assumption: so ha um rei de cada lado e sempre ha um.
+    public King getKingFrom (Side side) {
+        LinkedList<Piece> pieces = getPieces();
+
+        for (Piece piece : pieces) {
+            if (piece instanceof King k) {
+                if (k.getSide() == side) {
+                    return k;
+                }
+            }
+        }
+
+        return null;
     }
 
     // TODO: TRATAMENTO DE ERROS!!!

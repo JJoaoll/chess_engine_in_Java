@@ -33,21 +33,36 @@ public class ClassicalRules implements RuleSet {
         }
     }
 
+    public boolean theKingIsInCheck (Board board, Side side_of_the_king) {
+        King king         = board.getKingFrom(side_of_the_king);
+        if (king != null) {
+            Side oponent_side = side_of_the_king.OponentSide();
+
+            LinkedList<Piece> pieces_on_board = board.getPieces();
+
+            for (Piece piece : pieces_on_board) {
+                if (isAValidePieceMove (new Move(board, piece.getCurrent_position(), king.getCurrent_position()), oponent_side)
+                && isTheCorrectTurn(Optional.of(piece), oponent_side))
+                    return true;
+            }
+        }
+
+        System.out.println("The king was not in the board, how?!!");
+        return false;
+    }
+
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isSpecialMove(Move move, Side turn) {
+        return false;
+    }
 
-        //System.out.println("initial Position: " + move.getInitialPosition().getX() + " " + move.getInitialPosition().getY());
-        //System.out.println("Final Position: "   + move.getFinalPosition().getX() + " " + move.getFinalPosition().getY());
-
+    private boolean isAValidePieceMove (Move move, Side turn) {
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
 
         Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
-        // TODO TODO TODO: ACESSOU O GAME :TODO TODO TODO
-        boolean correct_turn = opt_piece.map (piece -> {return piece.getSide() == Game.getTurn();}).orElse(false);
 
-        // EXPRESSAO HORRIVEL DE FEIA PQ O JAVA NAO TEM O BASICO!!!
-        return correct_turn && opt_piece.map(piece -> {
+        return opt_piece.map(piece -> {
 
             if (piece instanceof Pawn p)        {
                 return isAValidPawnMove (p, move);
@@ -78,12 +93,54 @@ public class ClassicalRules implements RuleSet {
                 throw new PieceNotFound("Unexpected piece: " + piece.getClass().getSimpleName());
             }
         }).orElse(false);
+    }
 
+    private boolean isTheCorrectTurn (Optional<Piece> opt_piece, Side turn) {
+        // TODO TODO TODO: ACESSOU O GAME :TODO TODO TODO
+        return opt_piece.map (piece -> {return piece.getSide() == turn;}).orElse(false);
+    }
+
+    @Override
+    public boolean isValidMove(Move move, Side turn) {
+
+        //System.out.println("initial Position: " + move.getInitialPosition().getX() + " " + move.getInitialPosition().getY());
+        //System.out.println("Final Position: "   + move.getFinalPosition().getX() + " " + move.getFinalPosition().getY());
+
+        int x = move.getInitialPosition().getX();
+        int y = move.getInitialPosition().getY();
+
+        Optional<Piece> opt_piece = move.getBoardBeforeMove().getPiece(x, y);
+        boolean correct_turn = isTheCorrectTurn (opt_piece, turn);
+
+        boolean valid_piece_movement = isAValidePieceMove (move, turn);
+
+        if (!valid_piece_movement || !correct_turn)
+            return false;
+
+        Piece piece = opt_piece.get().clone();
+
+        Board board_after_move = new Board (move.getBoardBeforeMove());
+
+        int initial_x = piece.getCurrent_position().getX();
+        int initial_y = piece.getCurrent_position().getY();
+
+        int final_x   = move.getFinalPosition().getX();
+        int final_y   = move.getFinalPosition().getY();
+
+        piece.setCurrent_position(new Position2D(final_x, final_y));
+
+        board_after_move.replacePiece (initial_x, initial_y, Optional.empty());
+        board_after_move.replacePiece (  final_x,   final_y,          Optional.of(piece));
+
+        return !theKingIsInCheck(board_after_move, turn);
     }
 
     private boolean isAValidKingMove(King king, Move move) {
         if (!king.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("As posicoes inicial do movimento e a da torre nao batem");
+
+        if (move.getFinalPosition().equals(move.getInitialPosition()))
+            return false;
 
         LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(king::movable)

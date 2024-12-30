@@ -3,7 +3,9 @@ package br.ufrn.imd.model.Pieces;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
 
-public class Pawn extends Piece  implements Cloneable {
+public class Pawn extends Piece  implements Cloneable, BeginnersLucky {
+
+    private boolean has_made_the_first_move = false;
 
     public Pawn (Position2D new_position, Side new_side) {
         this.current_position = new Position2D(new_position);
@@ -26,4 +28,14 @@ public class Pawn extends Piece  implements Cloneable {
     public Piece clone() {
         return new Pawn (new Position2D(current_position), this.side);
     }
+
+    @Override
+    public boolean isTheFirstMove() {
+        return !has_made_the_first_move;
+    }
+
+    public void registerMoveAsMade () {
+        has_made_the_first_move = true;
+    }
+
 }

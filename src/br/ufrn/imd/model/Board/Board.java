@@ -78,8 +78,16 @@ public class Board {
     }
 
     public Optional<Piece> getPiece (int col, int row) {
-        Tile t = tiles.getValue(col, row);
-        return t.getPiece();
+        try {
+            Tile t = tiles.getValue(col, row);
+            return t.getPiece();
+        }
+
+        catch (Exception e) {
+            //System.out.println(e.getMessage());
+            // Por hora ,esta bom!
+            return Optional.empty();
+        }
     }
 
     // TODO: TRATAMENTO DE ERROS!!!

@@ -2,6 +2,7 @@ package br.ufrn.imd.model;
 
 import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Matrices.Position2D;
+import br.ufrn.imd.model.Pieces.BeginnersLucky;
 import br.ufrn.imd.model.Pieces.Piece;
 import br.ufrn.imd.model.Rules.ClassicalRules;
 import br.ufrn.imd.model.Rules.GameState;
@@ -61,7 +62,13 @@ public class Game {
         game.board.replacePiece(col1, row1, Optional.empty());
         game.board.replacePiece(col2, row2, opt_piece);
 
-        opt_piece.ifPresent(piece -> piece.setCurrent_position(new Position2D(col2, row2)));
+        if (opt_piece.isPresent()) {
+            Piece piece = opt_piece.get();
+            piece.setCurrent_position(new Position2D(col2, row2));
+            if (piece instanceof BeginnersLucky lucky_piece) {
+                lucky_piece.registerMoveAsMade();
+            }
+        }
     }
 
     public Optional<Piece> getPiece(int col, int row) {

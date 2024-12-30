@@ -10,6 +10,7 @@ import br.ufrn.imd.model.Pieces.*;
 import br.ufrn.imd.view.GameManager;
 import com.sun.jdi.connect.spi.TransportService;
 
+import javax.swing.text.Position;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -236,7 +237,7 @@ public class ClassicalRules implements RuleSet {
         LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
                 .stream().filter(knight::movable)
                 .collect(Collectors
-                        .toCollection(LinkedList::new));
+                .toCollection(LinkedList::new));
 
         if (!valid_positions.contains(move.getFinalPosition()))
             return false;
@@ -254,10 +255,36 @@ public class ClassicalRules implements RuleSet {
                 .collect(Collectors
                 .toCollection(LinkedList::new));
 
-        if (!valid_positions.contains(move.getFinalPosition()))
-            return false;
+        Position2D final_position = move.getFinalPosition();
+        int final_x = final_position.getX();
+        int final_y = final_position.getY();
 
-        return true;
+        Board board = move.getBoardBeforeMove();
+
+        boolean one_step_avaiable = board.getPiece(final_x, final_y).isEmpty();
+
+        if (one_step_avaiable && valid_positions.contains(final_position))
+            return true;
+
+        int side_direction = pawn.isWhite() ? 1 : -1;
+        int adjusted_y     = final_y + side_direction;
+        Position2D adjusted_position = new Position2D(final_x, adjusted_y);
+
+        if (one_step_avaiable
+            && valid_positions.contains(adjusted_position)
+            && board.getPiece(final_x, adjusted_y).isEmpty()
+            && pawn.isTheFirstMove()) {
+            return true;
+        }
+
+        // TODO: Captura
+        int initial_x = move.getInitialPosition().getX();
+
+        return (board.getPiece(initial_x + 1, adjusted_y).isPresent()
+                && final_position.equals(new Position2D(initial_x + 1, adjusted_y)))
+                || (board.getPiece(initial_x - 1, adjusted_y).isPresent()
+                && final_position.equals(new Position2D(initial_x - 1, adjusted_y)));
+
     }
 
     // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!

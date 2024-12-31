@@ -47,6 +47,7 @@ public class GameManager extends JPanel {
     // TODO: Simplificar a logica
     // TODO: Mais um acoplamento desnecessario do singleton GAME instance
     public void makeMove (Move move) {
+        Game game = Game.getInstance(); // TODO: torne game um atributo e nao um singleton de fato!!!!
         if (move.getBoardBeforeMove().equals(Game.getBoard())) {
             RuleSet referee = Game.getRules();
 
@@ -54,6 +55,16 @@ public class GameManager extends JPanel {
                 Game.makeMove (move);
                 // TODO: DA OVERLEAD LOGO, POR FAVOR!!
                 System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
+            }
+
+            else if (referee.isSpecialMove(game, move)) {
+                try {
+                    referee.makeItSpecial(game, move);
+                }
+
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -156,6 +167,7 @@ public class GameManager extends JPanel {
     }
 
     private void paintHighlights (Graphics2D g2d, Board board) {
+        Game game = Game.getInstance(); // TODO: ACOPLAR!!!!
 
         selected_piece.ifPresent(piece -> {
 
@@ -172,7 +184,9 @@ public class GameManager extends JPanel {
                     move            = new Move(board, piece.
                             getCurrent_position(), new Position2D(c, r));
 
-                    if(referee.isValidMove(move, Game.getTurn())) {
+                    // TODO: DESTAQUE NOS MOVIMENTOS ESPECIAIS!!!!
+                    if(referee.isValidMove(move, Game.getTurn())
+                        || referee.isSpecialMove(game, move)) {
                         int ovalSize = tileSize / 3;
 
                         int x = c * board.tileSize + (tileSize - ovalSize) / 2;

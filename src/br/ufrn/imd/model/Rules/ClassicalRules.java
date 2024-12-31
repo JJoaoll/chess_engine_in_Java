@@ -54,14 +54,173 @@ public class ClassicalRules implements RuleSet {
     }
 
 
+    // CONTEM MUITOS SIDE-EFFECTS!!!!!!!
     @Override
-    public Game makeItSpecial(Game game, Move move) {
-        return null;
+    public void makeItSpecial (Game game, Move move) throws IllegalArgumentException {
+        Board board = game.getBoardRf(); // BUSCANDO SIDE EFFECTS!!!! //TODO: tem refatoracão de base aqui!!!!
+
+        int x0 = move.getInitialPosition().getX();
+        int y0 = move.getInitialPosition().getY();
+
+        Optional<Piece> opt_piece = board.getPiece (x0, y0);
+        if (opt_piece.isEmpty ())
+            throw new IllegalArgumentException ("Piece not found");
+
+        // Nao vamos reverificar nada aqui!
+        try {
+            Piece piece = opt_piece.get();
+
+            // Como nenhum dos casos conflitam:
+            if (piece instanceof Pawn pawn) {
+                if(isAPromotingPawn (pawn, move)) {
+
+                }
+
+                else if (isAnEnPassant (game, pawn, move)) {
+
+                }
+            }
+
+            else if (piece instanceof King king) {
+                // Eh mais comum que o rei roque curto :)
+                if (isCastlingShort (king, move, Game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+
+                    String rook_side = king.isWhite() ? "h1" : "h8";
+                    Position2D rook_position = Position2D.fromChessNotation(rook_side);
+                    Position2D king_position = king.getCurrent_position();
+
+                    /*//
+                    Rook rook = (Rook) board.getPiece(rook_position.getX(), rook_position.getY()).get();*/
+
+                    // deletando:
+                    board.replacePiece (king_position.getX(), king_position.getY(), Optional.empty());
+                    board.replacePiece (rook_position.getX(), rook_position.getY(), Optional.empty());
+
+                    String rook_spot = king.isWhite() ? "f1" : "f8";
+                    String king_spot = king.isWhite() ? "g1" : "g8";
+
+                    /*Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
+                    Position2D new_king_position = Position2D.fromChessNotation(king_spot);
+
+                    // Recolocando:
+                    board.replacePiece (new_king_position.getX(), new_king_position.getY(), Optional.of(king));
+                    board.replacePiece (new_rook_position.getX(), new_rook_position.getY(), Optional.of(king));*/
+
+                }
+
+                else if (isCastlingLong   (king, move)) {
+
+                }
+            }
+
+            else {
+                throw new IllegalArgumentException ("Not a special piece");
+            }
+        }
+
+        catch (Exception e) {
+            e.getMessage();
+            throw e;
+        }
+
     }
 
     @Override
-    public boolean isSpecialMove(Move move, Side turn) {
+    public boolean isSpecialMove (Game game, Move move) {
+        Board board = move.getBoardBeforeMove();
+
+        int x0 = move.getInitialPosition().getX();
+        int y0 = move.getInitialPosition().getY();
+
+        Optional<Piece> opt_piece = board.getPiece (x0, y0);
+
+        return opt_piece.map(piece -> {
+
+            if (piece instanceof Pawn p)        {
+                return isAPromotingPawn (p, move)
+                    || isAnEnPassant    (game, p, move);
+            }
+
+            else if (piece instanceof King k) {
+                return isCastlingShort  (k, move, Game.getTurn()) // TODO: FIXAR ESSA ESTATICIDADE!!!
+                    || isCastlingLong   (k, move);
+            }
+
+            else {
+                return false;
+            }
+
+        }).orElse(false);
+    }
+
+
+    // TODO: DO!
+    private boolean isCastlingShort (King king, Move move, Side turn) {
+        Board board = move.getBoardBeforeMove();
+
+        String expected_rook_coordinate = king.isWhite() ? "h1" : "h8";
+        Position2D rook_position = Position2D.fromChessNotation(expected_rook_coordinate);
+        Optional<Piece> opt_piece = board.getPiece(rook_position.getX(), rook_position.getY());
+
+        if(opt_piece.isPresent()) {
+
+            try {
+                Rook rook          = (Rook) opt_piece.get();
+                boolean twin_souls = king.isTheFirstMove()
+                                  && rook.isTheFirstMove();
+
+                String empty_tile1 = king.isWhite() ? "f1" : "f8";
+                String empty_tile2 = king.isWhite() ? "g1" : "g8";
+
+                Position2D empty1  = Position2D.fromChessNotation(empty_tile1);
+                Position2D empty2  = Position2D.fromChessNotation(empty_tile2);
+
+                boolean free_space = board.getPiece(empty1.getX(), empty1.getY()).isEmpty()
+                                  && board.getPiece(empty2.getX(), empty2.getY()).isEmpty();
+
+                boolean is_in_check  = theKingIsInCheck(board, king.getSide());
+
+                // Break for efficiency
+                if (is_in_check || !free_space || !twin_souls)
+                    return false;
+
+                Board board_after_first_step  = new Board(board);
+                Board board_after_second_step = new Board(board);
+
+                int initial_x = king.getCurrent_position().getX();
+                int initial_y = king.getCurrent_position().getY();
+
+                board_after_first_step.replacePiece(initial_x, initial_y,Optional.empty());
+                board_after_first_step.replacePiece(empty1.getX(), empty1.getY(), Optional.of(king));
+
+                board_after_second_step.replacePiece(initial_x, initial_y,Optional.empty());
+                board_after_second_step.replacePiece(empty2.getX(), empty2.getY(), Optional.of(king));
+
+                return move.getFinalPosition().equals(empty2)
+                    && theKingIsInCheck(board_after_first_step  , king.getSide())
+                    && theKingIsInCheck(board_after_second_step , king.getSide())
+                    && isTheCorrectTurn(Optional.of(king), turn);
+            }
+
+            catch (ClassCastException e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
+
         return false;
+    }
+
+    private boolean isCastlingLong(King k, Move move) {
+        return false;
+    }
+
+    private boolean isAnEnPassant(Game game, Pawn p, Move move) {
+        return false;
+    }
+
+    private boolean isAPromotingPawn(Pawn p, Move move) {
+       return false;
     }
 
     private boolean isAValidPieceMove (Move move, Side turn) {

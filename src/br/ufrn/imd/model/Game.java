@@ -96,6 +96,10 @@ public class Game {
         Game game = Game.getInstance();
         return game.board;
     }
+    // TODO: refatorar pra esse ser o padraozao!!!!!
+    public Board getBoardRf() {
+        return this.board;
+    }
 
     public static RuleSet getRules() {
         Game game = Game.getInstance();

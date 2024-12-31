@@ -108,7 +108,31 @@ public class ClassicalRules implements RuleSet {
 
                 }
 
-                else if (isCastlingLong   (king, move)) {
+                else if (isCastlingLong   (king, move, Game.getTurn())) {
+                    // Eh mais comum que o rei roque curto :)
+                    if (isCastlingLong (king, move, Game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+
+                        String rook_side = king.isWhite() ? "a1" : "a8";
+                        Position2D rook_position = Position2D.fromChessNotation(rook_side);
+                        Position2D king_position = king.getCurrent_position();
+
+                    /*//
+                    Rook rook = (Rook) board.getPiece(rook_position.getX(), rook_position.getY()).get();*/
+
+                        // deletando:
+                        board.replacePiece(king_position.getX(), king_position.getY(), Optional.empty());
+                        board.replacePiece(rook_position.getX(), rook_position.getY(), Optional.empty());
+
+                        String rook_spot = king.isWhite() ? "d1" : "d8";
+                        String king_spot = king.isWhite() ? "c1" : "c8";
+
+                        Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
+                        Position2D new_king_position = Position2D.fromChessNotation(king_spot);
+
+                        // Recolocando:
+                        board.replacePiece(new_king_position.getX(), new_king_position.getY(), Optional.of(king));
+                        board.replacePiece(new_rook_position.getX(), new_rook_position.getY(), Optional.of(new Rook(new_rook_position, king.getSide())));
+                    }
 
                 }
             }
@@ -146,7 +170,7 @@ public class ClassicalRules implements RuleSet {
 
             else if (piece instanceof King k) {
                 return isCastlingShort  (k, move, Game.getTurn()) // TODO: FIXAR ESSA ESTATICIDADE!!!
-                    || isCastlingLong   (k, move);
+                    || isCastlingLong   (k, move, Game.getTurn());
             }
 
             else {
@@ -156,8 +180,6 @@ public class ClassicalRules implements RuleSet {
         }).orElse(false);
     }
 
-
-    // TODO: DO!
     private boolean isCastlingShort (King king, Move move, Side turn) {
         Board board = move.getBoardBeforeMove();
 
@@ -221,7 +243,66 @@ public class ClassicalRules implements RuleSet {
         return false;
     }
 
-    private boolean isCastlingLong(King k, Move move) {
+    private boolean isCastlingLong(King king, Move move, Side turn) {
+        Board board = move.getBoardBeforeMove();
+
+        String expected_rook_coordinate = king.isWhite() ? "a1" : "a8";
+        Position2D rook_position = Position2D.fromChessNotation(expected_rook_coordinate);
+        Optional<Piece> opt_piece = board.getPiece(rook_position.getX(), rook_position.getY());
+
+        if(opt_piece.isPresent()) {
+
+            try {
+                Rook rook          = (Rook) opt_piece.get();
+                boolean twin_souls =  king.isTheFirstMove()
+                        &&  rook.isTheFirstMove();
+                System.out.println("twin souls: " + twin_souls);
+
+                // NOMES RUINS ATRAPALHARAM! TODO: melhorar nomes se sobrar tempo.
+                String empty_tile1 = king.isWhite() ? "c1" : "c8";
+                String empty_tile2 = king.isWhite() ? "d1" : "d8";
+
+                Position2D empty1  = Position2D.fromChessNotation (empty_tile1);
+                Position2D empty2  = Position2D.fromChessNotation (empty_tile2);
+
+                boolean free_space = board.getPiece(empty1.getX(), empty1.getY()).isEmpty()
+                        && board.getPiece(empty2.getX(), empty2.getY()).isEmpty();
+
+                System.out.println("free space: " + free_space);
+
+                boolean is_in_check  = theKingIsInCheck(board, king.getSide());
+                System.out.println("is in check: " + is_in_check);
+
+                // Break for efficiency
+                if (is_in_check || !free_space || !twin_souls)
+                    return false;
+
+                Board board_after_first_step  = new Board(board);
+                Board board_after_second_step = new Board(board);
+
+                int initial_x = king.getCurrent_position().getX();
+                int initial_y = king.getCurrent_position().getY();
+
+                board_after_first_step.replacePiece(initial_x, initial_y,Optional.empty());
+                board_after_first_step.replacePiece(empty1.getX(), empty1.getY(),
+                        Optional.of(new King (king.getCurrent_position(), king.getSide())));
+
+                board_after_second_step.replacePiece(initial_x, initial_y,Optional.empty());
+                board_after_second_step.replacePiece(empty2.getX(), empty2.getY(),
+                        Optional.of(new King (king.getCurrent_position(), king.getSide())));
+
+                return move.getFinalPosition().equals(empty1)
+                        && !theKingIsInCheck(board_after_first_step  , king.getSide())
+                        && !theKingIsInCheck(board_after_second_step , king.getSide())
+                        && isTheCorrectTurn(Optional.of(king), turn);
+            }
+
+            catch (ClassCastException e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
+
         return false;
     }
 

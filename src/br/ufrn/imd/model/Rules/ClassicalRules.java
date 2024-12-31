@@ -77,6 +77,34 @@ public class ClassicalRules implements RuleSet {
                 }
 
                 else if (isAnEnPassant (game, pawn, move)) {
+                    // TRUST: (Nao ha caso de en-passant duplo)
+                    Move last_move = game.getMoveList().getFirst();
+                    // Trust: (Nao havera caso de en-passant fora do
+                    // tabuleiro por causa da estrutura do codigo ate aqui.)
+
+                    int side_walk = pawn.isWhite() ? -1 : 1;
+
+                    int pawn_x = pawn.getCurrent_position().getX();
+                    int pawn_y = pawn.getCurrent_position().getY();
+
+                    board.replacePiece(pawn_x, pawn_y, Optional.empty());
+
+                    //TODO: fix this bad name again!!
+                    // LEFT LEFT LEFT
+                    if (last_move.getFinalPosition().isXBehindOf(pawn.getCurrent_position())) {
+                        // TRUST: Nunca ha o caso onde o peao corta outra peca pq
+                        // se o peao inimigo avancou, entao a casa, agora 'atras' dele, esta vazia.
+
+                        board.replacePiece(pawn_x - 1, pawn_y + side_walk, Optional.of(pawn));
+                        board.replacePiece(pawn_x - 1, pawn_y, Optional.empty());
+
+                    }
+
+                    // Big trust!!!! TODO: Fix??!!
+                    else {
+                        board.replacePiece(pawn_x + 1, pawn_y + side_walk, Optional.of(pawn));
+                        board.replacePiece(pawn_x + 1, pawn_y, Optional.empty());
+                    }
 
                 }
             }
@@ -306,13 +334,74 @@ public class ClassicalRules implements RuleSet {
         return false;
     }
 
-    private boolean isAnEnPassant(Game game, Pawn p, Move move) {
-        return false;
+    private boolean isAnEnPassant(Game game, Pawn pawn, Move move) {
+        // off-by-one
+        int fifth_row = pawn.isWhite() ? 3 : 4;
+        if (pawn.getCurrent_position().getY() != fifth_row) {
+            System.out.println("Parada 0");
+            return false;
+        }
+
+        // se o peao esta na quinta linha, nao eh o primeiro lance!
+        Move last_move = game.getMoveList().getFirst();
+
+        Position2D pawn_position = pawn.getCurrent_position();
+        int pawn_x = pawn_position.getX();
+        int pawn_y = pawn_position.getY();
+
+        Optional<Piece> opt_piece_left  = game.getPiece(pawn_x + 1, pawn_y);
+        Optional<Piece> opt_piece_right = game.getPiece(pawn_x - 1, pawn_y);
+
+        if (opt_piece_right.isEmpty() && opt_piece_left.isEmpty()) {
+            System.out.println("PARADA 1");
+            return false;
+        }
+
+        int final_last_move_x = last_move.getFinalPosition().getX();
+        int final_last_move_y = last_move.getFinalPosition().getY();
+
+        Optional<Piece> maybe_a_pawn = game.getPiece(final_last_move_x, final_last_move_y);
+        if (maybe_a_pawn.isEmpty()) {
+            System.out.println("PARADA 2");
+            return false;
+        }
+
+        Piece last_moved_piece = maybe_a_pawn.get();
+        if (!(last_moved_piece instanceof Pawn) || last_moved_piece.getSide() == pawn.getSide()) {
+            System.out.printf("PARADA 3");
+            return false;
+        }
+
+        int side_walk = pawn.isWhite() ? -1 : 1;
+        Position2D final_position = move.getFinalPosition();
+
+        return (last_move.getFinalPosition().equals(new Position2D(pawn_x + 1, pawn_y))
+                && final_position.equals(new Position2D(pawn_x + 1, pawn_y + side_walk)))
+            || (last_move.getFinalPosition().equals(new Position2D(pawn_x - 1, pawn_y))
+                && final_position.equals(new Position2D(pawn_x - 1, pawn_y + side_walk)));
+
     }
 
-    private boolean isAPromotingPawn(Pawn p, Move move) {
-       return false;
+    private boolean isAPromotingPawn(Pawn pawn, Move move) {
+        if (pawn.getCurrent_position().equals(move.getInitialPosition()))
+            throw new IllegalArgumentException("Chegaram argumentos inconsistencites na \"isAPromotingPawn!\"");
+
+        int last_row  = pawn.isWhite() ?  0 : 7;
+        int side_walk = pawn.isWhite() ? -1 : 1;
+
+        int pawn_y    = pawn.getCurrent_position().getY();
+
+        int final_x   = move.getFinalPosition().getX();
+        int final_y   = move.getFinalPosition().getY();
+
+        return false;
+
+
     }
+
+
+
+
 
     private boolean isAValidPieceMove (Move move, Side turn) {
         int x = move.getInitialPosition().getX();

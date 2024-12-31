@@ -111,9 +111,9 @@ public class Board {
     // TODO: TRATAMENTO DE ERROS!!!
     public void replacePiece (int col, int row, Optional<Piece> opt_piece) {
         opt_piece.ifPresent(p -> {p.setCurrent_position(new Position2D(col, row));});
-        System.out.println("Antes: " + tiles.getValue(col, row).getPiece());
+       // System.out.println("Antes: " + tiles.getValue(col, row).getPiece());
         tiles.getValue(col, row).setPiece(opt_piece);
-        System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
+       // System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
     }
 
     // GETTER's

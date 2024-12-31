@@ -14,10 +14,10 @@ import java.util.Optional;
 
 // TODO: deixar de ser estatico (vai dar trabalho)
 public class Game {
-    private Board            board;
-    private RuleSet          rules;
-    private List<Move>   move_list = new LinkedList<>();
-    private GameState   game_state = GameState.Playing;
+    private Board             board;
+    private RuleSet           rules;
+    private LinkedList<Move>  move_list = new LinkedList<>();
+    private GameState        game_state = GameState.Playing;
 
     private static Game instance;
 
@@ -83,6 +83,8 @@ public class Game {
         }
 
         game.swapTurn();
+        // Essas convencoes do java....
+        game.move_list.addFirst(move);
     }
 
     public Optional<Piece> getPiece(int col, int row) {
@@ -105,6 +107,10 @@ public class Game {
     public static RuleSet getRules() {
         Game game = Game.getInstance();
         return game.rules;
+    }
+
+    public LinkedList<Move> getMoveList() {
+        return move_list;
     }
 
 

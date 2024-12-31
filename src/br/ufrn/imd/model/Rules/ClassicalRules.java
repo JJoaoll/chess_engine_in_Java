@@ -99,12 +99,12 @@ public class ClassicalRules implements RuleSet {
                     String rook_spot = king.isWhite() ? "f1" : "f8";
                     String king_spot = king.isWhite() ? "g1" : "g8";
 
-                    /*Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
+                    Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
                     Position2D new_king_position = Position2D.fromChessNotation(king_spot);
 
                     // Recolocando:
                     board.replacePiece (new_king_position.getX(), new_king_position.getY(), Optional.of(king));
-                    board.replacePiece (new_rook_position.getX(), new_rook_position.getY(), Optional.of(king));*/
+                    board.replacePiece (new_rook_position.getX(), new_rook_position.getY(), Optional.of(new Rook(new_rook_position, king.getSide())));
 
                 }
 
@@ -116,6 +116,9 @@ public class ClassicalRules implements RuleSet {
             else {
                 throw new IllegalArgumentException ("Not a special piece");
             }
+
+            game.swapTurn();
+
         }
 
         catch (Exception e) {
@@ -166,19 +169,24 @@ public class ClassicalRules implements RuleSet {
 
             try {
                 Rook rook          = (Rook) opt_piece.get();
-                boolean twin_souls = king.isTheFirstMove()
-                                  && rook.isTheFirstMove();
+                boolean twin_souls =  king.isTheFirstMove()
+                                  &&  rook.isTheFirstMove();
+                System.out.println("twin souls: " + twin_souls);
 
-                String empty_tile1 = king.isWhite() ? "f1" : "f8";
-                String empty_tile2 = king.isWhite() ? "g1" : "g8";
+                // NOMES RUINS ATRAPALHARAM! TODO: melhorar nomes se sobrar tempo.
+                String empty_tile1 = king.isWhite() ? "g1" : "g8";
+                String empty_tile2 = king.isWhite() ? "f1" : "f8";
 
-                Position2D empty1  = Position2D.fromChessNotation(empty_tile1);
-                Position2D empty2  = Position2D.fromChessNotation(empty_tile2);
+                Position2D empty1  = Position2D.fromChessNotation (empty_tile1);
+                Position2D empty2  = Position2D.fromChessNotation (empty_tile2);
 
                 boolean free_space = board.getPiece(empty1.getX(), empty1.getY()).isEmpty()
                                   && board.getPiece(empty2.getX(), empty2.getY()).isEmpty();
 
+                System.out.println("free space: " + free_space);
+
                 boolean is_in_check  = theKingIsInCheck(board, king.getSide());
+                System.out.println("is in check: " + is_in_check);
 
                 // Break for efficiency
                 if (is_in_check || !free_space || !twin_souls)
@@ -191,14 +199,16 @@ public class ClassicalRules implements RuleSet {
                 int initial_y = king.getCurrent_position().getY();
 
                 board_after_first_step.replacePiece(initial_x, initial_y,Optional.empty());
-                board_after_first_step.replacePiece(empty1.getX(), empty1.getY(), Optional.of(king));
+                board_after_first_step.replacePiece(empty1.getX(), empty1.getY(),
+                        Optional.of(new King (king.getCurrent_position(), king.getSide())));
 
                 board_after_second_step.replacePiece(initial_x, initial_y,Optional.empty());
-                board_after_second_step.replacePiece(empty2.getX(), empty2.getY(), Optional.of(king));
+                board_after_second_step.replacePiece(empty2.getX(), empty2.getY(),
+                        Optional.of(new King (king.getCurrent_position(), king.getSide())));
 
-                return move.getFinalPosition().equals(empty2)
-                    && theKingIsInCheck(board_after_first_step  , king.getSide())
-                    && theKingIsInCheck(board_after_second_step , king.getSide())
+                return move.getFinalPosition().equals(empty1)
+                    && !theKingIsInCheck(board_after_first_step  , king.getSide())
+                    && !theKingIsInCheck(board_after_second_step , king.getSide())
                     && isTheCorrectTurn(Optional.of(king), turn);
             }
 

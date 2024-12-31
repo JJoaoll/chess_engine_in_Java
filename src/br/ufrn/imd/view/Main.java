@@ -61,7 +61,6 @@ public class Main {
         System.out.println(position5.toChessNotation());
         System.out.println(position7.toChessNotation());
 
-
         Game.getInstance();
 
         JFrame frame = new JFrame("Chess Board");

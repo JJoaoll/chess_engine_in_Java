@@ -58,6 +58,7 @@ public class GameManager extends JPanel {
             }
 
             else if (referee.isSpecialMove(game, move)) {
+
                 try {
                     referee.makeItSpecial(game, move);
                 }

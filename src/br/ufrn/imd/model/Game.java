@@ -30,7 +30,8 @@ public class Game {
         return game.turn;
     }
 
-    private void swapTurn () {
+    // acabou sendo necessario!!
+    public void swapTurn () {
         this.turn = turn.OponentSide();
     }
 

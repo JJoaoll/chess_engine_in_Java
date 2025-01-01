@@ -74,6 +74,17 @@ public class ClassicalRules implements RuleSet {
             // Como nenhum dos casos conflitam:
             if (piece instanceof Pawn pawn) {
                 if(isAPromotingPawn (pawn, move, turn)) {
+                    // TRUST!
+                    Position2D initial_position = move.getInitialPosition();
+                    Position2D final_position   = move.getFinalPosition();
+
+                    board.replacePiece(initial_position.getX(), initial_position.getY(), Optional.empty());
+                    // TODO: DEIXAR O JOGADOR ESCOLHER QUAL PECA!!!! TODO TODO TODO
+
+
+                    board.replacePiece(final_position.getX(), final_position.getY(), Optional.of(
+                            new Queen (final_position, pawn.getSide()) // TODO: perde em eficiencia
+                    ));
 
                 }
 
@@ -977,6 +988,89 @@ public class ClassicalRules implements RuleSet {
 
         new_board.setTiles(new_tiles);
         return new_board;
+    }
+
+
+    // More Lazy Evaluation
+    public boolean turnPlayerHasValidMoves (Game game) {
+        Side turn = game.getTurn();
+        Board board = game.getBoard();
+
+        List<List<Tile>> tiles = board.getTiles().getGrid();
+
+        for (int col = 0; col < board.getWidth(); col++)
+            for (int row = 0; row < board.getHeight(); row++) {
+                Optional<Piece> opt_piece = board.getPiece(col, row);
+
+                if (opt_piece.isPresent()) {
+                    Piece piece = opt_piece.get();
+
+                    if (piece.getSide() == turn)
+                        if (pieceHasValidMoves(game, piece))
+                            return true;
+
+                }
+            }
+
+        return false;
+    }
+
+
+
+    public boolean pieceHasValidMoves (Game game, Piece piece) {
+        Side turn   = game.getTurn();
+        Board board = game.getBoard();
+
+        for (Position2D position : board_positions) {
+            Move move = new Move (board, piece.getCurrent_position(), position);
+            if (isValidMove(move, turn))
+                return true;
+        }
+
+        return false;
+    }
+
+
+    private boolean hasInsuficientMaterial (Board board, Side turn) {
+
+        LinkedList<Piece> turn_player_pieces = board.getPieces()
+                .stream()
+                .filter(piece -> piece.getSide() == turn)
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        for (Piece piece : turn_player_pieces) {
+            if (piece instanceof Pawn)
+                return false;
+            if (piece instanceof Rook)
+                return false;
+            if (piece instanceof Queen)
+                return false;
+        }
+
+        return turn_player_pieces.size() < 3;
+    }
+
+    @Override
+    public GameState getGameState(Game game) {
+        Side turn   = Game.getTurn(); // TODO: ACOPLE
+        Board board = Game.getBoard();
+
+        if (turnPlayerHasValidMoves(game)) { // TODO: material insuficiente
+            if (hasInsuficientMaterial(board, turn) && hasInsuficientMaterial(board, turn.OponentSide()))
+                return GameState.Draw;
+
+            return GameState.Playing;
+        }
+
+        if (theKingIsInCheck(board, turn)) {
+            if (turn == Side.WhiteSide)
+                return GameState.BlackWon;
+
+            return GameState.WhiteWon;
+        }
+
+        // Stalemate
+        return GameState.Draw;
     }
 
 

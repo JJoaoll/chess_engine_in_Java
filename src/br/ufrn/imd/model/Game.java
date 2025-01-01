@@ -99,6 +99,12 @@ public class Game {
         Game game = Game.getInstance();
         return game.board;
     }
+
+    public GameState getGameState() {
+        return game_state;
+    }
+
+
     // TODO: refatorar pra esse ser o padraozao!!!!!
     public Board getBoardRf() {
         return this.board;
@@ -116,8 +122,13 @@ public class Game {
 
 
 
+
     // SETTER's
 
     // TODO: Custom Setter's
+
+    public void updateGameState () {
+        game_state = rules.getGameState(this);
+    }
 
 }

@@ -36,7 +36,7 @@ public class Main {
         frame.add(game);
 
         frame.setVisible(true);*/
-        Position2D position7 = new Position2D(4, 3);
+        /*Position2D position7 = new Position2D(4, 3);
         Position2D position6 = new Position2D(7, 5);
         Position2D position5 = new Position2D(2, 4);
         Position2D position4 = new Position2D(3, 3);
@@ -59,7 +59,7 @@ public class Main {
         System.out.println(Position2D.fromChessNotation(position4.toChessNotation()).toChessNotation());
         System.out.println(position5.toChessNotation());
         System.out.println(position5.toChessNotation());
-        System.out.println(position7.toChessNotation());
+        System.out.println(position7.toChessNotation());*/
 
         Game.getInstance();
 

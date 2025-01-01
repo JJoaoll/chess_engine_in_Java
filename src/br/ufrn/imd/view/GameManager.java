@@ -43,6 +43,11 @@ public class GameManager extends JPanel {
         return instance;
     }
 
+    private void updateGameState () {
+        Game game = Game.getInstance(); //TODO: fixar pra acoplar!!!!!!
+        game.updateGameState();
+    }
+
     /// ///////////////////////////////////////////////////////////
     // TODO: Simplificar a logica
     // TODO: Mais um acoplamento desnecessario do singleton GAME instance
@@ -70,6 +75,8 @@ public class GameManager extends JPanel {
                 System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
             }
         }
+        updateGameState();
+        System.out.println("\n\nGame STATE: " + game.getGameState());
     }
 
 

@@ -58,6 +58,7 @@ public class ClassicalRules implements RuleSet {
     @Override
     public void makeItSpecial (Game game, Move move) throws IllegalArgumentException {
         Board board = game.getBoardRf(); // BUSCANDO SIDE EFFECTS!!!! //TODO: tem refatoracão de base aqui!!!!
+        Side turn   = Game.getTurn(); // TODO: acople!!!
 
         int x0 = move.getInitialPosition().getX();
         int y0 = move.getInitialPosition().getY();
@@ -72,7 +73,7 @@ public class ClassicalRules implements RuleSet {
 
             // Como nenhum dos casos conflitam:
             if (piece instanceof Pawn pawn) {
-                if(isAPromotingPawn (pawn, move)) {
+                if(isAPromotingPawn (pawn, move, turn)) {
 
                 }
 
@@ -183,6 +184,7 @@ public class ClassicalRules implements RuleSet {
     @Override
     public boolean isSpecialMove (Game game, Move move) {
         Board board = move.getBoardBeforeMove();
+        Side turn   = Game.getTurn();
 
         int x0 = move.getInitialPosition().getX();
         int y0 = move.getInitialPosition().getY();
@@ -192,7 +194,7 @@ public class ClassicalRules implements RuleSet {
         return opt_piece.map(piece -> {
 
             if (piece instanceof Pawn p)        {
-                return isAPromotingPawn (p, move)
+                return isAPromotingPawn (p, move, turn)
                     || isAnEnPassant    (game, p, move);
             }
 
@@ -368,7 +370,7 @@ public class ClassicalRules implements RuleSet {
 
         Piece last_moved_piece = maybe_a_pawn.get();
         if (!(last_moved_piece instanceof Pawn) || last_moved_piece.getSide() == pawn.getSide()) {
-            System.out.printf("PARADA 3");
+            System.out.println("PARADA 3");
             return false;
         }
 
@@ -382,26 +384,19 @@ public class ClassicalRules implements RuleSet {
 
     }
 
-    private boolean isAPromotingPawn(Pawn pawn, Move move) {
-        if (pawn.getCurrent_position().equals(move.getInitialPosition()))
+    private boolean isAPromotingPawn(Pawn pawn, Move move, Side turn) {
+        if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("Chegaram argumentos inconsistencites na \"isAPromotingPawn!\"");
 
         int last_row  = pawn.isWhite() ?  0 : 7;
         int side_walk = pawn.isWhite() ? -1 : 1;
 
-        int pawn_y    = pawn.getCurrent_position().getY();
+        int pawn_row    = pawn.getCurrent_position().getY();
 
-        int final_x   = move.getFinalPosition().getX();
-        int final_y   = move.getFinalPosition().getY();
-
-        return false;
-
-
+        return isValidMove(move, turn)
+            && pawn_row == last_row - side_walk;
+        // O caso de coroar com enpassant n existe aqui!
     }
-
-
-
-
 
     private boolean isAValidPieceMove (Move move, Side turn) {
         int x = move.getInitialPosition().getX();

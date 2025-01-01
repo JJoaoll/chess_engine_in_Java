@@ -51,13 +51,9 @@ public class GameManager extends JPanel {
         if (move.getBoardBeforeMove().equals(Game.getBoard())) {
             RuleSet referee = Game.getRules();
 
-            if (referee.isValidMove(move, Game.getTurn())) {
-                Game.makeMove (move);
-                // TODO: DA OVERLEAD LOGO, POR FAVOR!!
-                System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
-            }
-
-            else if (referee.isSpecialMove(game, move)) {
+            // Em troca de eficiencia, o projeto se torna mais estavel (Por causa da promocao do peao).
+            // TRUST (Nessa ordem nunca haverao conflitos.)
+            if (referee.isSpecialMove(game, move)) {
 
                 try {
                     referee.makeItSpecial(game, move);
@@ -66,6 +62,12 @@ public class GameManager extends JPanel {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+
+            else if (referee.isValidMove(move, Game.getTurn())) {
+                Game.makeMove (move);
+                // TODO: DA OVERLEAD LOGO, POR FAVOR!!
+                System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
             }
         }
     }

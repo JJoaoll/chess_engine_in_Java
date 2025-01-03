@@ -23,7 +23,7 @@ public class Board {
 
     // TODO: o getValue pode dar nulo, faz um try catch.
     public Board(Board board_to_copy) {
-        this.width = board_to_copy.width;
+        this.width  = board_to_copy.width;
         this.height = board_to_copy.height;
 
         // Criação de um novo Grid para os tiles
@@ -115,6 +115,15 @@ public class Board {
         tiles.getValue(col, row).setPiece(opt_piece);
        // System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Board another_board) {
+            return this.tiles.equals(another_board.tiles);
+        }
+        return false;
+    }
+
 
     // GETTER's
 

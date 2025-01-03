@@ -19,11 +19,11 @@ import java.util.Optional;
 public class GameManager extends JPanel {
 
     // TODO: um setter pra generalizar!
-    private Game game = new Game (new ClassicalRules());
+    private Game game                      = new Game (new ClassicalRules());
 
     private Optional<Piece> selected_piece = Optional.empty();
 
-    private PieceManager piece_manager = new PieceManager();
+    private PieceManager piece_manager     = new PieceManager();
 
     private static GameManager instance;
 
@@ -82,6 +82,7 @@ public class GameManager extends JPanel {
                 System.out.println(game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
             }
         }
+
         updateGameState();
         System.out.println("\n\nGame STATE: " + game.getGameState());
     }

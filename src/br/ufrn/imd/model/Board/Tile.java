@@ -33,6 +33,43 @@ public class Tile {
         return coordinate;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Tile another_tile) {
+
+            if (this.piece.isPresent() != another_tile.piece.isPresent()) {
+                System.out.println("saida 0");
+                return false;
+            }
+
+            if (this.piece.isPresent()) {
+                Piece piece1 = this         .piece.get();
+                Piece piece2 = another_tile .piece.get();
+
+                /*System.out.println("piece1: " + piece1.getCurrent_position().toChessNotation());
+                System.out.println("piece1: " + piece1.getClass().getSimpleName());
+
+                System.out.println("piece2: " + piece2.getCurrent_position().toChessNotation());
+                System.out.println("piece2: " + piece2.getClass().getSimpleName());*/
+
+                if (!piece1.getClass().getSimpleName().equals(piece2.getClass().getSimpleName())) {
+                    System.out.println("saida 1");
+                    return false;
+                }
+
+                if (!piece1.getSide().equals(piece2.getSide())) {
+                    System.out.println("saida 2");
+                    return false;
+                }
+
+            }
+
+            return this.coordinate.equals(another_tile.coordinate);
+
+        }
+        return false;
+    }
+
    /* public Color getColor() {
         return color;
     }*/

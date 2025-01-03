@@ -351,7 +351,7 @@ public class ClassicalRules implements RuleSet {
         // off-by-one
         int fifth_row = pawn.isWhite() ? 3 : 4;
         if (pawn.getCurrent_position().getY() != fifth_row) {
-            System.out.println("Parada 0");
+            //System.out.println("Parada 0");
             return false;
         }
 
@@ -366,7 +366,7 @@ public class ClassicalRules implements RuleSet {
         Optional<Piece> opt_piece_right = game.getPiece(pawn_x - 1, pawn_y);
 
         if (opt_piece_right.isEmpty() && opt_piece_left.isEmpty()) {
-            System.out.println("PARADA 1");
+            //System.out.println("PARADA 1");
             return false;
         }
 
@@ -375,13 +375,13 @@ public class ClassicalRules implements RuleSet {
 
         Optional<Piece> maybe_a_pawn = game.getPiece(final_last_move_x, final_last_move_y);
         if (maybe_a_pawn.isEmpty()) {
-            System.out.println("PARADA 2");
+            //System.out.println("PARADA 2");
             return false;
         }
 
         Piece last_moved_piece = maybe_a_pawn.get();
         if (!(last_moved_piece instanceof Pawn) || last_moved_piece.getSide() == pawn.getSide()) {
-            System.out.println("PARADA 3");
+            //System.out.println("PARADA 3");
             return false;
         }
 
@@ -1050,12 +1050,49 @@ public class ClassicalRules implements RuleSet {
         return turn_player_pieces.size() < 3;
     }
 
+    private boolean hasRepeatedThreeTimes (Board board_to_count, LinkedList<Board> boards) {
+        int count = 0;
+        System.out.println("Testou a tripla repeticao");
+        System.out.println("\n\n--------" + "lance: " + boards.size() + "--------\n");
+
+        for (Board b : boards) {
+            if (board_to_count.equals(b)) {
+                count++;
+                System.out.println("count: " + count);
+            }
+
+            if (count > 2) // SOLUCAO MAIS SIMPLES!!!!!
+                return true;
+        }
+
+        return false;
+    }
+
+
+
     @Override
     public GameState getGameState(Game game) {
-        Side turn   = game.getTurn(); // TODO: ACOPLE
+        Side turn   = game.getTurn();
         Board board = game.getBoard();
 
-        if (turnPlayerHasValidMoves(game)) { // TODO: material insuficiente
+        // Tripla repeticao:
+        LinkedList<Board> boards =
+                game.getMoveList()
+                .stream()
+                .map(Move::getBoardBeforeMove)
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        boards.add (game.getRules().initializeBoard());
+
+
+        // TODO: se o jogo nao for interrompido, vai bugar, pq sempre olha com base no ultimo!!!
+        if (!boards.isEmpty()) {
+            if (hasRepeatedThreeTimes(board, boards))
+                return GameState.Draw;
+        }
+
+
+        if (turnPlayerHasValidMoves(game)) {
             if (hasInsuficientMaterial(board, turn) && hasInsuficientMaterial(board, turn.OponentSide()))
                 return GameState.Draw;
 

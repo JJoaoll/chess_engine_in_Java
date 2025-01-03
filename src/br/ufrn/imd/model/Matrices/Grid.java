@@ -1,5 +1,7 @@
 package br.ufrn.imd.model.Matrices;
 
+import br.ufrn.imd.model.Board.Tile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,29 @@ public class Grid<T> {
             }           
             this.grid.add(new_col);
         }
+    }
+
+    // TODO: ver se um try catch realmente seria necesario por aqui!!!
+    @Override
+    public boolean equals(Object obj) {
+        System.out.println("\ntestou os grids");
+        if (obj instanceof Grid another_grid) {
+            for (int i = 0; i < this.cols; i++)
+                for (int j = 0; j < this.rows; j++) {
+                    Tile tile1 = (Tile) this        .getValue(i, j);
+                    Tile tile2 = (Tile) another_grid.getValue(i, j);
+
+                    if (!tile1.equals(tile2)) {
+                        System.out.println ("as posicoes" + i + "x" + j + ": nao concordam" );
+                        return false;
+                    }
+                }
+
+            System.out.println("retornou true pros grids!!");
+            return true;
+
+        }
+        return false;
     }
     
     public void setRow(int col_index, List<T> row) {

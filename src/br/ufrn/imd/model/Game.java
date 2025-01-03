@@ -7,10 +7,13 @@ import br.ufrn.imd.model.Pieces.Piece;
 import br.ufrn.imd.model.Rules.*;
 import br.ufrn.imd.view.GameManager;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Game {
     private Board             board;
@@ -61,7 +64,32 @@ public class Game {
 
         this.swapTurn();
         // Essas convencoes do java....
-        this.move_list.addFirst(move);
+        this.move_list.addFirst(new Move (
+                new Board (move.getBoardBeforeMove()),
+                move.getInitialPosition(),
+                move.getFinalPosition())
+        );
+
+        StringBuilder writed_moves = new StringBuilder();
+        for (Move m : this.move_list) {
+            writed_moves
+                    .append(m.getInitialPosition()
+                    .toChessNotation())
+                    .append("-")
+                    .append(m.getFinalPosition()
+                    .toChessNotation())
+                    .append("  ");            
+        }
+
+        System.out.println(String.valueOf(move_list.stream()
+                .map(Move::getBoardBeforeMove)
+                .collect(Collectors.toCollection(LinkedList::new))));
+
+
+        System.out.println(writed_moves);
+        System.out.println();
+
+
     }
 
     public Optional<Piece> getPiece(int col, int row) {

@@ -66,31 +66,7 @@ public class Input extends MouseAdapter{
         GameManager.selectPiece(Optional.empty());
         gm.repaint();
 
-        /*if(board.selectedPiece != null) {
-            Move move = new Move(board, board.selectedPiece, col, row);
 
-            // TODO: Inlinize it
-            try {
-                if(board.isValidMove(move)){
-                    board.makeMove(move);
-                }
-
-                else {
-                    board.selectedPiece.setxPos(
-                            board.selectedPiece.getCol() * board.tileSize);
-
-                    board.selectedPiece.setyPos(
-                            board.selectedPiece.getRow() * board.tileSize);
-                }
-            }
-
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-
-            board.selectedPiece = null;
-            board.repaint();
-        }*/
 
         draggedX = -1;
         draggedY = -1;
@@ -111,26 +87,6 @@ public class Input extends MouseAdapter{
         });
     }
 
-/*@Override
-    public void mouseDragged(MouseEvent e) {
-        GameManager referee = GameManager.getInstance();
-        Board board = Game.getBoard();
-        Optional<Piece> opt_piece = referee.getSelectedPiece();
-
-        opt_piece.ifPresent(piece -> {
-            // Atualize as coordenadas da peça com base no movimento do mouse
-            int newX = e.getX() - (board.tileSize / 2);
-            int newY = e.getY() - (board.tileSize / 2);
-
-            Position2D position = new Position2D(newX, newY);
-
-            if (true) {
-                piece.setCurrent_position(position);
-            }
-
-            referee.repaint();
-        });
-    }*/
 
     public int getDraggedX() {
         return draggedX;

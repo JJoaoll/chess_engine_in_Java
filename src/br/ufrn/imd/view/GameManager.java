@@ -116,28 +116,7 @@ public class GameManager extends JPanel {
         paintBoard      (g2d, board);
         paintPieces     (g2d, board);
         paintHighlights (g2d, board);
-        /*// PAINT HIGHLIGHTS
-        // TODO: fix this DRY ('U CAN MOVE HERE')
-        // TODO: The current position should be less neutral!
-        // TODO: Remove TRY CATCHS
-        if (selectedPiece != null)
-            for (int r = 0; r < rows; r++)
-                for (int c = 0; c < cols; c++) {
 
-                    try {
-                        if(isValidMove(new Move(this, selectedPiece, c, r))) {
-                            g2d.setColor(new Color(68, 180, 57, 190));
-                            g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-        // PAINT PIECES
-        for (Piece piece : pieceList) {
-            piece.paint(g2d);
-        }*/
     }
 
     private void paintBoard (Graphics2D g2d, Board board) {
@@ -218,19 +197,7 @@ public class GameManager extends JPanel {
 
         });
 
-        // SelectedPiece Highlight
-            /*for (int r = 0; r < rows; r++)
-                for (int c = 0; c < cols; c++) {
 
-                    try {
-                        if(isValidMove(new Move(this, selectedPiece, c, r))) {
-                            g2d.setColor(new Color(68, 180, 57, 190));
-                            g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }*/
     }
 
 

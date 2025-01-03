@@ -29,7 +29,7 @@ public class PieceView {
             sheet = ImageIO.read(new FileInputStream("resources/pieces.png"));
             //sheet = ImageIO.read(ClassLoader.getSystemResourceAsStream("../resources/piece.png"));
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -110,7 +110,7 @@ public class PieceView {
     }*/
 
     // metodo gerado de uma simplificacao por eficiencia.
-    private Image getSprite(Piece p) throws PieceNotFound {
+    public Image getSprite(Piece p) throws PieceNotFound {
         String key = p.getClass().getSimpleName() + (p.isWhite() ? "_white" : "_black");
         return spriteCache.computeIfAbsent(key, k -> {
             int tileSize = Game.getBoard().getTileSize();

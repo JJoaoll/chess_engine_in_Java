@@ -36,7 +36,7 @@ public class Input extends MouseAdapter{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Board board  = Game.getBoard();
+        Board board  = GameManager.getInstance().getBoard();
 
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
@@ -48,7 +48,7 @@ public class Input extends MouseAdapter{
     @Override
     public void mouseReleased(MouseEvent e) {
         GameManager gm = GameManager.getInstance();
-        Board board = Game.getBoard();
+        Board board    = gm.getBoard();
 
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
@@ -75,15 +75,15 @@ public class Input extends MouseAdapter{
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        GameManager referee       = GameManager.getInstance();
-        Optional<Piece> opt_piece = referee.getSelectedPiece();
+        GameManager gm       = GameManager.getInstance();
+        Optional<Piece> opt_piece = gm.getSelectedPiece();
 
         opt_piece.ifPresent(piece -> {
-            draggedX = e.getX() - (Game.getBoard().getTileSize() / 2);
-            draggedY = e.getY() - (Game.getBoard().getTileSize() / 2);
+            draggedX = e.getX() - (gm.getBoard().getTileSize() / 2);
+            draggedY = e.getY() - (gm.getBoard().getTileSize() / 2);
 
             // Solicitar redesenho do tabuleiro
-            referee.repaint();
+            gm.repaint();
         });
     }
 

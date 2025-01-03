@@ -1,25 +1,21 @@
 package br.ufrn.imd.view;
 
 import br.ufrn.imd.control.PieceNotFound;
-import br.ufrn.imd.model.Board.Board;
-import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Pieces.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 // TODO: poderia deixar de ser singleton e apenas ser um atributo do gameManager. (sem metodos estaticos!!)
 // TODO: poderia trocar tudo para pieceManager ou algo similar pra simualar (controle x visao)
 // static class (singleton por eficiencia)
-public class PieceView {
+public class PieceManager {
 
     private static final Map<String, Image> spriteCache = new HashMap<>();
     private BufferedImage sheet;
@@ -35,21 +31,10 @@ public class PieceView {
     }
 
     private final int sheetScale = sheet.getWidth() / 6;
-    private static PieceView instance;
 
     // TODO: Aprender a lidar com classes estaticas!
-    private PieceView () {}
+    public PieceManager() {}
 
-    public static PieceView getInstance() {
-        if (Objects.isNull(instance)) {
-            synchronized (PieceView.class) {
-                if (Objects.isNull(instance)) {
-                    instance = new PieceView();
-                }
-            }
-        }
-        return instance;
-    }
 
     // FICOU FEIO PORQUE O JAVA 17 NAO SUPORTA O BASICO DE PATTERN MATCHING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -110,10 +95,9 @@ public class PieceView {
     }*/
 
     // metodo gerado de uma simplificacao por eficiencia.
-    public Image getSprite(Piece p) throws PieceNotFound {
+    public Image getSprite(Piece p, int tile_size) throws PieceNotFound {
         String key = p.getClass().getSimpleName() + (p.isWhite() ? "_white" : "_black");
         return spriteCache.computeIfAbsent(key, k -> {
-            int tileSize = Game.getBoard().getTileSize();
             int spriteX = switch (p.getClass().getSimpleName()) {
                 case "Pawn"   -> 5;
                 case "Rook"   -> 4;
@@ -125,20 +109,18 @@ public class PieceView {
             };
             int spriteY = p.isWhite() ? 0 : sheetScale;
             return sheet.getSubimage(spriteX * sheetScale, spriteY, sheetScale, sheetScale)
-                    .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
+                    .getScaledInstance(tile_size, tile_size, BufferedImage.SCALE_SMOOTH);
         });
     }
 
     // TODO: resolver a chamada de metodos aninhados!
     //TODO: singleton things here
-    public static void paintPiece (Graphics2D g2d, Piece piece) {
-        PieceView pv = PieceView.getInstance();
-        int tileSize = Game.getBoard().getTileSize();
-        int xPos     = piece.getCurrent_position().getX() * tileSize;
-        int yPos     = piece.getCurrent_position().getY() * tileSize;
+    public void paintPiece (Graphics2D g2d, Piece piece, int tile_size) {
+        int xPos     = piece.getCurrent_position().getX() * tile_size;
+        int yPos     = piece.getCurrent_position().getY() * tile_size;
 
         try {
-            g2d.drawImage(pv.getSprite(piece), xPos, yPos, null);
+            g2d.drawImage(this.getSprite(piece, tile_size), xPos, yPos, null);
         }
 
         catch (Exception e) {
@@ -150,11 +132,10 @@ public class PieceView {
     }
 
     // TODO: singleton things here
-    public static void paintPieceAt (Graphics2D g2d, Piece piece, int PosX, int PosY) {
-        PieceView pv = PieceView.getInstance();
+    public void paintPieceAt (Graphics2D g2d, Piece piece, int PosX, int PosY, int tile_size) {
 
         try {
-            Image sprite = pv.getSprite(piece);
+            Image sprite = this.getSprite(piece, tile_size);
             g2d.drawImage(sprite, PosX, PosY, null);
         }
 

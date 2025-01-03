@@ -61,7 +61,7 @@ public class Main {
         System.out.println(position5.toChessNotation());
         System.out.println(position7.toChessNotation());*/
 
-        Game.getInstance();
+        Game game = new Game (new ClassicalRules());
 
         JFrame frame = new JFrame("Chess Board");
         frame.getContentPane().setBackground(Color.BLACK);

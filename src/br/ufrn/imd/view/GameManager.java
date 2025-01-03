@@ -18,13 +18,18 @@ import java.util.Optional;
 // TODO: Consertar a parte singleton
 public class GameManager extends JPanel {
 
+    // TODO: um setter pra generalizar!
+    private Game game = new Game (new ClassicalRules());
+
     private Optional<Piece> selected_piece = Optional.empty();
+
+    private PieceManager piece_manager = new PieceManager();
 
     private static GameManager instance;
 
     private GameManager() {
         Input input = Input.getInstance();
-        Board board = Game.getBoard();
+        Board board = game.getBoard();
         this.setPreferredSize(new Dimension(board.getWidth() * board.tileSize, board.getHeight() * board.tileSize));
 
         this.addMouseListener       (input);
@@ -44,17 +49,19 @@ public class GameManager extends JPanel {
     }
 
     private void updateGameState () {
-        Game game = Game.getInstance(); //TODO: fixar pra acoplar!!!!!!
         game.updateGameState();
+    }
+
+    public Board getBoard() {
+        GameManager gm = GameManager.getInstance();
+        return gm.game.getBoard();
     }
 
     /// ///////////////////////////////////////////////////////////
     // TODO: Simplificar a logica
-    // TODO: Mais um acoplamento desnecessario do singleton GAME instance
     public void makeMove (Move move) {
-        Game game = Game.getInstance(); // TODO: torne game um atributo e nao um singleton de fato!!!!
-        if (move.getBoardBeforeMove().equals(Game.getBoard())) {
-            RuleSet referee = Game.getRules();
+        if (move.getBoardBeforeMove().equals(game.getBoard())) {
+            RuleSet referee = game.getRules();
 
             // Em troca de eficiencia, o projeto se torna mais estavel (Por causa da promocao do peao).
             // TRUST (Nessa ordem nunca haverao conflitos.)
@@ -69,10 +76,10 @@ public class GameManager extends JPanel {
                 }
             }
 
-            else if (referee.isValidMove(move, Game.getTurn())) {
-                Game.makeMove (move);
+            else if (referee.isValidMove(move, game.getTurn())) {
+                game.makeMove (move);
                 // TODO: DA OVERLEAD LOGO, POR FAVOR!!
-                System.out.println(Game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
+                System.out.println(game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
             }
         }
         updateGameState();
@@ -80,9 +87,12 @@ public class GameManager extends JPanel {
     }
 
 
+    // Acoplamento pra resolver
+    // TODO: devia ser um funcao da classe "Game"
     public static Optional<Piece> getPiece(int col, int row) {
-        Game game = Game.getInstance();
-        Board board = Game.getBoard();
+        GameManager gameManager = GameManager.getInstance();
+        Game game = gameManager.game;
+        Board board = game.getBoard();
 
         return game.getPiece(col, row);
     }
@@ -92,7 +102,6 @@ public class GameManager extends JPanel {
     public static void selectPiece (Optional<Piece> opt_piece) {
         GameManager referee = GameManager.getInstance();
         referee.setSelectedPiece(opt_piece);
-
     }
 
     private void setSelectedPiece(Optional<Piece> opt_piece) {
@@ -107,12 +116,10 @@ public class GameManager extends JPanel {
 
     public void paintComponent (Graphics g) {
         super.paintComponent (g); // apaga as coisas
-        Game.getInstance     ( );
-        Board board    = Game.getBoard();
+        Board board    = game.getBoard();
         Graphics2D g2d = (Graphics2D) g;
 
 
-        // Evitando multiplas instancias p/ performance
         paintBoard      (g2d, board);
         paintPieces     (g2d, board);
         paintHighlights (g2d, board);
@@ -146,17 +153,16 @@ public class GameManager extends JPanel {
             int draggedX = input.getDraggedX();
             int draggedY = input.getDraggedY();
 
-            PieceView.paintPieceAt(g2d, piece, draggedX, draggedY);
+            piece_manager.paintPieceAt (g2d, piece, draggedX, draggedY, board.tileSize);
         });
 
         for (Piece piece : pieces) {
             //System.out.println(piece.getCurrent_position().getX() + "|" + piece.getCurrent_position().getY() + " : " + piece.getClass());
-            PieceView.paintPiece(g2d, piece);
+            piece_manager.paintPiece(g2d, piece, board.tileSize);
         }
     }
 
     private void paintHighlights (Graphics2D g2d, Board board) {
-        Game game = Game.getInstance(); // TODO: ACOPLAR!!!!
 
         selected_piece.ifPresent(piece -> {
 
@@ -169,12 +175,12 @@ public class GameManager extends JPanel {
             for (int c = 0; c < board.getWidth(); c++)
                 for (int r = 0; r < board.getHeight(); r++) {
 
-                    RuleSet referee = Game.getRules();
+                    RuleSet referee = game.getRules();
                     move            = new Move(board, piece.
                             getCurrent_position(), new Position2D(c, r));
 
                     // TODO: DESTAQUE NOS MOVIMENTOS ESPECIAIS!!!!
-                    if(referee.isValidMove(move, Game.getTurn())
+                    if(referee.isValidMove(move, game.getTurn())
                         || referee.isSpecialMove(game, move)) {
                         int ovalSize = tileSize / 3;
 
@@ -192,9 +198,6 @@ public class GameManager extends JPanel {
             int y = piece.getCurrent_position().getY();
 
             g2d.fillRect(x * board.tileSize, y * tileSize, tileSize, tileSize);
-
-
-
         });
 
 

@@ -58,7 +58,7 @@ public class ClassicalRules implements RuleSet {
     @Override
     public void makeItSpecial (Game game, Move move) throws IllegalArgumentException {
         Board board = game.getBoardRf(); // BUSCANDO SIDE EFFECTS!!!! //TODO: tem refatoracão de base aqui!!!!
-        Side turn   = Game.getTurn(); // TODO: acople!!!
+        Side turn   = game.getTurn(); // TODO: acople!!!
 
         int x0 = move.getInitialPosition().getX();
         int y0 = move.getInitialPosition().getY();
@@ -123,7 +123,7 @@ public class ClassicalRules implements RuleSet {
 
             else if (piece instanceof King king) {
                 // Eh mais comum que o rei roque curto :)
-                if (isCastlingShort (king, move, Game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+                if (isCastlingShort (king, move, game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
 
                     String rook_side = king.isWhite() ? "h1" : "h8";
                     Position2D rook_position = Position2D.fromChessNotation(rook_side);
@@ -148,9 +148,9 @@ public class ClassicalRules implements RuleSet {
 
                 }
 
-                else if (isCastlingLong   (king, move, Game.getTurn())) {
+                else if (isCastlingLong   (king, move, game.getTurn())) {
                     // Eh mais comum que o rei roque curto :)
-                    if (isCastlingLong (king, move, Game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+                    if (isCastlingLong (king, move, game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
 
                         String rook_side = king.isWhite() ? "a1" : "a8";
                         Position2D rook_position = Position2D.fromChessNotation(rook_side);
@@ -195,7 +195,7 @@ public class ClassicalRules implements RuleSet {
     @Override
     public boolean isSpecialMove (Game game, Move move) {
         Board board = move.getBoardBeforeMove();
-        Side turn   = Game.getTurn();
+        Side turn   = game.getTurn();
 
         int x0 = move.getInitialPosition().getX();
         int y0 = move.getInitialPosition().getY();
@@ -210,8 +210,8 @@ public class ClassicalRules implements RuleSet {
             }
 
             else if (piece instanceof King k) {
-                return isCastlingShort  (k, move, Game.getTurn()) // TODO: FIXAR ESSA ESTATICIDADE!!!
-                    || isCastlingLong   (k, move, Game.getTurn());
+                return isCastlingShort  (k, move, game.getTurn()) // TODO: FIXAR ESSA ESTATICIDADE!!!
+                    || isCastlingLong   (k, move, game.getTurn());
             }
 
             else {
@@ -1052,8 +1052,8 @@ public class ClassicalRules implements RuleSet {
 
     @Override
     public GameState getGameState(Game game) {
-        Side turn   = Game.getTurn(); // TODO: ACOPLE
-        Board board = Game.getBoard();
+        Side turn   = game.getTurn(); // TODO: ACOPLE
+        Board board = game.getBoard();
 
         if (turnPlayerHasValidMoves(game)) { // TODO: material insuficiente
             if (hasInsuficientMaterial(board, turn) && hasInsuficientMaterial(board, turn.OponentSide()))

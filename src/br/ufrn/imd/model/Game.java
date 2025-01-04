@@ -14,7 +14,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/**
+ * Classe que gerencia o jogo
+ * @author Joao Lucas
+ *
+ */
 public class Game {
     private Board             board;
     private RuleSet           rules;
@@ -25,11 +29,18 @@ public class Game {
     private Side turn = Side.WhiteSide;
 
     // Mais um problema com estaticidade
+    /**
+     * Método getter de Turn
+     * @return
+     */
     public Side getTurn() {
         return this.turn;
     }
 
     // acabou sendo necessario!!
+    /**
+     * Método para trocar de turno
+     */
     public void swapTurn () {
         this.turn = turn.OponentSide();
     }
@@ -39,6 +50,10 @@ public class Game {
         this.board = rules.initializeBoard();
     }
 
+    /**
+     * Método para realizar movimentos no jogo
+     * @param move
+     */
     public void makeMove (Move move) {
         int col1 = move.getInitialPosition().getX();
         int row1 = move.getInitialPosition().getY();
@@ -92,6 +107,12 @@ public class Game {
 
     }
 
+    /**
+     * Método para conseguir uma peça em uma posição
+     * @param col
+     * @param row
+     * @return
+     */
     public Optional<Piece> getPiece(int col, int row) {
         return board.getPiece(col, row);
     }
@@ -102,26 +123,45 @@ public class Game {
         return this.board;
     }
 
+    /**
+     * Método getter de GameState
+     * @return
+     */
     public GameState getGameState() {
         return game_state;
     }
 
 
     // TODO: refatorar pra esse ser o padraozao!!!!!
+    /**
+     * Método getter de BoardRF
+     * @return
+     */
     public Board getBoardRf() {
         return this.board;
     }
 
+    /**
+     * Método getter de Rules
+     * @return
+     */
     public RuleSet getRules() {
         return this.rules;
     }
 
+    /**
+     * Método getter de MoveList
+     * @return
+     */
     public LinkedList<Move> getMoveList() {
         return move_list;
     }
     // SETTER's
 
 
+    /**
+     * Método setter de updateGameState
+     */
     public void updateGameState () {
         game_state = rules.getGameState(this);
     }

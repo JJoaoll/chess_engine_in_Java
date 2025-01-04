@@ -15,6 +15,13 @@ import java.util.Map;
 // TODO: poderia deixar de ser singleton e apenas ser um atributo do gameManager. (sem metodos estaticos!!)
 // TODO: poderia trocar tudo para pieceManager ou algo similar pra simualar (controle x visao)
 // static class (singleton por eficiencia)
+
+/**
+ * Classe gerenciadora das peças
+ * @author Joao Lucas
+ *
+ */
+
 public class PieceManager {
 
     private static final Map<String, Image> spriteCache = new HashMap<>();
@@ -95,6 +102,13 @@ public class PieceManager {
     }*/
 
     // metodo gerado de uma simplificacao por eficiencia.
+    /**
+     * Método para achar o sprite correte de uma peça
+     * @param p
+     * @param tile_size
+     * @return Image
+     * @throws PieceNotFound
+     */
     public Image getSprite(Piece p, int tile_size) throws PieceNotFound {
         String key = p.getClass().getSimpleName() + (p.isWhite() ? "_white" : "_black");
         return spriteCache.computeIfAbsent(key, k -> {
@@ -115,6 +129,12 @@ public class PieceManager {
 
     // TODO: resolver a chamada de metodos aninhados!
     //TODO: singleton things here
+    /**
+     * Método para inserir o sprite de uma peça
+     * @param g2d
+     * @param piece
+     * @param tile_size
+     */
     public void paintPiece (Graphics2D g2d, Piece piece, int tile_size) {
         int xPos     = piece.getCurrent_position().getX() * tile_size;
         int yPos     = piece.getCurrent_position().getY() * tile_size;
@@ -132,6 +152,14 @@ public class PieceManager {
     }
 
     // TODO: singleton things here
+    /**
+     * Método para inserir o sprite de uma peça no tabuleiro
+     * @param g2d
+     * @param piece
+     * @param PosX
+     * @param PosY
+     * @param tile_size
+     */
     public void paintPieceAt (Graphics2D g2d, Piece piece, int PosX, int PosY, int tile_size) {
 
         try {

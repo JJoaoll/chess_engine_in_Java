@@ -2,7 +2,11 @@ package br.ufrn.imd.model.Pieces;
 
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
-
+/**
+ * Classe de definição da peça Cavalo
+ * @author Joao Lucas
+ *
+ */
 public class Knight extends Piece  implements Cloneable {
 
     public Knight (Position2D new_position, Side new_side) {

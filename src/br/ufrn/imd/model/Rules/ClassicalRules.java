@@ -22,6 +22,11 @@ import static br.ufrn.imd.model.Matrices.Position2D.lowestXPosition;
 
 
 // TODO: DO!
+/**
+ * 
+ * @author Joao Lucas
+ *
+ */
 public class ClassicalRules implements RuleSet {
 
     LinkedList<Position2D> board_positions = new LinkedList<>();
@@ -35,6 +40,12 @@ public class ClassicalRules implements RuleSet {
         }
     }
 
+    /**
+     * Método para verificação se o rei está em check
+     * @param board
+     * @param side_of_the_king
+     * @return true or false
+     */
     public boolean theKingIsInCheck (Board board, Side side_of_the_king) {
         King king = board.getKingFrom (side_of_the_king);
         if (king != null) {
@@ -55,6 +66,9 @@ public class ClassicalRules implements RuleSet {
 
 
     // CONTEM MUITOS SIDE-EFFECTS!!!!!!!
+    /**
+     * Método de funcionamento principal das regras clássicas
+     */
     @Override
     public void makeItSpecial (Game game, Move move) throws IllegalArgumentException {
         Board board = game.getBoardRf(); // BUSCANDO SIDE EFFECTS!!!! //TODO: tem refatoracão de base aqui!!!!
@@ -191,7 +205,10 @@ public class ClassicalRules implements RuleSet {
         }
 
     }
-
+    
+    /**
+     * Método para verificação se é um movimento especial
+     */
     @Override
     public boolean isSpecialMove (Game game, Move move) {
         Board board = move.getBoardBeforeMove();
@@ -221,6 +238,13 @@ public class ClassicalRules implements RuleSet {
         }).orElse(false);
     }
 
+    /**
+     * Método para verificação do Roque curto
+     * @param king
+     * @param move
+     * @param turn
+     * @return true or false
+     */
     private boolean isCastlingShort (King king, Move move, Side turn) {
         Board board = move.getBoardBeforeMove();
 
@@ -283,7 +307,14 @@ public class ClassicalRules implements RuleSet {
 
         return false;
     }
-
+    
+    /**
+     * Método para verificação do Roque longo
+     * @param king
+     * @param move
+     * @param turn
+     * @return true or false
+     */
     private boolean isCastlingLong(King king, Move move, Side turn) {
         Board board = move.getBoardBeforeMove();
 
@@ -346,7 +377,14 @@ public class ClassicalRules implements RuleSet {
 
         return false;
     }
-
+    
+    /**
+     * Método para verificações de ocorrencia do En Passant
+     * @param game
+     * @param pawn
+     * @param move
+     * @return true or false
+     */
     private boolean isAnEnPassant(Game game, Pawn pawn, Move move) {
         // off-by-one
         int fifth_row = pawn.isWhite() ? 3 : 4;
@@ -394,7 +432,15 @@ public class ClassicalRules implements RuleSet {
                 && final_position.equals(new Position2D(pawn_x - 1, pawn_y + side_walk)));
 
     }
-
+    
+    /**
+     * Método para verificação se um peão está disponível para promoção
+     * @param pawn
+     * @param move
+     * @param turn
+     * @return true or false
+     * @deprecated
+     */
     private boolean isAPromotingPawn(Pawn pawn, Move move, Side turn) {
         if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException("Chegaram argumentos inconsistencites na \"isAPromotingPawn!\"");
@@ -408,7 +454,13 @@ public class ClassicalRules implements RuleSet {
             && pawn_row == last_row - side_walk;
         // O caso de coroar com enpassant n existe aqui!
     }
-
+    
+    /**
+     * Método de verificação do movimento valido de uma peça qualquer
+     * @param move
+     * @param turn
+     * @return true or false
+     */
     private boolean isAValidPieceMove (Move move, Side turn) {
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
@@ -447,11 +499,20 @@ public class ClassicalRules implements RuleSet {
             }
         }).orElse(false);
     }
-
+    
+    /**
+     * Método de verificação do turno correto
+     * @param opt_piece
+     * @param turn
+     * @return true or false
+     */
     private boolean isTheCorrectTurn (Optional<Piece> opt_piece, Side turn) {
         return opt_piece.map (piece -> {return piece.getSide() == turn;}).orElse(false);
     }
-
+    
+    /**
+     * Método de verificação se um movimento é válido
+     */
     @Override
     public boolean isValidMove(Move move, Side turn) {
 
@@ -485,7 +546,13 @@ public class ClassicalRules implements RuleSet {
         //System.out.println ("the " + turn.toString() + " king is in check: (" + theKingIsInCheck(board_after_move, turn) + ")");
         return !theKingIsInCheck (board_after_move, turn);
     }
-
+    
+    /**
+     * Método que verifica se um rei está realizando um movimento válido
+     * @param king
+     * @param move
+     * @return true or false
+     */
     private boolean isAValidKingMove(King king, Move move) {
         Board board = move.getBoardBeforeMove();
 
@@ -509,7 +576,12 @@ public class ClassicalRules implements RuleSet {
         return valid_positions.contains(move.getFinalPosition())
                 && !same_team;
     }
-
+    /**
+     * Método que verifica se uma rainha está realizando um movimento válido
+     * @param queen
+     * @param move
+     * @return true or false
+     */
     private boolean isAValidQueenMove(Queen queen, Move move) {
         if (!queen.getCurrent_position().equals(move.getInitialPosition()))
             throw new IllegalArgumentException ("As posicoes inicial do movimento e a da torre nao batem");
@@ -540,7 +612,12 @@ public class ClassicalRules implements RuleSet {
 
 
     }
-
+    /**
+     * Método que verifica se uma bispo está realizando um movimento válido
+     * @param bishop
+     * @param move
+     * @return true of false
+     */
     private boolean isAValidBishopMove(Bishop bishop, Move move) {
         Board board = move.getBoardBeforeMove();
 
@@ -635,7 +712,12 @@ public class ClassicalRules implements RuleSet {
 
         return false;
     }
-
+    /**
+     * Método que verifica se uma cavalo está realizando um movimento válido
+     * @param knight
+     * @param move
+     * @return true or false
+     */
     private boolean isAValidKnightMove(Knight knight, Move move) {
         Board board = move.getBoardBeforeMove();
 
@@ -659,7 +741,12 @@ public class ClassicalRules implements RuleSet {
 
         return !same_team;
     }
-
+    /**
+     * Método que verifica se uma peão está realizando um movimento válido
+     * @param pawn
+     * @param move
+     * @return true or false
+     */
     private boolean isAValidPawnMove(Pawn pawn, Move move) {
 
         if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
@@ -706,6 +793,12 @@ public class ClassicalRules implements RuleSet {
     }
 
     // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!
+    /**
+     * Método que verifica se uma torre está realizando um movimento válido
+     * @param rook
+     * @param move
+     * @return true or false
+     */
     private boolean isAValidRookMove (Rook rook, Move move) {
         Board board = move.getBoardBeforeMove();
 
@@ -907,7 +1000,9 @@ public class ClassicalRules implements RuleSet {
     public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {
         return null;
     }
-
+    /**
+     * Método para criação de uma mesa nova
+     */
     @Override
     public Board initializeBoard() {
         Board      new_board = new Board();
@@ -990,8 +1085,13 @@ public class ClassicalRules implements RuleSet {
         return new_board;
     }
 
-
+    
     // More Lazy Evaluation
+    /**
+     * Método para verificação se o jogador tem movimentos válidos
+     * @param game
+     * @return true or false
+     */
     public boolean turnPlayerHasValidMoves (Game game) {
         Side turn = game.getTurn();
         Board board = game.getBoard();
@@ -1016,7 +1116,12 @@ public class ClassicalRules implements RuleSet {
     }
 
 
-
+    /**
+     * Método para verificação se uma peça tem movimentos válidos
+     * @param game
+     * @param piece
+     * @return true or false
+     */
     public boolean pieceHasValidMoves (Game game, Piece piece) {
         Side turn   = game.getTurn();
         Board board = game.getBoard();
@@ -1050,6 +1155,7 @@ public class ClassicalRules implements RuleSet {
         return turn_player_pieces.size() < 3;
     }
 
+    
     private boolean hasRepeatedThreeTimes (Board board_to_count, LinkedList<Board> boards) {
         int count = 0;
         System.out.println("Testou a tripla repeticao");
@@ -1069,7 +1175,9 @@ public class ClassicalRules implements RuleSet {
     }
 
 
-
+    /**
+     * Método para verificação do estado do jogo
+     */
     @Override
     public GameState getGameState(Game game) {
         Side turn   = game.getTurn();

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"br.ufrn.imd.control"},{"l":"br.ufrn.imd.dao"},{"l":"br.ufrn.imd.model"},{"l":"br.ufrn.imd.model.Board"},{"l":"br.ufrn.imd.model.Matrices"},{"l":"br.ufrn.imd.model.Pieces"},{"l":"br.ufrn.imd.model.Rules"},{"l":"br.ufrn.imd.view"}];updateSearchResults();

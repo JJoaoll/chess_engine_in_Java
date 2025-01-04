@@ -2,7 +2,11 @@ package br.ufrn.imd.model.Pieces;
 
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
-
+/**
+ * Classe de definição da peça Rei
+ * @author Joao Lucas
+ *
+ */
 public class King extends Piece  implements Cloneable, BeginnersLucky {
 
     boolean has_made_the_first_move = false;

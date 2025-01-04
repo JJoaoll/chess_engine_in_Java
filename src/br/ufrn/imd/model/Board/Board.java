@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO: tratamento de erros
+/**
+ * Classe que gerencia o tabuleiro
+ * @author Joao Lucas
+ *
+ */
 public class Board {
     private int width = 8, height = 8;
     private Grid<Tile> tiles;
@@ -56,13 +61,20 @@ public class Board {
 
 
     // Assumindo que esta tudo bem aqui!!
+    /**
+     * Método para designar o tabuleiro a janela
+     * @param grid
+     */
     public void setBoardGrid (Grid<Tile> grid) {
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++) {
                 this.tiles.setValue(i, j, grid.getValue(i, j));
             }
     }
-
+/**
+ * Método colocar uma peça no quadrilhos
+ * @return
+ */
     public LinkedList<Piece> getPieces() {
         LinkedList<Piece> pieces = new LinkedList<Piece>();
 
@@ -79,6 +91,12 @@ public class Board {
         return pieces;
     }
 
+    /**
+     * Método colocar uma peça no quadrilho
+     * @param col
+     * @param row
+     * @return
+     */
     public Optional<Piece> getPiece (int col, int row) {
         try {
             Tile t = tiles.getValue(col, row);
@@ -94,6 +112,11 @@ public class Board {
 
     // Pega o rei de um certo lado/time/side
     // Assumption: so ha um rei de cada lado e sempre ha um.
+    /**
+     * Método que recebe os reis de cada lado
+     * @param side
+     * @return
+     */
     public King getKingFrom (Side side) {
         LinkedList<Piece> pieces = getPieces();
 
@@ -108,7 +131,14 @@ public class Board {
         return null;
     }
 
-    // TODO: TRATAMENTO DE ERROS!!!
+
+    // TODO: TRATAMENTO DE ERROS!!!/**
+     /** 
+      * Método para trocar peças
+     * @param col
+     * @param row
+     * @param opt_piece
+     */
     public void replacePiece (int col, int row, Optional<Piece> opt_piece) {
         opt_piece.ifPresent(p -> {p.setCurrent_position(new Position2D(col, row));});
        // System.out.println("Antes: " + tiles.getValue(col, row).getPiece());
@@ -116,6 +146,9 @@ public class Board {
        // System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
     }
 
+    /**
+     * Método que verifica se dois ladrinho estão na mesma posição
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Board another_board) {
@@ -127,18 +160,34 @@ public class Board {
 
     // GETTER's
 
+    /**
+     * Método getter de width
+     * @return
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Método getter de Tiler
+     * @return
+     */
     public Grid<Tile> getTiles() {
         return tiles;
     }
 
+    /**
+     * Método getter de TileSize
+     * @return
+     */
     public int getTileSize() {
         return tileSize;
     }
 
+    /**
+     * Método getter de Height
+     * @return
+     */
     public int getHeight() {
         return height;
     }
@@ -146,14 +195,26 @@ public class Board {
 
     // SETTER's
 
+    /**
+     * Método setter de Width
+     * @param width
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Método setter de Height
+     * @param height
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * Método setter de Tiles
+     * @param tiles
+     */
     public void setTiles(Grid<Tile> tiles) {
         this.tiles = tiles;
     }

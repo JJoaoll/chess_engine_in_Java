@@ -2,7 +2,11 @@ package br.ufrn.imd.model.Pieces;
 
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Rules.Side;
-
+/**
+ * Classe de definição da peça Rainha
+ * @author Joao Lucas
+ *
+ */
 public class Queen extends Piece  implements Cloneable {
 
     public Queen (Position2D new_position, Side new_side) {

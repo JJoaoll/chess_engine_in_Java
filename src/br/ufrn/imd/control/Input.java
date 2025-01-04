@@ -14,6 +14,12 @@ import java.util.Optional;
 
 // TODO: Fix DRY!
 // TODO: KeyListener next!
+
+/**
+ * Classe que gerencia o input do mouse
+ * @author Joao Lucas
+ *
+ */
 public class Input extends MouseAdapter{
 
     private int draggedX = -1;
@@ -34,6 +40,9 @@ public class Input extends MouseAdapter{
         return instance;
     }
 
+    /**
+     * Método que identifica a libera do clique do mouse
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         Board board  = GameManager.getInstance().getBoard();
@@ -45,6 +54,9 @@ public class Input extends MouseAdapter{
         GameManager.selectPiece(opt_piece);
     }
 
+    /**
+     * Método que identifica a libera do clique do mouse
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         GameManager gm = GameManager.getInstance();
@@ -73,6 +85,9 @@ public class Input extends MouseAdapter{
     }
 
 
+    /**
+     * Método que movimenta as peças baseado usando o mouse
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         GameManager gm       = GameManager.getInstance();
@@ -87,11 +102,18 @@ public class Input extends MouseAdapter{
         });
     }
 
-
+    /**
+     * Método getter de DraggedX
+     * @return
+     */
     public int getDraggedX() {
         return draggedX;
     }
 
+    /**
+     * Método getter de Draggedy
+     * @return
+     */
     public int getDraggedY() {
         return draggedY;
     }

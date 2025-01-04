@@ -16,6 +16,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 // TODO: Consertar a parte singleton
+/**
+ * Classe gerenciadora de estado do jogo
+ * @author Joao Lucas
+ *
+ */
+
 public class GameManager extends JPanel {
 
     // TODO: um setter pra generalizar!
@@ -26,7 +32,7 @@ public class GameManager extends JPanel {
     private PieceManager piece_manager     = new PieceManager();
 
     private static GameManager instance;
-
+    
     private GameManager() {
         Input input = Input.getInstance();
         Board board = game.getBoard();
@@ -36,7 +42,10 @@ public class GameManager extends JPanel {
         this.addMouseMotionListener (input);
         //this.setBackground(Color.GREEN);
     }
-
+    /**
+     * Retorna a instancia de GameManager de acordo com o Simpleton
+     * @return instance
+     */
     public static GameManager getInstance() {
         if (Objects.isNull(instance)) {
             synchronized (GameManager.class) {
@@ -47,11 +56,16 @@ public class GameManager extends JPanel {
         }
         return instance;
     }
-
+    /**
+     * Atualiza o estado do jogo
+     */
     private void updateGameState () {
         game.updateGameState();
     }
-
+    /**
+     * Getter para Board
+     * @return Board
+     */
     public Board getBoard() {
         GameManager gm = GameManager.getInstance();
         return gm.game.getBoard();
@@ -59,6 +73,10 @@ public class GameManager extends JPanel {
 
     /// ///////////////////////////////////////////////////////////
     // TODO: Simplificar a logica
+    /**
+     * Método para realizar movimento
+     * @param move
+     */
     public void makeMove (Move move) {
         if (move.getBoardBeforeMove().equals(game.getBoard())) {
             RuleSet referee = game.getRules();
@@ -90,6 +108,13 @@ public class GameManager extends JPanel {
 
     // Acoplamento pra resolver
     // TODO: devia ser um funcao da classe "Game"
+    
+    /**
+     * Método para achar qualquer uma das peças do tabuleiro
+     * @param col
+     * @param row
+     * @return
+     */
     public static Optional<Piece> getPiece(int col, int row) {
         GameManager gameManager = GameManager.getInstance();
         Game game = gameManager.game;
@@ -99,22 +124,32 @@ public class GameManager extends JPanel {
     }
 
 
-
+    /**
+     * Método para seleção de peça
+     * @param opt_piece
+     */
     public static void selectPiece (Optional<Piece> opt_piece) {
         GameManager referee = GameManager.getInstance();
         referee.setSelectedPiece(opt_piece);
     }
 
+    /**
+     * Método para atualização da peça selecionada
+     * @param opt_piece
+     */
     private void setSelectedPiece(Optional<Piece> opt_piece) {
         selected_piece = opt_piece;
     }
 
-
+    /**
+     * 
+     * @return selected_piece
+     */
     public Optional<Piece> getSelectedPiece () {
         return selected_piece;
     }
 
-
+    
     public void paintComponent (Graphics g) {
         super.paintComponent (g); // apaga as coisas
         Board board    = game.getBoard();
@@ -126,7 +161,11 @@ public class GameManager extends JPanel {
         paintHighlights (g2d, board);
 
     }
-
+    /**
+     * Método para inserção do tabuleiro
+     * @param g2d
+     * @param board
+     */
     private void paintBoard (Graphics2D g2d, Board board) {
 
         // TODO: Modularize e confira os c's e os r's
@@ -140,7 +179,11 @@ public class GameManager extends JPanel {
         }
     }
 
-
+    /**
+     * Método para inserção do sprite de todas as peças no tabuleiro
+     * @param g2d
+     * @param board
+     */
     private void paintPieces (Graphics2D g2d, Board board) {
 
         // TODO: resolver chamada de metodos aninhadas
@@ -162,7 +205,11 @@ public class GameManager extends JPanel {
             piece_manager.paintPiece(g2d, piece, board.tileSize);
         }
     }
-
+    /**
+     * Método para realçar os possiveis movimentos da peça selecionada
+     * @param g2d
+     * @param board
+     */
     private void paintHighlights (Graphics2D g2d, Board board) {
 
         selected_piece.ifPresent(piece -> {

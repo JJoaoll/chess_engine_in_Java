@@ -3,7 +3,11 @@ package br.ufrn.imd.model.Board;
 import br.ufrn.imd.model.Pieces.Piece;
 
 import java.util.Optional;
-
+/**
+ * Classe que gerencia as posições
+ * @author Joao Lucas
+ *
+ */
 public class Tile {
     // Optional pode ser uma opcao valida?
     private Optional<Piece> piece       = Optional.empty();
@@ -25,14 +29,25 @@ public class Tile {
 
     // GETTER's
 
+    /**
+     * Método getter de Piece
+     * @return
+     */
     public Optional<Piece> getPiece() {
         return piece;
     }
 
+    /**
+     * Método getter de Coordinate
+     * @return
+     */
     public String getCoordinate() {
         return coordinate;
     }
 
+    /**
+     * Método para verificação se dois ladrinhos esão se propepondo 
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Tile another_tile) {
@@ -76,10 +91,18 @@ public class Tile {
 
     // SETTER's
 
+    /**
+     * Método setter de Piece
+     * @param optional_piece
+     */
     public void setPiece(Optional<Piece> optional_piece) {
         this.piece = optional_piece;
     }
 
+    /**
+     * Método setter de Coordinate
+     * @param coordinate
+     */
     public void setCoordinate(String coordinate) {
         this.coordinate = coordinate;
     }

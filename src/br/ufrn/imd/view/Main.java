@@ -8,6 +8,11 @@ import br.ufrn.imd.model.Rules.RuleSet;
 
 import javax.swing.*;
 import java.awt.*;
+/**
+ * 
+ * @author Joao Lucas
+ *
+ */
 
 public class Main {
     public static void main(String[] args) {

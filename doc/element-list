@@ -1,0 +1,8 @@
+br.ufrn.imd.control
+br.ufrn.imd.dao
+br.ufrn.imd.model
+br.ufrn.imd.model.Board
+br.ufrn.imd.model.Matrices
+br.ufrn.imd.model.Pieces
+br.ufrn.imd.model.Rules
+br.ufrn.imd.view

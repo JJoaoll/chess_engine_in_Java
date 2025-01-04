@@ -7,6 +7,11 @@ import java.util.Collections;
 import java.util.List;
 
 // TODO: tratamento de erros!
+/**
+ * Classe que gerencia o grid
+ * @author Joao Lucas
+ *
+ */
 public class Grid<T> {
     private final List<List<T>> grid = new ArrayList<>();
     private final int cols, rows;
@@ -38,6 +43,9 @@ public class Grid<T> {
     }
 
     // TODO: ver se um try catch realmente seria necesario por aqui!!!
+    /**
+     * Método para verificação de igualdade entre posições
+     */
     @Override
     public boolean equals(Object obj) {
         System.out.println("\ntestou os grids");
@@ -60,16 +68,33 @@ public class Grid<T> {
         return false;
     }
     
+    /**
+     * 
+     * @param col_index
+     * @param row
+     */
     public void setRow(int col_index, List<T> row) {
         if (col_index > 0 && col_index <= cols - 1) {
             grid.set(col_index, row);
         }
     }
 
+    /**
+     * método getter value
+     * @param col_index
+     * @param row_index
+     * @return
+     */
     public T getValue(int col_index, int row_index) {
         return grid.get(col_index).get(row_index);
     }
 
+    /**
+     * Método setter de Value
+     * @param col_index
+     * @param row_index
+     * @param value
+     */
     public void setValue(int col_index, int row_index, T value) {
         grid.get(col_index).set(row_index, value);
     }
@@ -77,14 +102,26 @@ public class Grid<T> {
 
     // GETTER'S
 
+    /**
+     * Método getter de Grid
+     * @return
+     */
     public List<List<T>> getGrid() {
         return grid;
     }
 
+    /**
+     * Método getter de Cols
+     * @return
+     */
     public int getCols() {
         return cols;
     }
 
+    /**
+     * Método getter de Rows
+     * @return
+     */
     public int getRows() {
         return rows;
     }

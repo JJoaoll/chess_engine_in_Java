@@ -7,17 +7,9 @@ import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
-import br.ufrn.imd.view.GameManager;
-import com.sun.jdi.connect.spi.TransportService;
 
-import javax.swing.text.Position;
 import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static br.ufrn.imd.model.Matrices.Position2D.lowestXPosition;
 // TODO: REMOVER ACOPLAMENTO COM O GAME ao maximo!!!
 
 
@@ -27,7 +19,7 @@ import static br.ufrn.imd.model.Matrices.Position2D.lowestXPosition;
  * @author Joao Lucas
  *
  */
-public class ClassicalRules implements RuleSet {
+public class ClassicalChessRules implements RuleSet {
 
     LinkedList<Position2D> board_positions = new LinkedList<>();
 
@@ -891,110 +883,7 @@ public class ClassicalRules implements RuleSet {
         return false;
     }
 
-   /* private boolean isAValidRookMove (Rook rook, Move move) {
 
-        if (rook.getCurrent_position() != move.getInitialPosition())
-            throw new IllegalArgumentException("Bogou");
-
-        // Correcao automatica
-        LinkedList<Position2D> valid_positions    = new LinkedList<>(List.copyOf(board_positions))
-                .stream().filter(rook::movable)
-                .collect(Collectors
-                .toCollection(LinkedList::new));
-
-        Position2D initial_position = rook.getCurrent_position();
-        Position2D final_position   = move.getFinalPosition();
-
-        BiPredicate<Position2D, Position2D> predicate;
-        Function<LinkedList<Position2D>, Position2D> extremeFunction = null;
-
-        //System.out.println(final_position == initial_position);
-
-        // RIGHT
-        if (final_position.isXAboveOf(move.getInitialPosition())) {
-            predicate      = Position2D::isXAboveOf;
-
-            extremeFunction = Position2D::highestXPosition;
-        }
-
-        // LEFT
-        else if (final_position.isXBehindOf(move.getInitialPosition())) {
-            predicate = Position2D::isXBehindOf;
-
-            extremeFunction = Position2D::lowestXPosition;
-        }
-
-        // UP
-        else if (final_position.isYAboveOf(move.getInitialPosition())) {
-            predicate = Position2D::isYAboveOf;
-
-            extremeFunction = Position2D::highestYPosition;
-        }
-
-        // DOWN
-        else if (final_position.isYBehindOf(move.getInitialPosition())) {
-            predicate = Position2D::isYBehindOf;
-
-            extremeFunction = Position2D::lowestYPosition;
-        }
-
-        else {
-            predicate = null;
-            //System.out.println(String.valueOf(final_position == initial_position));
-            // Nao deve dar throw aqui!
-            //throw new IllegalArgumentException("Posicao invalida");
-        }
-
-        if (predicate == null)
-            return false;
-
-        // TODO: um nome melhor seria "directioned positions"
-        LinkedList<Position2D> directioned_moves
-                = new LinkedList<>(valid_positions.stream()
-                .filter(position -> predicate.test(initial_position, position))
-                .toList());
-
-        // umas versoes iterativas de codigo
-        LinkedList<Piece> blocking_pieces = new LinkedList<>();
-        for (Position2D position : directioned_moves) {
-            GameManager.getPiece(position.getX(), position.getY())
-                       .ifPresent(blocking_pieces::add);
-        }
-
-        if (blocking_pieces.isEmpty())
-            return valid_positions.contains(final_position);
-
-        // ---- Parte final: (Hallelluia)
-
-        LinkedList<Position2D> blocking_positions = blocking_pieces.stream()
-                .map(Piece::getCurrent_position)
-                .collect(Collectors.toCollection(LinkedList::new));
-
-        Position2D block_position = extremeFunction.apply(blocking_positions);
-        System.out.printf(block_position.getX() + " " + block_position.getY() + ", ");
-
-        // TODO: FIXE ESSE TRUST!!!!
-        Piece block_piece = Game.getBoard().getPiece(block_position.getX(), block_position.getY()).get();
-
-
-
-
-
-        // Solucao iterativa pra poupar a minha sanidade mental :P
-        for (Position2D position : directioned_moves) {
-            if (predicate.test(block_position, position)) {
-                //System.out.println(position.getX() + " " + position.getY());
-                return true;
-            }
-        }
-
-        // TODO: possiveis problemas com eficiencia
-        if (block_piece.isWhite() != rook.isWhite())
-            return final_position == block_position;
-
-        return false;
-    }
-*/
 
     // TODO: Deleat it
     public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {
@@ -1156,7 +1045,7 @@ public class ClassicalRules implements RuleSet {
     }
 
     
-    private boolean hasRepeatedThreeTimes (Board board_to_count, LinkedList<Board> boards) {
+        private boolean hasRepeatedThreeTimes (Board board_to_count, LinkedList<Board> boards) {
         int count = 0;
         System.out.println("Testou a tripla repeticao");
         System.out.println("\n\n--------" + "lance: " + boards.size() + "--------\n");

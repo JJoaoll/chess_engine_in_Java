@@ -5,7 +5,7 @@ import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.Piece;
-import br.ufrn.imd.model.Rules.ClassicalRules;
+import br.ufrn.imd.model.Rules.ClassicalChessRules;
 import br.ufrn.imd.model.Rules.Move;
 import br.ufrn.imd.model.Rules.RuleSet;
 
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class GameManager extends JPanel {
 
     // TODO: um setter pra generalizar!
-    private Game game                      = new Game (new ClassicalRules());
+    private Game game                      = new Game (new ClassicalChessRules());
 
     private Optional<Piece> selected_piece = Optional.empty();
 

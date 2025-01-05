@@ -1,10 +1,7 @@
 package br.ufrn.imd.view;
 
-import br.ufrn.imd.model.Board.Board;
 import br.ufrn.imd.model.Game;
-import br.ufrn.imd.model.Matrices.Position2D;
-import br.ufrn.imd.model.Rules.ClassicalRules;
-import br.ufrn.imd.model.Rules.RuleSet;
+import br.ufrn.imd.model.Rules.ClassicalChessRules;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +63,7 @@ public class Main {
         System.out.println(position5.toChessNotation());
         System.out.println(position7.toChessNotation());*/
 
-        Game game = new Game (new ClassicalRules());
+        Game game = new Game (new ClassicalChessRules());
 
         JFrame frame = new JFrame("Chess Board");
         frame.getContentPane().setBackground(Color.BLACK);

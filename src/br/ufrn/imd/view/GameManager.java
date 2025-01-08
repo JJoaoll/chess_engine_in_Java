@@ -6,6 +6,7 @@ import br.ufrn.imd.model.Game;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.Piece;
 import br.ufrn.imd.model.Rules.ClassicalChessRules;
+import br.ufrn.imd.model.Rules.GameState;
 import br.ufrn.imd.model.Rules.Move;
 import br.ufrn.imd.model.Rules.RuleSet;
 
@@ -61,6 +62,7 @@ public class GameManager extends JPanel {
      */
     private void updateGameState () {
         game.updateGameState();
+        mostrarResultados();
     }
     /**
      * Getter para Board
@@ -251,5 +253,95 @@ public class GameManager extends JPanel {
 
     }
 
+    
+    /**
+     * Método para visualização dos resultados
+     */
+    private void mostrarResultados() {
+    	if (game.getGameState() == GameState.WhiteWon ) {
+            JFrame frameResultado = new JFrame("Resultados");
+            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frameResultado.setSize(300, 150);
+            frameResultado.setLayout(new FlowLayout());
+
+            JLabel label = new JLabel("Brancas Ganharam");
+            JButton voltarButton = new JButton("Começar outro jogo");
+
+            voltarButton.addActionListener(e -> {
+            	frameResultado.dispose();
+            	
+            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+            	if (framePrincipal != null ) {
+            		framePrincipal.getContentPane().removeAll();
+                    GameManager.instance = null;
+                    GameManager novoGameManager = GameManager.getInstance();
+                    framePrincipal.getContentPane().add(novoGameManager);
+                    framePrincipal.revalidate();
+                    framePrincipal.repaint();
+            	}
+            	
+            });
+            frameResultado.add(label);
+            frameResultado.add(voltarButton);
+
+            frameResultado.setVisible(true);
+    	}
+    	if (game.getGameState() == GameState.BlackWon ) {
+            JFrame frameResultado = new JFrame("Resultados");
+            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frameResultado.setSize(300, 150);
+            frameResultado.setLayout(new FlowLayout());
+
+            JLabel label = new JLabel("Pretas Ganharam");
+            JButton voltarButton = new JButton("Começar outro jogo");
+
+            voltarButton.addActionListener(e -> {
+            	frameResultado.dispose();
+            	
+            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+            	if (framePrincipal != null ) {
+            		framePrincipal.getContentPane().removeAll();
+                    GameManager.instance = null;
+                    GameManager novoGameManager = GameManager.getInstance();
+                    framePrincipal.getContentPane().add(novoGameManager);
+                    framePrincipal.revalidate();
+                    framePrincipal.repaint();
+            	}
+            	
+            });
+            frameResultado.add(label);
+            frameResultado.add(voltarButton);
+
+            frameResultado.setVisible(true);
+    	}
+    	if (game.getGameState() == GameState.Draw ) {
+            JFrame frameResultado = new JFrame("Resultados");
+            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frameResultado.setSize(300, 150);
+            frameResultado.setLayout(new FlowLayout());
+
+            JLabel label = new JLabel("Empate");
+            JButton voltarButton = new JButton("Começar outro jogo");
+
+            voltarButton.addActionListener(e -> {
+            	frameResultado.dispose();
+            	
+            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+            	if (framePrincipal != null ) {
+            		framePrincipal.getContentPane().removeAll();
+                    GameManager.instance = null;
+                    GameManager novoGameManager = GameManager.getInstance();
+                    framePrincipal.getContentPane().add(novoGameManager);
+                    framePrincipal.revalidate();
+                    framePrincipal.repaint();
+            	}
+            	
+            });
+            frameResultado.add(label);
+            frameResultado.add(voltarButton);
+
+            frameResultado.setVisible(true);
+    	}
+    }
 
 }

@@ -263,6 +263,8 @@ public class GameManager extends JPanel {
             frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frameResultado.setSize(300, 150);
             frameResultado.setLayout(new FlowLayout());
+            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+
 
             JLabel label = new JLabel("Brancas Ganharam");
             JButton voltarButton = new JButton("Começar outro jogo");
@@ -270,7 +272,6 @@ public class GameManager extends JPanel {
             voltarButton.addActionListener(e -> {
             	frameResultado.dispose();
             	
-            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
             	if (framePrincipal != null ) {
             		framePrincipal.getContentPane().removeAll();
                     GameManager.instance = null;
@@ -283,7 +284,11 @@ public class GameManager extends JPanel {
             });
             frameResultado.add(label);
             frameResultado.add(voltarButton);
-
+            
+            if (framePrincipal != null) {
+                frameResultado.setLocationRelativeTo(framePrincipal);
+            }
+            
             frameResultado.setVisible(true);
     	}
     	if (game.getGameState() == GameState.BlackWon ) {
@@ -291,6 +296,7 @@ public class GameManager extends JPanel {
             frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frameResultado.setSize(300, 150);
             frameResultado.setLayout(new FlowLayout());
+            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
 
             JLabel label = new JLabel("Pretas Ganharam");
             JButton voltarButton = new JButton("Começar outro jogo");
@@ -298,7 +304,6 @@ public class GameManager extends JPanel {
             voltarButton.addActionListener(e -> {
             	frameResultado.dispose();
             	
-            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
             	if (framePrincipal != null ) {
             		framePrincipal.getContentPane().removeAll();
                     GameManager.instance = null;
@@ -312,6 +317,10 @@ public class GameManager extends JPanel {
             frameResultado.add(label);
             frameResultado.add(voltarButton);
 
+            if (framePrincipal != null) {
+                frameResultado.setLocationRelativeTo(framePrincipal);
+            }
+            
             frameResultado.setVisible(true);
     	}
     	if (game.getGameState() == GameState.Draw ) {
@@ -319,14 +328,15 @@ public class GameManager extends JPanel {
             frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frameResultado.setSize(300, 150);
             frameResultado.setLayout(new FlowLayout());
+            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
 
             JLabel label = new JLabel("Empate");
             JButton voltarButton = new JButton("Começar outro jogo");
 
+        	
             voltarButton.addActionListener(e -> {
             	frameResultado.dispose();
-            	
-            	JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+
             	if (framePrincipal != null ) {
             		framePrincipal.getContentPane().removeAll();
                     GameManager.instance = null;
@@ -337,9 +347,14 @@ public class GameManager extends JPanel {
             	}
             	
             });
+            
             frameResultado.add(label);
             frameResultado.add(voltarButton);
-
+            
+            if (framePrincipal != null) {
+                frameResultado.setLocationRelativeTo(framePrincipal);
+            }
+            
             frameResultado.setVisible(true);
     	}
     }

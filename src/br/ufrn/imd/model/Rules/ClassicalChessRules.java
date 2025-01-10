@@ -8,9 +8,18 @@ import br.ufrn.imd.model.Matrices.Grid;
 import br.ufrn.imd.model.Matrices.Position2D;
 import br.ufrn.imd.model.Pieces.*;
 
+import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 // TODO: REMOVER ACOPLAMENTO COM O GAME ao maximo!!!
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 
 // TODO: DO!
@@ -83,15 +92,33 @@ public class ClassicalChessRules implements RuleSet {
                     // TRUST!
                     Position2D initial_position = move.getInitialPosition();
                     Position2D final_position   = move.getFinalPosition();
+                    
+                    String chosenPiece = mostrarTelaPromocao();
+
+                    Piece promotedPiece;
+                    switch (chosenPiece) {
+                        case "Queen":
+                            promotedPiece = new Queen(final_position, pawn.getSide());
+                            break;
+                        case "Rook":
+                            promotedPiece = new Rook(final_position, pawn.getSide());
+                            break;
+                        case "Bishop":
+                            promotedPiece = new Bishop(final_position, pawn.getSide());
+                            break;
+                        case "Knight":
+                            promotedPiece = new Knight(final_position, pawn.getSide());
+                            break;
+                        default:
+                        	throw new IllegalArgumentException("Escolha inválida para promoção: " + chosenPiece);
+                    }
 
                     board.replacePiece(initial_position.getX(), initial_position.getY(), Optional.empty());
+                    
                     // TODO: DEIXAR O JOGADOR ESCOLHER QUAL PECA!!!! TODO TODO TODO
-
-
-                    board.replacePiece(final_position.getX(), final_position.getY(), Optional.of(
-                            new Queen (final_position, pawn.getSide()) // TODO: perde em eficiencia
-                    ));
-
+                    
+                    board.replacePiece(final_position.getX(), final_position.getY(), Optional.of(promotedPiece) // TODO: perde em eficiencia
+                    );
                 }
 
                 else if (isAnEnPassant (game, pawn, move)) {
@@ -431,7 +458,6 @@ public class ClassicalChessRules implements RuleSet {
      * @param move
      * @param turn
      * @return true or false
-     * @deprecated
      */
     private boolean isAPromotingPawn(Pawn pawn, Move move, Side turn) {
         if (!pawn.getCurrent_position().equals(move.getInitialPosition()))
@@ -1107,5 +1133,53 @@ public class ClassicalChessRules implements RuleSet {
         return GameState.Draw;
     }
 
+    
+    /**
+     * método para iniciar tela de escolha para a promoção do peão
+     * @return peça que o peão ira virar
+     */
+    private String mostrarTelaPromocao() {
+        final JDialog dialog = new JDialog((Frame) null, "Escolha a promoção", true);
+        dialog.setSize(300, 150);
+        dialog.setLayout(new FlowLayout());
+
+        final String[] pecaEscolhida = {null};
+        
+        
+        
+        JLabel label = new JLabel("Escolha qual será a promoção do peão:");
+        dialog.add(label);
+
+        JButton queenButton  = new JButton("Rainha");
+        JButton rookButton   = new JButton("Torre ");
+        JButton bishopButton = new JButton("Bispo ");
+        JButton knightButton = new JButton("Cavalo");
+        
+        queenButton.addActionListener(e -> {
+            pecaEscolhida[0] = "Queen";
+            dialog.dispose();
+        });
+        rookButton.addActionListener(e -> {
+            pecaEscolhida[0] = "Rook";
+            dialog.dispose();
+        });
+        bishopButton.addActionListener(e -> {
+            pecaEscolhida[0] = "Bishop";
+            dialog.dispose();
+        });
+        knightButton.addActionListener(e -> {
+            pecaEscolhida[0] = "Knight";
+            dialog.dispose();
+        });
+
+        dialog.add(queenButton);
+        dialog.add(rookButton);
+        dialog.add(bishopButton);
+        dialog.add(knightButton);
+
+        dialog.setVisible(true);
+
+        return pecaEscolhida[0];
+    }
 
 }

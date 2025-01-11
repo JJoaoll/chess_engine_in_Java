@@ -234,12 +234,33 @@ public class GameManager extends JPanel {
                     // TODO: DESTAQUE NOS MOVIMENTOS ESPECIAIS!!!!
                     if(referee.isValidMove(move, game.getTurn())
                         || referee.isSpecialMove(game, move)) {
-                        int ovalSize = tileSize / 3;
 
-                        int x = c * board.tileSize + (tileSize - ovalSize) / 2;
-                        int y = r * board.tileSize + (tileSize - ovalSize) / 2;
+                        int final_x = move.getFinalPosition().getX();
+                        int final_y = move.getFinalPosition().getY();
 
-                        g2d.fillOval(x, y, ovalSize, ovalSize);
+                        int geometrical_size = tileSize / 3;
+
+                        int x = c * board.tileSize + (tileSize - geometrical_size) / 2;
+                        int y = r * board.tileSize + (tileSize - geometrical_size) / 2;
+
+                        if (getPiece(final_x,final_y).isEmpty()) {
+
+                            g2d.setColor(new Color(0, 255, 0, 150));
+                            g2d.fillOval(x, y, geometrical_size, geometrical_size);
+
+                            g2d.setColor(new Color(7, 7, 7));
+                            g2d.setStroke(new BasicStroke(3));
+                            g2d.drawOval(x, y, geometrical_size, geometrical_size);
+                        }
+
+                        else {
+                            g2d.setColor(new Color(216, 22, 16, 255));
+                            g2d.setStroke(new BasicStroke(3));
+
+                            g2d.drawLine(x, y, x + geometrical_size, y + geometrical_size);
+                            g2d.drawLine(x + geometrical_size, y, x, y + geometrical_size);
+                        }
+
                     }
                 }
 
@@ -251,8 +272,6 @@ public class GameManager extends JPanel {
 
             g2d.fillRect(x * board.tileSize, y * tileSize, tileSize, tileSize);
         });
-
-
     }
 
     

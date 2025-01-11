@@ -84,7 +84,6 @@ public class Input extends MouseAdapter{
         draggedY = -1;
     }
 
-
     /**
      * Método que movimenta as peças baseado usando o mouse
      */

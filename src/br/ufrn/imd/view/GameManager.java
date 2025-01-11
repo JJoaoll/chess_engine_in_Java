@@ -260,6 +260,8 @@ public class GameManager extends JPanel {
      * Método para visualização dos resultados
      */
     private void mostrarResultados() {
+        JButton voltarButton = new JButton("Jogar novamente");
+
     	if (game.getGameState() == GameState.WhiteWon ) {
             JFrame frame_resultado = new JFrame("Resultados");
             frame_resultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -269,7 +271,6 @@ public class GameManager extends JPanel {
 
 
             JLabel label = new JLabel("Brancas Ganharam");
-            JButton voltarButton = new JButton("Começar outro jogo");
 
             voltarButton.addActionListener(e -> {
             	frame_resultado.dispose();
@@ -301,7 +302,6 @@ public class GameManager extends JPanel {
             JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
 
             JLabel label = new JLabel("Pretas Ganharam");
-            JButton voltarButton = new JButton("Começar outro jogo");
 
             voltarButton.addActionListener(e -> {
             	frameResultado.dispose();
@@ -333,7 +333,6 @@ public class GameManager extends JPanel {
             JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
 
             JLabel label = new JLabel("Empate");
-            JButton voltarButton = new JButton("Começar outro jogo");
 
         	
             voltarButton.addActionListener(e -> {

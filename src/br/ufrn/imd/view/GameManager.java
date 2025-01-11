@@ -33,6 +33,8 @@ public class GameManager extends JPanel {
     private PieceManager piece_manager     = new PieceManager();
 
     private static GameManager instance;
+
+    private Referee referee = new Referee(game.getRules());
     
     private GameManager() {
         Input input = Input.getInstance();
@@ -81,7 +83,7 @@ public class GameManager extends JPanel {
      */
     public void makeMove (Move move) {
         if (move.getBoardBeforeMove().equals(game.getBoard())) {
-            RuleSet referee = game.getRules();
+            RuleSet rules = game.getRules();
 
             // Em troca de eficiencia, o projeto se torna mais estavel (Por causa da promocao do peao).
             // TRUST (Nessa ordem nunca haverao conflitos.)
@@ -259,37 +261,37 @@ public class GameManager extends JPanel {
      */
     private void mostrarResultados() {
     	if (game.getGameState() == GameState.WhiteWon ) {
-            JFrame frameResultado = new JFrame("Resultados");
-            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frameResultado.setSize(300, 150);
-            frameResultado.setLayout(new FlowLayout());
-            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+            JFrame frame_resultado = new JFrame("Resultados");
+            frame_resultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame_resultado.setSize(300, 150);
+            frame_resultado.setLayout(new FlowLayout());
+            JFrame main_frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
 
             JLabel label = new JLabel("Brancas Ganharam");
             JButton voltarButton = new JButton("Começar outro jogo");
 
             voltarButton.addActionListener(e -> {
-            	frameResultado.dispose();
+            	frame_resultado.dispose();
             	
-            	if (framePrincipal != null ) {
-            		framePrincipal.getContentPane().removeAll();
+            	if (main_frame != null ) {
+                    main_frame.getContentPane().removeAll();
                     GameManager.instance = null;
                     GameManager novoGameManager = GameManager.getInstance();
-                    framePrincipal.getContentPane().add(novoGameManager);
-                    framePrincipal.revalidate();
-                    framePrincipal.repaint();
+                    main_frame.getContentPane().add(novoGameManager);
+                    main_frame.revalidate();
+                    main_frame.repaint();
             	}
             	
             });
-            frameResultado.add(label);
-            frameResultado.add(voltarButton);
+            frame_resultado.add(label);
+            frame_resultado.add(voltarButton);
             
-            if (framePrincipal != null) {
-                frameResultado.setLocationRelativeTo(framePrincipal);
+            if (main_frame != null) {
+                frame_resultado.setLocationRelativeTo(main_frame);
             }
             
-            frameResultado.setVisible(true);
+            frame_resultado.setVisible(true);
     	}
     	if (game.getGameState() == GameState.BlackWon ) {
             JFrame frameResultado = new JFrame("Resultados");
@@ -359,4 +361,11 @@ public class GameManager extends JPanel {
     	}
     }
 
+    public Referee getReferee() {
+        return referee;
+    }
+
+    public void setReferee(Referee referee) {
+        this.referee = referee;
+    }
 }

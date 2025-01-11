@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author Joao Lucas
  *
  */
-public class Input extends MouseAdapter{
+public class Input extends MouseAdapter {
 
     private int draggedX = -1;
     private int draggedY = -1;

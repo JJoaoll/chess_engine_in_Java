@@ -64,7 +64,7 @@ public class GameManager extends JPanel {
      */
     private void updateGameState () {
         game.updateGameState();
-        mostrarResultados();
+        showResultsScreen();
     }
     /**
      * Getter para Board
@@ -278,105 +278,55 @@ public class GameManager extends JPanel {
     /**
      * Método para visualização dos resultados
      */
-    private void mostrarResultados() {
-        JButton voltarButton = new JButton("Jogar novamente");
-
-    	if (game.getGameState() == GameState.WhiteWon ) {
-            JFrame frame_resultado = new JFrame("Resultados");
-            frame_resultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame_resultado.setSize(300, 150);
-            frame_resultado.setLayout(new FlowLayout());
-            JFrame main_frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-
-            JLabel label = new JLabel("Brancas Ganharam");
-
-            voltarButton.addActionListener(e -> {
-            	frame_resultado.dispose();
-            	
-            	if (main_frame != null ) {
-                    main_frame.getContentPane().removeAll();
-                    GameManager.instance = null;
-                    GameManager novoGameManager = GameManager.getInstance();
-                    main_frame.getContentPane().add(novoGameManager);
-                    main_frame.revalidate();
-                    main_frame.repaint();
-            	}
-            	
-            });
-            frame_resultado.add(label);
-            frame_resultado.add(voltarButton);
-            
-            if (main_frame != null) {
-                frame_resultado.setLocationRelativeTo(main_frame);
-            }
-            
-            frame_resultado.setVisible(true);
-    	}
-    	if (game.getGameState() == GameState.BlackWon ) {
-            JFrame frameResultado = new JFrame("Resultados");
-            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frameResultado.setSize(300, 150);
-            frameResultado.setLayout(new FlowLayout());
-            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            JLabel label = new JLabel("Pretas Ganharam");
-
-            voltarButton.addActionListener(e -> {
-            	frameResultado.dispose();
-            	
-            	if (framePrincipal != null ) {
-            		framePrincipal.getContentPane().removeAll();
-                    GameManager.instance = null;
-                    GameManager novoGameManager = GameManager.getInstance();
-                    framePrincipal.getContentPane().add(novoGameManager);
-                    framePrincipal.revalidate();
-                    framePrincipal.repaint();
-            	}
-            	
-            });
-            frameResultado.add(label);
-            frameResultado.add(voltarButton);
-
-            if (framePrincipal != null) {
-                frameResultado.setLocationRelativeTo(framePrincipal);
-            }
-            
-            frameResultado.setVisible(true);
-    	}
-    	if (game.getGameState() == GameState.Draw ) {
-            JFrame frameResultado = new JFrame("Resultados");
-            frameResultado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frameResultado.setSize(300, 150);
-            frameResultado.setLayout(new FlowLayout());
-            JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            JLabel label = new JLabel("Empate");
-
+    private void showResultsScreen() {
+        if(game.getGameState() == GameState.BlackWon || game.getGameState() == GameState.WhiteWon || game.getGameState() == GameState.Draw) {
+        JButton back_Button = new JButton("Jogar novamente");
+        JFrame frame_Result = new JFrame("Resultados");
+        frame_Result.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame_Result.setSize(300, 150);
+        frame_Result.setLayout(new FlowLayout());
+        JFrame main_Frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        
+        JLabel label = new JLabel("");
+        
+        
+        if (game.getGameState() == GameState.WhiteWon) {
         	
-            voltarButton.addActionListener(e -> {
-            	frameResultado.dispose();
+            label.setText("Brancas Ganharam");
+            
+        } else if (game.getGameState() == GameState.BlackWon) {
+        	
+            label.setText("Pretas Ganharam");
+            
+        } else if (game.getGameState() == GameState.Draw) {
+        	
+            label.setText("Empate");
+            
+        }
+    	
+        back_Button.addActionListener(e -> {
+        	frame_Result.dispose();
 
-            	if (framePrincipal != null ) {
-            		framePrincipal.getContentPane().removeAll();
-                    GameManager.instance = null;
-                    GameManager novoGameManager = GameManager.getInstance();
-                    framePrincipal.getContentPane().add(novoGameManager);
-                    framePrincipal.revalidate();
-                    framePrincipal.repaint();
-            	}
-            	
-            });
-            
-            frameResultado.add(label);
-            frameResultado.add(voltarButton);
-            
-            if (framePrincipal != null) {
-                frameResultado.setLocationRelativeTo(framePrincipal);
-            }
-            
-            frameResultado.setVisible(true);
-    	}
+        	if (main_Frame != null ) {
+        		main_Frame.getContentPane().removeAll();
+                GameManager.instance = null;
+                GameManager novoGameManager = GameManager.getInstance();
+                main_Frame.getContentPane().add(novoGameManager);
+                main_Frame.revalidate();
+                main_Frame.repaint();
+        	}
+        	
+        });
+        
+        frame_Result.add(label);
+        frame_Result.add(back_Button);
+        
+        if (main_Frame != null) {
+            frame_Result.setLocationRelativeTo(main_Frame);
+        }
+        
+        frame_Result.setVisible(true);
+        }
     }
 
     public Referee getReferee() {

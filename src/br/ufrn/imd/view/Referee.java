@@ -14,6 +14,12 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Optional;
 
+/**
+ * Classe verificadora das regras
+ * @author Joao Lucas
+ *
+ */
+
 public class Referee {
     RuleSet rules;
 
@@ -49,6 +55,7 @@ public class Referee {
             dialog.add(button);
         }
 
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
 
         return selected_piece[0];

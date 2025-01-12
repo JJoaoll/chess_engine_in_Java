@@ -270,6 +270,7 @@ public class GameManager extends JPanel {
             int x = piece.getCurrent_position().getX();
             int y = piece.getCurrent_position().getY();
 
+            g2d.setColor(new Color(0, 255, 0, 150));
             g2d.fillRect(x * board.tileSize, y * tileSize, tileSize, tileSize);
         });
     }

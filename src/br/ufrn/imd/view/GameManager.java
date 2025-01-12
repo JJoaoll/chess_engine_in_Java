@@ -280,36 +280,34 @@ public class GameManager extends JPanel {
      * Método para visualização dos resultados
      */
     private void showResultsScreen() {
-        if(game.getGameState() == GameState.BlackWon || game.getGameState() == GameState.WhiteWon || game.getGameState() == GameState.Draw) {
+    	if(game.getGameState() == GameState.WhiteWon || game.getGameState() == GameState.BlackWon || game.getGameState() == GameState.Draw) {
+    	
         JButton back_Button = new JButton("Jogar novamente");
         JFrame frame_Result = new JFrame("Resultados");
         frame_Result.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame_Result.setSize(300, 150);
         frame_Result.setLayout(new FlowLayout());
         JFrame main_Frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        
-        JLabel label = new JLabel("");
-        
-        
-        if (game.getGameState() == GameState.WhiteWon) {
-        	
-            label.setText("Brancas Ganharam");
-            
-        } else if (game.getGameState() == GameState.BlackWon) {
-        	
-            label.setText("Pretas Ganharam");
-            
-        } else if (game.getGameState() == GameState.Draw) {
-        	
-            label.setText("Empate");
-            
-        }
-    	
-        back_Button.addActionListener(e -> {
-        	frame_Result.dispose();
 
+        JLabel label = new JLabel();
+    	if (game.getGameState() == GameState.WhiteWon ) {
+            label.setText("Brancas Ganharam");
+
+    	}
+    	if (game.getGameState() == GameState.BlackWon ) {
+            label.setText("Pretas Ganharam");
+
+    	}
+    	if (game.getGameState() == GameState.Draw ) {
+            label.setText("Empate");
+
+    	}
+    	
+    	back_Button.addActionListener(e -> {
+        	frame_Result.dispose();
+        	
         	if (main_Frame != null ) {
-        		main_Frame.getContentPane().removeAll();
+                main_Frame.getContentPane().removeAll();
                 GameManager.instance = null;
                 GameManager novoGameManager = GameManager.getInstance();
                 main_Frame.getContentPane().add(novoGameManager);
@@ -318,7 +316,6 @@ public class GameManager extends JPanel {
         	}
         	
         });
-        
         frame_Result.add(label);
         frame_Result.add(back_Button);
         
@@ -327,7 +324,7 @@ public class GameManager extends JPanel {
         }
         
         frame_Result.setVisible(true);
-        }
+    	}
     }
 
     public Referee getReferee() {

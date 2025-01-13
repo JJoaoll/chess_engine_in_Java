@@ -17,6 +17,7 @@ import java.util.Optional;
 /**
  * Classe verificadora das regras
  * @author Joao Lucas
+ * @author Felipe Augusto
  *
  */
 
@@ -63,16 +64,14 @@ public class Referee {
 
 
 
-    // CONTEM MUITOS SIDE-EFFECTS!!!!!!!
     /**
-     * Método de funcionamento principal das regras clássicas
+     * Método de funcionamento principal das regras especiais do xadrez clássico
      */
     private void makeItClassicallySpecial (Game game, Move move) throws IllegalArgumentException {
-        Board board = game.getBoardRf(); // BUSCANDO SIDE EFFECTS!!!! //TODO: tem refatoracão de base aqui!!!!
-        Side turn   = game.getTurn(); // TODO: acople!!!
+        Board board = game.getBoardRf();
+        Side turn   = game.getTurn();
 
 
-        // TRUST:
         ClassicalChessRules classical_rules = (ClassicalChessRules) this.rules;
 
         int x0 = move.getInitialPosition().getX();
@@ -82,14 +81,12 @@ public class Referee {
         if (opt_piece.isEmpty ())
             throw new IllegalArgumentException ("Piece not found");
 
-        // Nao vamos reverificar nada aqui!
         try {
             Piece piece = opt_piece.get();
 
-            // Como nenhum dos casos conflitam:
             if (piece instanceof Pawn pawn) {
                 if(classical_rules.isAPromotingPawn (pawn, move, turn)) {
-                    // TRUST!
+                    
                     Position2D initial_position = move.getInitialPosition();
                     Position2D final_position   = move.getFinalPosition();
 
@@ -115,17 +112,14 @@ public class Referee {
 
                     board.replacePiece(initial_position.getX(), initial_position.getY(), Optional.empty());
 
-                    // TODO: DEIXAR O JOGADOR ESCOLHER QUAL PECA!!!! TODO TODO TODO
 
-                    board.replacePiece(final_position.getX(), final_position.getY(), Optional.of(promotedPiece) // TODO: perde em eficiencia
+                    board.replacePiece(final_position.getX(), final_position.getY(), Optional.of(promotedPiece) 
                     );
                 }
 
                 else if (classical_rules.isAnEnPassant (game, pawn, move)) {
-                    // TRUST: (Nao ha caso de en-passant duplo)
+                    
                     Move last_move = game.getMoveList().getFirst();
-                    // Trust: (Nao havera caso de en-passant fora do
-                    // tabuleiro por causa da estrutura do codigo ate aqui.)
 
                     int side_walk = pawn.isWhite() ? -1 : 1;
 
@@ -134,18 +128,13 @@ public class Referee {
 
                     board.replacePiece(pawn_x, pawn_y, Optional.empty());
 
-                    //TODO: fix this bad name again!!
-                    // LEFT LEFT LEFT
                     if (last_move.getFinalPosition().isXBehindOf(pawn.getCurrent_position())) {
-                        // TRUST: Nunca ha o caso onde o peao corta outra peca pq
-                        // se o peao inimigo avancou, entao a casa, agora 'atras' dele, esta vazia.
 
                         board.replacePiece(pawn_x - 1, pawn_y + side_walk, Optional.of(pawn));
                         board.replacePiece(pawn_x - 1, pawn_y, Optional.empty());
 
                     }
 
-                    // Big trust!!!! TODO: Fix??!!
                     else {
                         board.replacePiece(pawn_x + 1, pawn_y + side_walk, Optional.of(pawn));
                         board.replacePiece(pawn_x + 1, pawn_y, Optional.empty());
@@ -155,17 +144,13 @@ public class Referee {
             }
 
             else if (piece instanceof King king) {
-                // Eh mais comum que o rei roque curto :)
-                if (classical_rules.isCastlingShort (king, move, game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+                if (classical_rules.isCastlingShort (king, move, game.getTurn())) {
 
                     String rook_side = king.isWhite() ? "h1" : "h8";
                     Position2D rook_position = Position2D.fromChessNotation(rook_side);
                     Position2D king_position = king.getCurrent_position();
 
-                    /*//
-                    Rook rook = (Rook) board.getPiece(rook_position.getX(), rook_position.getY()).get();*/
 
-                    // deletando:
                     board.replacePiece (king_position.getX(), king_position.getY(), Optional.empty());
                     board.replacePiece (rook_position.getX(), rook_position.getY(), Optional.empty());
 
@@ -175,24 +160,19 @@ public class Referee {
                     Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
                     Position2D new_king_position = Position2D.fromChessNotation(king_spot);
 
-                    // Recolocando:
                     board.replacePiece (new_king_position.getX(), new_king_position.getY(), Optional.of(king));
                     board.replacePiece (new_rook_position.getX(), new_rook_position.getY(), Optional.of(new Rook(new_rook_position, king.getSide())));
 
                 }
 
                 else if (classical_rules.isCastlingLong   (king, move, game.getTurn())) {
-                    // Eh mais comum que o rei roque curto :)
-                    if (classical_rules.isCastlingLong (king, move, game.getTurn())) { // TODO: FIXAR ESSE METODO ESTATICO PRA NAO SER!
+                    if (classical_rules.isCastlingLong (king, move, game.getTurn())) {
 
                         String rook_side = king.isWhite() ? "a1" : "a8";
                         Position2D rook_position = Position2D.fromChessNotation(rook_side);
                         Position2D king_position = king.getCurrent_position();
 
-                    /*//
-                    Rook rook = (Rook) board.getPiece(rook_position.getX(), rook_position.getY()).get();*/
 
-                        // deletando:
                         board.replacePiece(king_position.getX(), king_position.getY(), Optional.empty());
                         board.replacePiece(rook_position.getX(), rook_position.getY(), Optional.empty());
 
@@ -202,7 +182,6 @@ public class Referee {
                         Position2D new_rook_position = Position2D.fromChessNotation(rook_spot);
                         Position2D new_king_position = Position2D.fromChessNotation(king_spot);
 
-                        // Recolocando:
                         board.replacePiece(new_king_position.getX(), new_king_position.getY(), Optional.of(king));
                         board.replacePiece(new_rook_position.getX(), new_rook_position.getY(), Optional.of(new Rook(new_rook_position, king.getSide())));
                     }
@@ -229,7 +208,6 @@ public class Referee {
             makeItClassicallySpecial(game, move);
         }
 
-        // Aqui outras regras
     }
 
     public RuleSet getRules() {

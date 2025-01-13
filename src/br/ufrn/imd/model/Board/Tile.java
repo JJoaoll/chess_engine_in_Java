@@ -9,15 +9,10 @@ import java.util.Optional;
  *
  */
 public class Tile {
-    // Optional pode ser uma opcao valida?
     private Optional<Piece> piece       = Optional.empty();
     private String coordinate           = ""  ;
-    //private Color color                 = null;
-    //  g2d.setColor((c+r) % 2 == 0 ?
-    //  new Color(227, 198, 181) : new Color(157, 105, 53));
 
 
-    // Dois construtores diferentes bem faceis de usar :P
     public Tile(String coordinate) {
         this.coordinate = coordinate;
     }
@@ -27,7 +22,6 @@ public class Tile {
         this.piece      = Optional.of(piece);
     }
 
-    // GETTER's
 
     /**
      * Método getter de Piece
@@ -46,7 +40,7 @@ public class Tile {
     }
 
     /**
-     * Método para verificação se dois ladrinhos esão se propepondo 
+     * Método para verificação se dois ladrinhos esão se sobrepondo 
      */
     @Override
     public boolean equals(Object obj) {
@@ -61,11 +55,6 @@ public class Tile {
                 Piece piece1 = this         .piece.get();
                 Piece piece2 = another_tile .piece.get();
 
-                /*System.out.println("piece1: " + piece1.getCurrent_position().toChessNotation());
-                System.out.println("piece1: " + piece1.getClass().getSimpleName());
-
-                System.out.println("piece2: " + piece2.getCurrent_position().toChessNotation());
-                System.out.println("piece2: " + piece2.getClass().getSimpleName());*/
 
                 if (!piece1.getClass().getSimpleName().equals(piece2.getClass().getSimpleName())) {
                     System.out.println("saida 1");
@@ -85,11 +74,6 @@ public class Tile {
         return false;
     }
 
-   /* public Color getColor() {
-        return color;
-    }*/
-
-    // SETTER's
 
     /**
      * Método setter de Piece
@@ -107,8 +91,5 @@ public class Tile {
         this.coordinate = coordinate;
     }
 
-   /* public void setColor(Color color) {
-        this.color = color;
-    }*/
 
 }

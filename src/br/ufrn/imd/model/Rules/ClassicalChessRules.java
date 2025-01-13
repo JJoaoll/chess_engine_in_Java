@@ -13,7 +13,6 @@ import java.awt.Frame;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
-// TODO: REMOVER ACOPLAMENTO COM O GAME ao maximo!!!
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,11 +21,10 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 
-// TODO: DO!
 /**
  * 
  * @author Joao Lucas
- *
+ * @author Felipe Augusto
  */
 public class ClassicalChessRules implements RuleSet {
 
@@ -59,8 +57,6 @@ public class ClassicalChessRules implements RuleSet {
                     return true;
             }
         }
-        /*if (king == null)
-            System.out.println("The king was not in the board, how?!!");*/
 
         return false;
     }
@@ -99,7 +95,7 @@ public class ClassicalChessRules implements RuleSet {
             }
 
             else if (piece instanceof King k) {
-                return isCastlingShort  (k, move, game.getTurn()) // TODO: FIXAR ESSA ESTATICIDADE!!!
+                return isCastlingShort  (k, move, game.getTurn())
                     || isCastlingLong   (k, move, game.getTurn());
             }
 
@@ -132,7 +128,6 @@ public class ClassicalChessRules implements RuleSet {
                                   &&  rook.isTheFirstMove();
                 System.out.println("twin souls: " + twin_souls);
 
-                // NOMES RUINS ATRAPALHARAM! TODO: melhorar nomes se sobrar tempo.
                 String empty_tile1 = king.isWhite() ? "g1" : "g8";
                 String empty_tile2 = king.isWhite() ? "f1" : "f8";
 
@@ -147,7 +142,7 @@ public class ClassicalChessRules implements RuleSet {
                 boolean is_in_check  = theKingIsInCheck(board, king.getSide());
                 System.out.println("is in check: " + is_in_check);
 
-                // Break for efficiency
+                
                 if (is_in_check || !free_space || !twin_souls)
                     return false;
 
@@ -202,7 +197,7 @@ public class ClassicalChessRules implements RuleSet {
                         &&  rook.isTheFirstMove();
                 System.out.println("twin souls: " + twin_souls);
 
-                // NOMES RUINS ATRAPALHARAM! TODO: melhorar nomes se sobrar tempo.
+                
                 String empty_tile1 = king.isWhite() ? "c1" : "c8";
                 String empty_tile2 = king.isWhite() ? "d1" : "d8";
 
@@ -217,7 +212,7 @@ public class ClassicalChessRules implements RuleSet {
                 boolean is_in_check  = theKingIsInCheck(board, king.getSide());
                 System.out.println("is in check: " + is_in_check);
 
-                // Break for efficiency
+                
                 if (is_in_check || !free_space || !twin_souls)
                     return false;
 
@@ -258,14 +253,14 @@ public class ClassicalChessRules implements RuleSet {
      * @return true or false
      */
     public boolean isAnEnPassant(Game game, Pawn pawn, Move move) {
-        // off-by-one
+        
         int fifth_row = pawn.isWhite() ? 3 : 4;
         if (pawn.getCurrent_position().getY() != fifth_row) {
-            //System.out.println("Parada 0");
+            
             return false;
         }
 
-        // se o peao esta na quinta linha, nao eh o primeiro lance!
+        
         Move last_move = game.getMoveList().getFirst();
 
         Position2D pawn_position = pawn.getCurrent_position();
@@ -276,7 +271,7 @@ public class ClassicalChessRules implements RuleSet {
         Optional<Piece> opt_piece_right = game.getPiece(pawn_x - 1, pawn_y);
 
         if (opt_piece_right.isEmpty() && opt_piece_left.isEmpty()) {
-            //System.out.println("PARADA 1");
+            
             return false;
         }
 
@@ -285,13 +280,13 @@ public class ClassicalChessRules implements RuleSet {
 
         Optional<Piece> maybe_a_pawn = game.getPiece(final_last_move_x, final_last_move_y);
         if (maybe_a_pawn.isEmpty()) {
-            //System.out.println("PARADA 2");
+            
             return false;
         }
 
         Piece last_moved_piece = maybe_a_pawn.get();
         if (!(last_moved_piece instanceof Pawn) || last_moved_piece.getSide() == pawn.getSide()) {
-            //System.out.println("PARADA 3");
+            
             return false;
         }
 
@@ -323,7 +318,7 @@ public class ClassicalChessRules implements RuleSet {
 
         return isValidMove(move, turn)
             && pawn_row == last_row - side_walk;
-        // O caso de coroar com enpassant n existe aqui!
+       
     }
     
     /**
@@ -387,8 +382,6 @@ public class ClassicalChessRules implements RuleSet {
     @Override
     public boolean isValidMove(Move move, Side turn) {
 
-        //System.out.println("initial Position: " + move.getInitialPosition().getX() + " " + move.getInitialPosition().getY());
-        //System.out.println("Final Position: "   + move.getFinalPosition().getX() + " " + move.getFinalPosition().getY());
 
         int x = move.getInitialPosition().getX();
         int y = move.getInitialPosition().getY();
@@ -414,7 +407,6 @@ public class ClassicalChessRules implements RuleSet {
         board_after_move.replacePiece (initial_x, initial_y, Optional.empty());
         board_after_move.replacePiece (  final_x,   final_y,          Optional.of(piece));
 
-        //System.out.println ("the " + turn.toString() + " king is in check: (" + theKingIsInCheck(board_after_move, turn) + ")");
         return !theKingIsInCheck (board_after_move, turn);
     }
     
@@ -515,30 +507,25 @@ public class ClassicalChessRules implements RuleSet {
 
         Position2D bishop_position = bishop.getCurrent_position();
 
-        // Setta os blocker's
         for (Piece piece : pieces_in_the_way) {
             Position2D piece_position = piece.getCurrent_position();
 
-            // upR
             if (piece_position.isInRightUpDiagonalOf(bishop_position)
                     && (blocker_upR == null || blocker_upR.getCurrent_position().isInRightUpDiagonalOf(piece_position)))
             {
                 blocker_upR = piece;
             }
 
-            // upL
             else if (piece_position.isInLeftUpDiagonalOf(bishop.getCurrent_position())
                     && (blocker_upL == null || blocker_upL.getCurrent_position().isInLeftUpDiagonalOf(piece_position))) {
                 blocker_upL = piece;
             }
 
-            // downR
             else if (piece_position.isInRightDownDiagonalOf(bishop.getCurrent_position())
                     && (blocker_downR == null || blocker_downR.getCurrent_position().isInRightDownDiagonalOf(piece_position))) {
                 blocker_downR = piece;
             }
 
-            // downL
             else if (piece_position.isInLeftDownDiagonalOf(bishop.getCurrent_position())
                     && (blocker_downL == null || blocker_downL.getCurrent_position().isInLeftDownDiagonalOf(piece_position))) {
                 blocker_downL = piece;
@@ -547,9 +534,7 @@ public class ClassicalChessRules implements RuleSet {
 
         Position2D final_position = move.getFinalPosition();
 
-        // EFICIENCIA:
 
-        // upR
         if (final_position.isInRightUpDiagonalOf(bishop_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_upR == null || blocker_upR.getCurrent_position().isInRightUpDiagonalOf(final_position)
@@ -557,7 +542,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_upR.getCurrent_position().equals(final_position)));
         }
 
-        // upL
         else if (final_position.isInLeftUpDiagonalOf(bishop_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_upL == null || blocker_upL.getCurrent_position().isInLeftUpDiagonalOf(final_position)
@@ -565,7 +549,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_upL.getCurrent_position().equals(final_position)));
         }
 
-        // downR
         else if (final_position.isInRightDownDiagonalOf(bishop_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_downR == null || blocker_downR.getCurrent_position().isInRightDownDiagonalOf(final_position)
@@ -573,7 +556,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_downR.getCurrent_position().equals(final_position)));
         }
 
-        // downL
         else if (final_position.isInLeftDownDiagonalOf(bishop_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_downL == null || blocker_downL.getCurrent_position().isInLeftDownDiagonalOf(final_position)
@@ -650,7 +632,6 @@ public class ClassicalChessRules implements RuleSet {
             return true;
         }
 
-        // TODO: Captura
         int initial_x     = move.getInitialPosition().getX();
         adjusted_y        = pawn.getCurrent_position().getY() - side_direction;
 
@@ -663,7 +644,6 @@ public class ClassicalChessRules implements RuleSet {
             || capture_right;
     }
 
-    // Todas as direcoes/orientacoes sao pra matriz e nao pra posicao!
     /**
      * Método que verifica se uma torre está realizando um movimento válido
      * @param rook
@@ -698,7 +678,6 @@ public class ClassicalChessRules implements RuleSet {
 
         Position2D rook_position = rook.getCurrent_position();
 
-        // Setta os blocker's
         for (Piece piece : pieces_in_the_way) {
             Position2D piece_position = piece.getCurrent_position();
             if (piece_position.isYAboveOf(rook_position)
@@ -725,9 +704,8 @@ public class ClassicalChessRules implements RuleSet {
 
         Position2D final_position = move.getFinalPosition();
 
-        // EFICIENCIA:
 
-        // up
+        
         if (final_position.isYAboveOf(rook_position)) {
             return valid_positions.contains(move.getFinalPosition())
                    && (blocker_up == null || blocker_up.getCurrent_position().isYAboveOf(final_position)
@@ -735,7 +713,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_up.getCurrent_position().equals(final_position)));
         }
 
-        // right
         else if (final_position.isXAboveOf(rook_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_right == null || blocker_right.getCurrent_position().isXAboveOf(final_position)
@@ -743,7 +720,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_right.getCurrent_position().equals(final_position)));
         }
 
-        // left
         else if (final_position.isXBehindOf(rook_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_left == null || blocker_left.getCurrent_position().isXBehindOf(final_position)
@@ -751,7 +727,6 @@ public class ClassicalChessRules implements RuleSet {
                     && blocker_left.getCurrent_position().equals(final_position)));
         }
 
-        // down
         else if (final_position.isYBehindOf(rook_position)) {
             return valid_positions.contains(move.getFinalPosition())
                     && (blocker_down == null || blocker_down.getCurrent_position().isYBehindOf(final_position)
@@ -764,7 +739,6 @@ public class ClassicalChessRules implements RuleSet {
 
 
 
-    // TODO: Deleat it
     public LinkedList<Move> getAllValidMoves(Board board, Piece piece) {
         return null;
     }
@@ -776,7 +750,6 @@ public class ClassicalChessRules implements RuleSet {
         Board      new_board = new Board();
         Grid<Tile> new_tiles = new Grid<>(new_board.getWidth(), new_board.getHeight());
 
-        // TODO: Maneira mais inteligente de fazer isso?
         new_tiles.setValue(0, 7, new Tile("a1", new Rook   (new Position2D(0, 7), Side.WhiteSide)));
         new_tiles.setValue(0, 6, new Tile("a2", new Pawn   (new Position2D(0, 6), Side.WhiteSide)));
         new_tiles.setValue(0, 5, new Tile("a3"));
@@ -854,7 +827,6 @@ public class ClassicalChessRules implements RuleSet {
     }
 
     
-    // More Lazy Evaluation
     /**
      * Método para verificação se o jogador tem movimentos válidos
      * @param game
@@ -935,7 +907,7 @@ public class ClassicalChessRules implements RuleSet {
                 System.out.println("count: " + count);
             }
 
-            if (count > 2) // SOLUCAO MAIS SIMPLES!!!!!
+            if (count > 2)
                 return true;
         }
 
@@ -951,7 +923,6 @@ public class ClassicalChessRules implements RuleSet {
         Side turn   = game.getTurn();
         Board board = game.getBoard();
 
-        // Tripla repeticao:
         LinkedList<Board> boards =
                 game.getMoveList()
                 .stream()
@@ -961,7 +932,6 @@ public class ClassicalChessRules implements RuleSet {
         boards.add (game.getRules().initializeBoard());
 
 
-        // TODO: se o jogo nao for interrompido, vai bugar, pq sempre olha com base no ultimo!!!
         if (!boards.isEmpty()) {
             if (hasRepeatedThreeTimes(board, boards))
                 return GameState.Draw;
@@ -982,7 +952,6 @@ public class ClassicalChessRules implements RuleSet {
             return GameState.WhiteWon;
         }
 
-        // Stalemate
         return GameState.Draw;
     }
 

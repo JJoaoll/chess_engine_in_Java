@@ -16,16 +16,15 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 
-// TODO: Consertar a parte singleton
 /**
  * Classe gerenciadora de estado do jogo
- * @author Joao Lucas
+ * @author Joao Lucas 
+ * @author Felipe Augusto
  *
  */
 
 public class GameManager extends JPanel {
 
-    // TODO: um setter pra generalizar!
     private Game game                      = new Game (new ClassicalChessRules());
 
     private Optional<Piece> selected_piece = Optional.empty();
@@ -43,7 +42,6 @@ public class GameManager extends JPanel {
 
         this.addMouseListener       (input);
         this.addMouseMotionListener (input);
-        //this.setBackground(Color.GREEN);
     }
     /**
      * Retorna a instancia de GameManager de acordo com o Simpleton
@@ -66,17 +64,12 @@ public class GameManager extends JPanel {
         game.updateGameState();
         showResultsScreen();
     }
-    /**
-     * Getter para Board
-     * @return Board
-     */
+    
     public Board getBoard() {
         GameManager gm = GameManager.getInstance();
         return gm.game.getBoard();
     }
 
-    /// ///////////////////////////////////////////////////////////
-    // TODO: Simplificar a logica
     /**
      * Método para realizar movimento
      * @param move
@@ -85,8 +78,6 @@ public class GameManager extends JPanel {
         if (move.getBoardBeforeMove().equals(game.getBoard())) {
             RuleSet rules = game.getRules();
 
-            // Em troca de eficiencia, o projeto se torna mais estavel (Por causa da promocao do peao).
-            // TRUST (Nessa ordem nunca haverao conflitos.)
             if (referee.isSpecialMove(game, move)) {
 
                 try {
@@ -100,7 +91,6 @@ public class GameManager extends JPanel {
 
             else if (referee.isValidMove(move, game.getTurn())) {
                 game.makeMove (move);
-                // TODO: DA OVERLEAD LOGO, POR FAVOR!!
                 System.out.println(game.getBoard().getPiece(move.getInitialPosition().getX(), move.getInitialPosition().getY()));
             }
         }
@@ -110,8 +100,6 @@ public class GameManager extends JPanel {
     }
 
 
-    // Acoplamento pra resolver
-    // TODO: devia ser um funcao da classe "Game"
     
     /**
      * Método para achar qualquer uma das peças do tabuleiro
@@ -137,25 +125,19 @@ public class GameManager extends JPanel {
         referee.setSelectedPiece(opt_piece);
     }
 
-    /**
-     * Método para atualização da peça selecionada
-     * @param opt_piece
-     */
     private void setSelectedPiece(Optional<Piece> opt_piece) {
         selected_piece = opt_piece;
     }
 
-    /**
-     * 
-     * @return selected_piece
-     */
     public Optional<Piece> getSelectedPiece () {
         return selected_piece;
     }
 
-    
+    /**
+     * Método para mostrar os objetos na interface
+     */
     public void paintComponent (Graphics g) {
-        super.paintComponent (g); // apaga as coisas
+        super.paintComponent (g);
         Board board    = game.getBoard();
         Graphics2D g2d = (Graphics2D) g;
 
@@ -172,10 +154,8 @@ public class GameManager extends JPanel {
      */
     private void paintBoard (Graphics2D g2d, Board board) {
 
-        // TODO: Modularize e confira os c's e os r's
         for (int c = 0; c < board.getTiles().getCols(); c++) {
             for (int r = 0; r < board.getTiles().getRows(); r++) {
-                // TODO: Generalize colors by using the settings checkup!!
                 g2d.setColor((c+r) % 2 == 0 ? new Color(227, 198, 181) : new Color(157, 105, 53));
                 g2d.fillRect(c * board.tileSize, r * board.tileSize, board.tileSize, board.tileSize);
 
@@ -190,8 +170,6 @@ public class GameManager extends JPanel {
      */
     private void paintPieces (Graphics2D g2d, Board board) {
 
-        // TODO: resolver chamada de metodos aninhadas
-        // Salvando possiveis erros remanescentes
         LinkedList<Piece> pieces = board.getPieces();
         selected_piece.ifPresent(piece -> {
             pieces.remove(piece);
@@ -205,10 +183,10 @@ public class GameManager extends JPanel {
         });
 
         for (Piece piece : pieces) {
-            //System.out.println(piece.getCurrent_position().getX() + "|" + piece.getCurrent_position().getY() + " : " + piece.getClass());
             piece_manager.paintPiece(g2d, piece, board.tileSize);
         }
     }
+    
     /**
      * Método para realçar os possiveis movimentos da peça selecionada
      * @param g2d
@@ -223,7 +201,6 @@ public class GameManager extends JPanel {
             g2d.setColor(new Color(68, 180, 57, 190));
             Move move;
 
-            // Possible Moves Highlights
             for (int c = 0; c < board.getWidth(); c++)
                 for (int r = 0; r < board.getHeight(); r++) {
 
@@ -231,7 +208,6 @@ public class GameManager extends JPanel {
                     move            = new Move(board, piece.
                             getCurrent_position(), new Position2D(c, r));
 
-                    // TODO: DESTAQUE NOS MOVIMENTOS ESPECIAIS!!!!
                     if(referee.isValidMove(move, game.getTurn())
                         || referee.isSpecialMove(game, move)) {
 
@@ -264,9 +240,7 @@ public class GameManager extends JPanel {
                     }
                 }
 
-            // selected piece highlight:
 
-            // Chamada de metodos aninhados!
             int x = piece.getCurrent_position().getX();
             int y = piece.getCurrent_position().getY();
 

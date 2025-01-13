@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: tratamento de erros
 /**
  * Classe que gerencia o tabuleiro
  * @author Joao Lucas
@@ -19,25 +18,20 @@ import java.util.Optional;
 public class Board {
     private int width = 8, height = 8;
     private Grid<Tile> tiles;
-    // TODO: It's ok with that beeing public and final?
     public final int tileSize = 85;
 
     public Board () {
         Grid<Tile> grid = new Grid<>(width, height);
     }
 
-    // TODO: o getValue pode dar nulo, faz um try catch.
     public Board(Board board_to_copy) {
         this.width  = board_to_copy.width;
         this.height = board_to_copy.height;
 
-        // Criação de um novo Grid para os tiles
         Grid<Tile> new_tiles = new Grid<>(width, height);
 
-        // Iteração sobre o tabuleiro original
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                // Tornando x e y efetivamente finais
 
                 Tile original_tile        = board_to_copy.tiles.getValue(x, y);
                 Optional<Piece> opt_piece = original_tile.getPiece();
@@ -55,12 +49,10 @@ public class Board {
             this.tiles = new_tiles;
         }
 
-        // Atualiza os tiles do novo tabuleiro
         this.tiles = new_tiles;
     }
 
 
-    // Assumindo que esta tudo bem aqui!!
     /**
      * Método para designar o tabuleiro a janela
      * @param grid
@@ -83,8 +75,6 @@ public class Board {
                 Tile tile = tiles.getValue(c, r);
                 if (tile != null) {
                     tile.getPiece().ifPresent(p -> pieces.add(p));
-                    // versao com lambda:
-                    // tile.getPiece().ifPresent(pieces::add);
                 }
             }
 
@@ -104,14 +94,10 @@ public class Board {
         }
 
         catch (Exception e) {
-            //System.out.println(e.getMessage());
-            // Por hora ,esta bom!
             return Optional.empty();
         }
     }
 
-    // Pega o rei de um certo lado/time/side
-    // Assumption: so ha um rei de cada lado e sempre ha um.
     /**
      * Método que recebe os reis de cada lado
      * @param side
@@ -132,7 +118,6 @@ public class Board {
     }
 
 
-    // TODO: TRATAMENTO DE ERROS!!!/**
      /** 
       * Método para trocar peças
      * @param col
@@ -141,9 +126,7 @@ public class Board {
      */
     public void replacePiece (int col, int row, Optional<Piece> opt_piece) {
         opt_piece.ifPresent(p -> {p.setCurrent_position(new Position2D(col, row));});
-       // System.out.println("Antes: " + tiles.getValue(col, row).getPiece());
         tiles.getValue(col, row).setPiece(opt_piece);
-       // System.out.println("Depois: " + tiles.getValue(col, row).getPiece());
     }
 
     /**
@@ -158,7 +141,6 @@ public class Board {
     }
 
 
-    // GETTER's
 
     /**
      * Método getter de width
@@ -192,8 +174,6 @@ public class Board {
         return height;
     }
 
-
-    // SETTER's
 
     /**
      * Método setter de Width

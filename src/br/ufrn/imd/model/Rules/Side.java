@@ -1,6 +1,5 @@
 package br.ufrn.imd.model.Rules;
 
-// Another name could be "team"
 /**
  * Classe para verificação dos times
  * @author Joao Lucas
@@ -17,7 +16,6 @@ public enum Side {
         return "Black";
     }
 
-    // Booleanismo
     public boolean isWhite() {
         return this == WhiteSide;
     }
@@ -26,7 +24,6 @@ public enum Side {
         return this == BlackSide;
     }
 
-    // For legibility
     /**
      * Método para verificação se é do mesmop time
      * @param otherSide

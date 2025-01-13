@@ -12,13 +12,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-// TODO: Fix DRY!
-// TODO: KeyListener next!
-
 /**
  * Classe que gerencia o input do mouse
  * @author Joao Lucas
- *
+ * @author Felipe Augusto
  */
 public class Input extends MouseAdapter {
 
@@ -65,16 +62,12 @@ public class Input extends MouseAdapter {
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
 
-        // TODO: REMOVE THESE SHITTY TRY CATCHS!!!!
-        // TODO: DO!
         Optional<Piece> opt_piece = gm.getSelectedPiece();
         opt_piece.ifPresent(piece -> {
             Move move = new Move(board, piece.getCurrent_position(), new Position2D(col, row));
-            // isValidMove
             gm.makeMove(move);
         });
 
-        // TODO: IT SHOULD BE STATIC?
         GameManager.selectPiece(Optional.empty());
         gm.repaint();
 
@@ -96,7 +89,6 @@ public class Input extends MouseAdapter {
             draggedX = e.getX() - (gm.getBoard().getTileSize() / 2);
             draggedY = e.getY() - (gm.getBoard().getTileSize() / 2);
 
-            // Solicitar redesenho do tabuleiro
             gm.repaint();
         });
     }

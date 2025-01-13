@@ -6,7 +6,7 @@ import br.ufrn.imd.model.Rules.ClassicalChessRules;
 import javax.swing.*;
 import java.awt.*;
 /**
- * 
+ * Classe Main
  * @author Joao Lucas
  *
  */

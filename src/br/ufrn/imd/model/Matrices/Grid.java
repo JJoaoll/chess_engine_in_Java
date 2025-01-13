@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// TODO: tratamento de erros!
 /**
  * Classe que gerencia o grid
  * @author Joao Lucas
@@ -16,7 +15,6 @@ public class Grid<T> {
     private final List<List<T>> grid = new ArrayList<>();
     private final int cols, rows;
 
-    // Um vetor[coluna][fileira]
     public Grid(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
@@ -26,13 +24,11 @@ public class Grid<T> {
         }
     }
 
-    // Copia segura!
     public Grid(Grid<T> grid_to_copy) {
         
         this.cols = grid_to_copy.getCols();
         this.rows = grid_to_copy.getRows();
         
-        // prepara a grid de forma manual, sem aproveitar o construtor antigo p/ evitar acoplamento.
         for (int i = 0; i < this.cols; i++) {
             List<T> new_col = new ArrayList<>(this.rows);
             for (int j = 0; j < this.rows; j++) {
@@ -42,7 +38,6 @@ public class Grid<T> {
         }
     }
 
-    // TODO: ver se um try catch realmente seria necesario por aqui!!!
     /**
      * Método para verificação de igualdade entre posições
      */
@@ -69,7 +64,7 @@ public class Grid<T> {
     }
     
     /**
-     * 
+     * método settter de row
      * @param col_index
      * @param row
      */
@@ -100,7 +95,6 @@ public class Grid<T> {
     }
 
 
-    // GETTER'S
 
     /**
      * Método getter de Grid

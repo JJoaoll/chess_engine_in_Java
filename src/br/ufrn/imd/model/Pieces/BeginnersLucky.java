@@ -1,6 +1,6 @@
 package br.ufrn.imd.model.Pieces;
 /**
- * Interface para registrar se as peças fizeram o primeiro movimento
+ * Interface para registrar se as peças fizeram o primeiro movimento para os movimentos especiais
  * @author Joao Lucas
  *
  */

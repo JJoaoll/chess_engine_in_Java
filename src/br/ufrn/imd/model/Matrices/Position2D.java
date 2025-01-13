@@ -1,6 +1,5 @@
 package br.ufrn.imd.model.Matrices;
 
-//TODO: Lidar com valores nulos nessa clase:
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -92,7 +91,6 @@ public class Position2D {
         return Math.abs(this.x - another_position.getX()) * Math.abs(this.y - another_position.getY()) == 2;
     }
 
-    // Inclui a propria posicao
     /**
      * Método para saber de uma posição esta sendo cercada
      * @param another_position
@@ -104,7 +102,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está mais alta
+     * Método para saber se uma posição está mais a direita
      * @param another_position
      * @return
      */
@@ -113,7 +111,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está mais baixa
+     * Método para saber se uma posição está mais a esquerda
      * @param another_position
      * @return
      */
@@ -122,7 +120,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está mais a direita
+     * Método para saber se uma posição está mais alta
      * @param another_position
      * @return
      */
@@ -131,7 +129,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está mais a esquerda
+     * Método para saber se uma posição está mais baixa
      * @param another_position
      * @return
      */
@@ -140,7 +138,7 @@ public class Position2D {
     }
 
 /**
- * Método para saber se uma posição está na diagonal superior direita
+ * Método para saber se uma posição está na diagonal superior direita em relação a posição inicial
  * @param another_position
  * @return
  */
@@ -150,7 +148,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está na diagonal superior esquerda
+     * Método para saber se uma posição está na diagonal superior esquerda em relação a posição inicial
      * @param another_position
      * @return
      */
@@ -160,7 +158,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está na diagonal inferior direita
+     * Método para saber se uma posição está na diagonal inferior direita em relação a posição inicial
      * @param another_position
      * @return
      */
@@ -170,7 +168,7 @@ public class Position2D {
     }
 
     /**
-     * Método para saber se uma posição está na diagonal inferior esquerda
+     * Método para saber se uma posição está na diagonal inferior esquerda em relação a posição inicial
      * @param another_position
      * @return
      */
@@ -179,55 +177,45 @@ public class Position2D {
             && this.y < another_position.getY();
     }
 
-    // TODO: contratos!
 
-    // Assumindo que todos estao na mesma diagonal
     /**
      * Método para achar a ultima coordenada da diagonal superior esquerda
      * @param positions
      * @return
      */
     public static Position2D highestInTheLeftDiagonal (LinkedList<Position2D> positions) {
-        return lowestXPosition(positions); // o mais a esquerda
+        return lowestXPosition(positions); 
     }
 
-    // Assumindo que todos estao na mesma diagonal
     /**
-     * Método para achar a ultima coordenada da diagonal inferior esquerda
+     * Método para achar a ultima coordenada da diagonal inferior direita
      * @param positions
      * @return
      */
     public static Position2D lowestInTheLeftDiagonal (LinkedList<Position2D> positions) {
-        return highestXPosition(positions); // o mais a direita
+        return highestXPosition(positions); 
     }
 
-    // Assumindo que todos estao na mesma diagonal
     /**
      * Método para achar a ultima coordenada da diagonal superior direita
      * @param positions
      * @return
      */
     public static Position2D highestInTheRightDiagonal (LinkedList<Position2D> positions) {
-        return highestXPosition(positions); // o mais a direita
+        return highestXPosition(positions); 
     }
 
-    // Assumindo que todos estao na mesma diagonal
     /**
      * Método para achar a ultima coordenada da diagonal inferior esquerda
      * @param positions
      * @return
      */
     public static Position2D lowestInTheRightDiagonal (LinkedList<Position2D> positions) {
-        return lowestXPosition(positions); // o mais a esquerda
+        return lowestXPosition(positions); 
     }
 
-    // Aqui nao precisa usar getters e nem setters
-
-    // Reducao sugerida:
-
-    // TODO: Tratar do throws illegalArguments!!?
     /**
-     * Método que retorna a maior posição X
+     * Método que retorna a maior posição a direita
      * @param positions
      * @return
      */
@@ -236,7 +224,7 @@ public class Position2D {
     }
 
     /**
-     * Método que retorna a menor posição X
+     * Método que retorna a menor posição a direita
      * @param positions
      * @return
      */
@@ -245,7 +233,7 @@ public class Position2D {
     }
 
     /**
-     * Método que retorna a maior posição Y
+     * Método que retorna a maior posição a cima
      * @param positions
      * @return
      */
@@ -254,7 +242,7 @@ public class Position2D {
     }
 
     /**
-     * Método que retorna a menor posição Y
+     * Método que retorna a menor posição a baixo
      * @param positions
      * @return
      */
@@ -271,7 +259,6 @@ public class Position2D {
         return this.y + 1 == another_position.getY();
     }
 
-    //TODO: Melhorar as exceptions
     /**
      * Método de tratamento de erro da peça estar fora do tabuleiro na hora da criação 
      * @param coordinate
@@ -283,7 +270,6 @@ public class Position2D {
             throw new IllegalArgumentException("Coordenada inválida: " + coordinate);
         }
 
-        // nomes sugeridos
         char file = coordinate.charAt(0);
         char rank = coordinate.charAt(1);
 
@@ -291,15 +277,12 @@ public class Position2D {
             throw new IllegalArgumentException("Coordenada fora do tabuleiro: " + coordinate);
         }
 
-        // assim fica mais legivel:
         int x = file - 'a';
         int y = '8' - rank;
 
         return new Position2D(x, y);
     }
 
-    //TODO: criar um throw unico, novo e adequado que herde deste
-    // O nome "chessNotation ficou bem melhor"
     /**
      * Método de tratamento de erro da peça estar fora do tabuleiro
      * @return
@@ -317,7 +300,6 @@ public class Position2D {
         return String.valueOf(file) + rank;
     }
 
-    // !!!!!!!!!1
     /**
      * Método de verificação se duas peças estão no mesmo lugar
      */

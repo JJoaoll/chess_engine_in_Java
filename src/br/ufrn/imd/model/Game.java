@@ -25,10 +25,8 @@ public class Game {
     private LinkedList<Move>  move_list = new LinkedList<>();
     private GameState        game_state = GameState.Playing;
 
-    // Consideremos isso absoluto pra todos os jogos p/ simplificar.
     private Side turn = Side.WhiteSide;
 
-    // Mais um problema com estaticidade
     /**
      * Método getter de Turn
      * @return
@@ -37,7 +35,6 @@ public class Game {
         return this.turn;
     }
 
-    // acabou sendo necessario!!
     /**
      * Método para trocar de turno
      */
@@ -58,14 +55,10 @@ public class Game {
         int col1 = move.getInitialPosition().getX();
         int row1 = move.getInitialPosition().getY();
 
-        // TODO: um overload cairia bem
         Optional<Piece> opt_piece = this.board.getPiece(col1, row1);
-        //System.out.println(opt_piece.isPresent());
-
         int col2 = move.getFinalPosition().getX();
         int row2 = move.getFinalPosition().getY();
 
-        // TODO: um overload cairia bem aqui tbm
         this.board.replacePiece(col1, row1, Optional.empty());
         this.board.replacePiece(col2, row2, opt_piece);
 
@@ -78,7 +71,6 @@ public class Game {
         }
 
         this.swapTurn();
-        // Essas convencoes do java....
         this.move_list.addFirst(new Move (
                 new Board (move.getBoardBeforeMove()),
                 move.getInitialPosition(),
@@ -117,8 +109,10 @@ public class Game {
         return board.getPiece(col, row);
     }
 
-
-    // TODO: Discover about possible side effects here!!
+    /**
+     * Método getter de Board
+     * @return
+     */
     public Board getBoard() {
         return this.board;
     }
@@ -132,7 +126,6 @@ public class Game {
     }
 
 
-    // TODO: refatorar pra esse ser o padraozao!!!!!
     /**
      * Método getter de BoardRF
      * @return
@@ -156,7 +149,6 @@ public class Game {
     public LinkedList<Move> getMoveList() {
         return move_list;
     }
-    // SETTER's
 
 
     /**

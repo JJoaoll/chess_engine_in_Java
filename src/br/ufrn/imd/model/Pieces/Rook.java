@@ -13,7 +13,7 @@ public class Rook extends Piece implements Cloneable, BeginnersLucky {
 
     public Rook (Position2D new_position, Side new_side) {
         this.current_position = new Position2D(new_position);
-        this.side             = new_side; // vamos ter problemas com referencia aqui?
+        this.side             = new_side; 
         this.value            = 5;
     }
 

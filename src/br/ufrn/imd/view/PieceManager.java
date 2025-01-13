@@ -12,9 +12,6 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: poderia deixar de ser singleton e apenas ser um atributo do gameManager. (sem metodos estaticos!!)
-// TODO: poderia trocar tudo para pieceManager ou algo similar pra simualar (controle x visao)
-// static class (singleton por eficiencia)
 
 /**
  * Classe gerenciadora das peças
@@ -28,9 +25,7 @@ public class PieceManager {
     private BufferedImage sheet;
     {
         try{
-            // TODO: Unify things with a "resources" package.
             sheet = ImageIO.read(new FileInputStream("resources/pieces.png"));
-            //sheet = ImageIO.read(ClassLoader.getSystemResourceAsStream("../resources/piece.png"));
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -39,69 +34,8 @@ public class PieceManager {
 
     private final int sheetScale = sheet.getWidth() / 6;
 
-    // TODO: Aprender a lidar com classes estaticas!
     public PieceManager() {}
 
-
-    // FICOU FEIO PORQUE O JAVA 17 NAO SUPORTA O BASICO DE PATTERN MATCHING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO: Lidar com IOException
-    // TODO: ENTENDER PQ TROCAR O p.isWhite por p.isBlack deu certo!!!!
-   /* private Image getSprite (Piece p) throws PieceNotFound, IOException, Exception {
-        // TODO: Modularize isso (talvez global!??)
-        int tileSize = Game.getBoard().getTileSize();
-        try {
-            if (p instanceof Pawn) {
-                return sheet.getSubimage(5 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else if (p instanceof Rook) {
-                return sheet.getSubimage(4 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else if (p instanceof Knight) {
-                return sheet.getSubimage(3 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else if (p instanceof Bishop) {
-                return sheet.getSubimage(2 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else if (p instanceof Queen) {
-                return sheet.getSubimage(1 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else if (p instanceof King) {
-                return sheet.getSubimage(0 * this.sheetScale,
-                       p.isBlack() ? 0 : sheetScale, sheetScale, sheetScale)
-                       .getScaledInstance(tileSize, tileSize, BufferedImage.SCALE_SMOOTH);
-            }
-
-            else {
-                // Texto gerado apertando tab no intellij :O
-                throw new PieceNotFound("Unsupported piece type: " + p.getClass().getSimpleName());
-            }
-
-        }
-
-        // TODO: entender o printStackTrace
-        catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }*/
-
-    // metodo gerado de uma simplificacao por eficiencia.
     /**
      * Método para achar o sprite correte de uma peça
      * @param p
@@ -127,8 +61,6 @@ public class PieceManager {
         });
     }
 
-    // TODO: resolver a chamada de metodos aninhados!
-    //TODO: singleton things here
     /**
      * Método para inserir o sprite de uma peça
      * @param g2d
@@ -144,14 +76,12 @@ public class PieceManager {
         }
 
         catch (Exception e) {
-            //throw new RuntimeException(e);
             System.out.printf("Error: %s\n", e.getMessage());
             e.printStackTrace();
             return;
         }
     }
 
-    // TODO: singleton things here
     /**
      * Método para inserir o sprite de uma peça no tabuleiro
      * @param g2d
@@ -168,7 +98,6 @@ public class PieceManager {
         }
 
         catch (Exception e) {
-            // Sugestao de texto gerada pelo meu editor lindao <3
             System.err.printf("Erro ao desenhar peça na posição (%d, %d): %s\n", PosX, PosY, e.getMessage());
             e.printStackTrace();
         }

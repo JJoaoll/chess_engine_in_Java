@@ -31,7 +31,6 @@
         }
 
 
-        // Algo alem das pecas vai se mover?
         /**
          * Método para verificação de a peça pode se mover
          * @param candidate_position
@@ -39,7 +38,6 @@
          */
         public abstract boolean movable(Position2D candidate_position);
 
-        // GETTER'S
         /**
          * Método Getter de current_position
          * @return Position2D
@@ -58,7 +56,6 @@
          */
         public Side getSide() { return side; }
 
-        // SETTER'S
         /**
          * Método Setter de current_position
          * @param current_position
